@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * Qualquer outro aluno responde 404, sem revelar que existe.
  */
 @Component
-class PortalAccess {
+public class PortalAccess {
 
 	private final StudentRepository students;
 
@@ -26,7 +26,7 @@ class PortalAccess {
 	}
 
 	/** O primeiro é sempre o próprio cadastro. */
-	List<Student> profiles(CurrentUser me) {
+	public List<Student> profiles(CurrentUser me) {
 		Map<UUID, Student> visible = new LinkedHashMap<>();
 		for (Student self : students.findLinkedToUser(me.academyId(), me.userId())) {
 			visible.put(self.getId(), self);
