@@ -85,7 +85,11 @@
     "ALREADY_STAFF": "Esta conta já faz parte da equipe da academia.",
     "INVITE_EMAIL_MISMATCH": "Este convite foi enviado para outro e-mail. Entre com a conta desse e-mail.",
     "WRONG_PASSWORD": "A senha atual não confere.",
-    "PASSWORD_UNCHANGED": "A nova senha precisa ser diferente da atual."
+    "PASSWORD_UNCHANGED": "A nova senha precisa ser diferente da atual.",
+    "CLASS_NOT_TODAY": "Esta aula não acontece hoje.",
+    "CHECK_IN_CLOSED": "O check-in abre 1 hora antes da aula e fecha no fim dela.",
+    "CHECK_IN_INACTIVE": "Sua matrícula está inativa. Fale com a academia.",
+    "CHECK_IN_BY_STAFF": "Esta presença foi marcada pelo professor; só ele pode desfazer."
   },
   "topbar": {
     "menu": "Abrir ou fechar o menu",
@@ -506,8 +510,43 @@
   },
   "account": {
     "hello": "Olá, {{name}}!",
-    "linked": "Você faz parte de {{academy}} como {{role}}.",
-    "comingSoon": "Em breve você vai acompanhar aqui suas aulas, presenças, graduação e mensalidades."
+    "me": "Eu",
+    "profilesAria": "Escolha de quem ver os dados",
+    "loadError": "Não foi possível carregar seus dados. Tente novamente.",
+    "noProfile": "Seu cadastro de aluno ainda não está ligado a esta conta. Fale com a academia.",
+    "inactive": "Esta matrícula está inativa. Fale com a academia para reativar.",
+    "today": {
+      "title": "Aulas de hoje",
+      "hint": "O check-in abre 1 hora antes da aula e vai até o fim dela. O professor confirma na chamada.",
+      "empty": "Nenhuma aula hoje.",
+      "walkIn": "Avulsa",
+      "checkIn": "Fazer check-in",
+      "present": "Presença marcada",
+      "undo": "Desfazer",
+      "window": "Check-in das {{from}} às {{to}}"
+    },
+    "belt": {
+      "title": "Minha faixa",
+      "progress": "Na faixa desde {{since}} · {{months}} · {{trainings}} desde então"
+    },
+    "classes": {
+      "title": "Minhas turmas",
+      "empty": "Você ainda não está inscrito em nenhuma turma."
+    },
+    "attendance": {
+      "title": "Presenças",
+      "total_zero": "Nenhum treino registrado ainda.",
+      "total_one": "{{count}} treino registrado no total.",
+      "total_other": "{{count}} treinos registrados no total.",
+      "empty": "As presenças aparecem aqui depois do check-in ou da chamada."
+    },
+    "invoices": {
+      "title": "Mensalidades",
+      "hint": "Pagamentos são registrados pela academia.",
+      "empty": "Nenhuma fatura por enquanto.",
+      "dueOn": "Vence em {{date}}",
+      "paidOn": "Paga em {{date}}"
+    }
   },
   "weekdays": {
     "short": { "1": "Seg", "2": "Ter", "3": "Qua", "4": "Qui", "5": "Sex", "6": "Sáb", "7": "Dom" },

@@ -16,7 +16,8 @@ const ICON_LINKS = [
   { to: '/notificacoes', labelKey: 'topbar.notifications', icon: Bell },
 ] as const
 
-export function Topbar({ onToggleMenu }: { onToggleMenu: () => void }) {
+/** Sem {@code onToggleMenu} (área do aluno): sem menu lateral nem atalhos da equipe. */
+export function Topbar({ onToggleMenu }: { onToggleMenu?: () => void }) {
   const { t } = useTranslation()
   const { activeMembership, logout } = useAuth()
   const { theme, toggle } = useTheme()
@@ -24,12 +25,15 @@ export function Topbar({ onToggleMenu }: { onToggleMenu: () => void }) {
   const isManager = Boolean(activeMembership && MANAGER_ROLES.includes(activeMembership.role))
   const { data: pendingRequests = 0 } = usePendingRequestCount(isManager)
   const badgeFor = (to: string) => (to === REQUESTS_PATH ? pendingRequests : 0)
+  const staffLinks = onToggleMenu ? ICON_LINKS : []
 
   return (
     <header className="topbar">
-      <button type="button" className="icon-btn" onClick={onToggleMenu} aria-label={t('topbar.menu')}>
-        <Menu size={20} aria-hidden />
-      </button>
+      {onToggleMenu && (
+        <button type="button" className="icon-btn" onClick={onToggleMenu} aria-label={t('topbar.menu')}>
+          <Menu size={20} aria-hidden />
+        </button>
+      )}
       <div className="topbar-brand">
         <span className="brand-mark" aria-hidden>
           {academyName.charAt(0).toUpperCase()}
@@ -39,7 +43,7 @@ export function Topbar({ onToggleMenu }: { onToggleMenu: () => void }) {
         </span>
       </div>
 
-      {ICON_LINKS.map(({ to, labelKey, icon: Icon }) => {
+      {staffLinks.map(({ to, labelKey, icon: Icon }) => {
         const badge = badgeFor(to)
         const label = badge > 0 ? `${t(labelKey)} (${badge})` : t(labelKey)
         return (
@@ -50,7 +54,7 @@ export function Topbar({ onToggleMenu }: { onToggleMenu: () => void }) {
         )
       })}
 
-      <span className="pill trial-pill hide-mobile">{t('topbar.trial')}</span>
+      {onToggleMenu && <span className="pill trial-pill hide-mobile">{t('topbar.trial')}</span>}
       <button
         type="button"
         className="icon-btn"

@@ -26,6 +26,13 @@ public interface StudentRepository extends JpaRepository<Student, UUID>, JpaSpec
 	@Query("select s from Student s where s.household.id = ?1 order by s.searchName")
 	List<Student> findMembers(UUID householdId);
 
+	/** Cadastro de aluno ligado à conta de login na academia (área do aluno). */
+	@Query("""
+			select s from Student s left join fetch s.household
+			where s.academyId = ?1 and s.userId = ?2 order by s.createdAt
+			""")
+	List<Student> findLinkedToUser(UUID academyId, UUID userId);
+
 	@Query("""
 			select new br.com.academia.api.student.HouseholdMemberCount(s.household.id, count(s))
 			from Student s where s.academyId = ?1 and s.household is not null

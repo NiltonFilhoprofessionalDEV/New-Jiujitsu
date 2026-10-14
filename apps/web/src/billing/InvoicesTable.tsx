@@ -5,16 +5,10 @@ import { formatDate } from '@/students/format'
 import type { Page } from '@/students/types'
 
 import { formatMoney } from './money'
-import type { Invoice, InvoiceSituation } from './types'
+import { SITUATION_PILL } from './situation'
+import type { Invoice } from './types'
 
 export type RowAction = 'pay' | 'cancel' | 'reverse'
-
-const SITUATION_PILL: Record<InvoiceSituation, string> = {
-  OPEN: 'pill pill-outline',
-  OVERDUE: 'pill pill-danger',
-  PAID: 'pill pill-success',
-  CANCELED: 'pill pill-muted',
-}
 
 type Props = {
   page: Page<Invoice>

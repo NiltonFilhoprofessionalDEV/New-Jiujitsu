@@ -38,4 +38,8 @@ public class CheckIn {
 	public UUID getStudentId() {
 		return studentId;
 	}
+
+	public UUID getMarkedBy() {
+		return markedBy;
+	}
 }

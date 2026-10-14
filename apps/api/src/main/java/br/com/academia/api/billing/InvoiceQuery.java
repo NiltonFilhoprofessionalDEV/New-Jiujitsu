@@ -67,6 +67,23 @@ class InvoiceQuery {
 				.single();
 	}
 
+	/** Faturas de um aluno, mais recentes primeiro; canceladas não interessam ao aluno. */
+	List<InvoiceRow> forStudent(UUID academyId, UUID studentId, LocalDate today, int limit) {
+		return jdbc.sql("""
+				select i.id, i.student_id, s.name, i.description, i.amount_cents, i.due_date, i.status,
+				       i.paid_on, i.payment_method
+				from invoices i join students s on s.id = i.student_id
+				where i.academy_id = :academyId and i.student_id = :studentId and i.status <> 'CANCELED'
+				order by i.due_date desc, i.id
+				limit :limit
+				""")
+				.param("academyId", academyId)
+				.param("studentId", studentId)
+				.param("limit", limit)
+				.query((rs, n) -> row(rs, today))
+				.list();
+	}
+
 	OverdueSummary overdue(UUID academyId, LocalDate today) {
 		return jdbc.sql("""
 				select count(distinct i.student_id), coalesce(sum(i.amount_cents), 0) from invoices i

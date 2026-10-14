@@ -43,6 +43,12 @@ public class InvoiceService {
 				query.totals(academyId, filter, today), query.overdue(academyId, today));
 	}
 
+	/** Para a área do aluno: o acesso ao aluno já foi validado por quem chama. */
+	@Transactional(readOnly = true)
+	public List<InvoiceRow> forStudent(UUID academyId, UUID studentId, int limit) {
+		return query.forStudent(academyId, studentId, today(), limit);
+	}
+
 	@Transactional
 	public InvoiceRow pay(UUID academyId, UUID recordedBy, UUID id, PayRequest request) {
 		if (request.paidOn().isAfter(today())) {

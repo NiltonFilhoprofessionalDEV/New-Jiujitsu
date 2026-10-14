@@ -7,6 +7,7 @@ import '@/styles/invites.css'
 import '@/styles/classes.css'
 import '@/styles/graduations.css'
 import '@/styles/billing.css'
+import '@/styles/account.css'
 import '@/lib/i18n'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'

@@ -15,6 +15,9 @@ public interface ClassEnrollmentRepository extends JpaRepository<ClassEnrollment
 
 	long countByClassId(UUID classId);
 
+	@Query("select e.classId from ClassEnrollment e where e.studentId = ?1")
+	List<UUID> findClassIds(UUID studentId);
+
 	@Query("""
 			select new br.com.academia.api.training.ClassCount(e.classId, count(e))
 			from ClassEnrollment e where e.classId in ?1 group by e.classId
