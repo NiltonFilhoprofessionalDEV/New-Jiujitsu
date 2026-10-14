@@ -21,6 +21,17 @@ const managerRoutes = [
   { path: 'financeiro/faturas', lazy: page(() => import('@/billing/InvoicesPage'), (m) => m.InvoicesPage) },
 ]
 
+/** Mesmas telas para equipe e aluno; os links internos são relativos à base de cada área. */
+const videoRoutes = [
+  { path: 'videos', lazy: page(() => import('@/videos/VideoLibraryPage'), (m) => m.VideoLibraryPage) },
+  { path: 'videos/:videoId', lazy: page(() => import('@/videos/VideoPlayerPage'), (m) => m.VideoPlayerPage) },
+]
+
+const studentRoutes = [
+  { index: true, lazy: page(() => import('@/account/StudentAccountPage'), (m) => m.StudentAccountPage) },
+  ...videoRoutes,
+]
+
 const staffRoutes = [
   { index: true, lazy: page(() => import('@/home/HomePage'), (m) => m.HomePage) },
   { path: 'alunos', lazy: page(() => import('@/students/StudentsPage'), (m) => m.StudentsPage) },
@@ -30,6 +41,7 @@ const staffRoutes = [
   { path: 'requests', lazy: page(() => import('@/requests/RequestsPage'), (m) => m.RequestsPage) },
   { path: 'configuracoes', lazy: page(() => import('@/settings/SettingsPage'), (m) => m.SettingsPage) },
   { path: 'relatorios', lazy: page(() => import('@/reports/ReportsPage'), (m) => m.ReportsPage) },
+  ...videoRoutes,
   {
     path: 'relatorios/professores',
     lazy: page(() => import('@/reports/InstructorsReportPage'), (m) => m.InstructorsReportPage),
@@ -58,7 +70,11 @@ export const router = createBrowserRouter([
       {
         element: <RequireAuth />,
         children: [
-          { path: STUDENT_HOME, lazy: page(() => import('@/account/StudentAccountPage'), (m) => m.StudentAccountPage) },
+          {
+            path: STUDENT_HOME,
+            lazy: page(() => import('@/account/StudentShell'), (m) => m.StudentShell),
+            children: studentRoutes,
+          },
           {
             element: <RequireStaff />,
             children: [{ element: <AppShell />, children: staffRoutes }],

@@ -1,11 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Navigate } from 'react-router'
 
-import { STAFF_ROLES } from '@/auth/types'
 import { useAuth } from '@/auth/useAuth'
 import { PageHeader } from '@/components/PageHeader'
-import { Topbar } from '@/layout/Topbar'
 import { PasswordForm } from '@/settings/PasswordForm'
 
 import { InvoicesCard } from './InvoicesCard'
@@ -18,33 +15,26 @@ import type { Profile } from './types'
 export function StudentAccountPage() {
   const { t } = useTranslation()
   const { session, activeMembership } = useAuth()
-  const isStaff = Boolean(activeMembership && STAFF_ROLES.includes(activeMembership.role))
-  const { data: profiles, isLoading, isError } = useProfiles(!isStaff)
+  const { data: profiles, isLoading, isError } = useProfiles()
   const [chosenId, setChosenId] = useState<string | null>(null)
 
   if (!session || !activeMembership) return null
-  if (isStaff) return <Navigate to="/" replace />
   const selected = profiles?.find((p) => p.id === chosenId) ?? profiles?.[0]
 
   return (
-    <div className="student-shell">
-      <Topbar />
-      <main className="main">
-        <div className="page">
-          <PageHeader eyebrow={activeMembership.academy.name}
-            title={t('account.hello', { name: session.user.name.split(' ')[0] })} />
-          <div className="stack">
-            {isLoading && <p className="empty">{t('common.loading')}</p>}
-            {isError && <div className="alert alert-error">{t('account.loadError')}</div>}
-            {profiles?.length === 0 && <div className="card empty-detail">{t('account.noProfile')}</div>}
-            {profiles && profiles.length > 1 && (
-              <ProfileTabs profiles={profiles} selectedId={selected?.id} onSelect={setChosenId} />
-            )}
-            {selected && <ProfileView key={selected.id} profile={selected} />}
-            <PasswordForm />
-          </div>
-        </div>
-      </main>
+    <div className="page">
+      <PageHeader eyebrow={activeMembership.academy.name}
+        title={t('account.hello', { name: session.user.name.split(' ')[0] })} />
+      <div className="stack">
+        {isLoading && <p className="empty">{t('common.loading')}</p>}
+        {isError && <div className="alert alert-error">{t('account.loadError')}</div>}
+        {profiles?.length === 0 && <div className="card empty-detail">{t('account.noProfile')}</div>}
+        {profiles && profiles.length > 1 && (
+          <ProfileTabs profiles={profiles} selectedId={selected?.id} onSelect={setChosenId} />
+        )}
+        {selected && <ProfileView key={selected.id} profile={selected} />}
+        <PasswordForm />
+      </div>
     </div>
   )
 }

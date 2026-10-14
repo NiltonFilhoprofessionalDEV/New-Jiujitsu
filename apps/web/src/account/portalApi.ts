@@ -10,11 +10,10 @@ const TODAY_REFRESH_MS = 60_000
 
 const studentPath = (studentId: string) => `/portal/students/${encodeURIComponent(studentId)}`
 
-export function useProfiles(enabled: boolean) {
+export function useProfiles() {
   return useQuery({
     queryKey: [PORTAL, 'profiles'],
     queryFn: async () => (await api.get<Profile[]>('/portal/profiles')).data,
-    enabled,
   })
 }
 

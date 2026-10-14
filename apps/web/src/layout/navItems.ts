@@ -6,6 +6,7 @@ import {
   CreditCard,
   Home,
   Inbox,
+  PlaySquare,
   Receipt,
   Settings,
   ShieldCheck,
@@ -38,6 +39,7 @@ export const MANAGER_NAV: NavGroup[] = [
       { to: '/aulas', labelKey: 'nav.turmas', icon: CalendarDays, end: true },
       { to: '/alunos', labelKey: 'nav.alunos', icon: Users },
       { to: '/aulas/faixas', labelKey: 'nav.graduacoes', icon: Award },
+      { to: '/videos', labelKey: 'nav.videos', icon: PlaySquare },
     ],
   },
   {
