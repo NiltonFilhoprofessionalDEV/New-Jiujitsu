@@ -29,7 +29,7 @@ export const MANAGER_NAV: NavGroup[] = [
       { to: '/', labelKey: 'nav.inicio', icon: Home, end: true },
       { to: '/alunos', labelKey: 'nav.alunos', icon: Users },
       { to: '/aulas', labelKey: 'nav.aulas', icon: Dumbbell },
-      { to: '/equipe', labelKey: 'nav.equipe', icon: ShieldCheck },
+      { to: '/equipe', labelKey: 'nav.equipe', icon: ShieldCheck, managersOnly: true },
       { to: '/mensalidades', labelKey: 'nav.planosDeMensalidade', icon: CreditCard, managersOnly: true },
       { to: '/certificados', labelKey: 'nav.certificados', icon: Award },
     ],

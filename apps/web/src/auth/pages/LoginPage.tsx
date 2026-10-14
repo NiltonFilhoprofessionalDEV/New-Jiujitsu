@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useLocation, useNavigate } from 'react-router'
+import { Link } from 'react-router'
 
 import { authErrorMessage } from '../authErrors'
 import { useAuth } from '../useAuth'
@@ -9,8 +9,6 @@ import { AuthLayout } from './AuthLayout'
 export function LoginPage() {
   const { t } = useTranslation()
   const { login } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
@@ -21,8 +19,6 @@ export function LoginPage() {
     setError(null)
     try {
       await login(String(form.get('email')), String(form.get('password')))
-      const from = (location.state as { from?: string } | null)?.from
-      navigate(from?.startsWith('/') ? from : '/', { replace: true })
     } catch (err) {
       setError(authErrorMessage(t, err))
     } finally {

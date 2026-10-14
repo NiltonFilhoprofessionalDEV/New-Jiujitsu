@@ -19,8 +19,10 @@ import { AcceptInvitePage } from '@/public/AcceptInvitePage'
 import { EnrollPage } from '@/public/EnrollPage'
 import { RequestsPage } from '@/requests/RequestsPage'
 import { StudentsPage } from '@/students/StudentsPage'
+import { AcceptStaffInvitePage } from '@/team/AcceptStaffInvitePage'
+import { TeamPage } from '@/team/TeamPage'
 
-const IMPLEMENTED = new Set(['/', '/alunos', '/aulas', '/requests', '/mensalidades', '/financeiro/alunos',
+const IMPLEMENTED = new Set(['/', '/alunos', '/aulas', '/equipe', '/requests', '/mensalidades', '/financeiro/alunos',
   '/financeiro/faturas'])
 
 const pendingItems = MANAGER_NAV.flatMap((g) => g.items).filter((item) => !IMPLEMENTED.has(item.to))
@@ -32,6 +34,7 @@ const pendingRoute = (item: (typeof pendingItems)[number]) => ({
 export const router = createBrowserRouter([
   { path: '/matricula/:token', element: <EnrollPage /> },
   { path: '/convite/:token', element: <AcceptInvitePage /> },
+  { path: '/equipe/convite/:token', element: <AcceptStaffInvitePage /> },
   {
     element: <RedirectIfAuthenticated />,
     children: [
@@ -59,6 +62,7 @@ export const router = createBrowserRouter([
               {
                 element: <RequireManager />,
                 children: [
+                  { path: 'equipe', element: <TeamPage /> },
                   { path: 'mensalidades', element: <PlansPage /> },
                   { path: 'financeiro/alunos', element: <SubscriptionsPage /> },
                   { path: 'financeiro/faturas', element: <InvoicesPage /> },

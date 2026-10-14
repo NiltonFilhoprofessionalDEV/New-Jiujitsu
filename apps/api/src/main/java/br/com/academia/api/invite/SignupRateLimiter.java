@@ -14,7 +14,7 @@ public class SignupRateLimiter {
 		this.attempts = new SlidingWindowLimiter(props.signup().maxAttempts(), props.signup().window());
 	}
 
-	void consume(String clientIp) {
+	public void consume(String clientIp) {
 		attempts.check(clientIp);
 		attempts.record(clientIp);
 	}

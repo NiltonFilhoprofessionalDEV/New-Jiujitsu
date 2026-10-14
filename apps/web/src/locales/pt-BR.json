@@ -77,7 +77,13 @@
     "INVOICE_NOT_FOUND": "Fatura não encontrada.",
     "INVOICE_STATUS_CHANGED": "Esta fatura foi alterada por outra pessoa. Recarregue a lista.",
     "PAYMENT_IN_FUTURE": "A data do recebimento não pode ser futura.",
-    "STUDENT_HAS_INVOICES": "Este aluno tem faturas registradas e não pode ser excluído. Desative a matrícula."
+    "STUDENT_HAS_INVOICES": "Este aluno tem faturas registradas e não pode ser excluído. Desative a matrícula.",
+    "OWNER_ONLY": "Somente o dono da academia pode fazer isso.",
+    "INVALID_ROLE": "Escolha professor ou co-gestor.",
+    "MEMBER_NOT_FOUND": "Membro da equipe não encontrado. Ele pode ter sido removido.",
+    "CANNOT_REMOVE_SELF": "Você não pode remover a si mesmo da equipe.",
+    "ALREADY_STAFF": "Esta conta já faz parte da equipe da academia.",
+    "INVITE_EMAIL_MISMATCH": "Este convite foi enviado para outro e-mail. Entre com a conta desse e-mail."
   },
   "topbar": {
     "menu": "Abrir ou fechar o menu",
@@ -429,6 +435,45 @@
       "ACCEPTED": "Este convite já foi usado",
       "EXPIRED": "Este convite expirou",
       "REVOKED": "Este convite foi cancelado"
+    }
+  },
+  "team": {
+    "title": "Equipe",
+    "intro": "Professores e co-gestores da academia. Professores cuidam das aulas e alunos; co-gestores também acessam o financeiro.",
+    "loadError": "Não foi possível carregar a equipe.",
+    "you": "Você",
+    "roleOf": "Papel de {{name}}",
+    "remove": "Remover da equipe",
+    "removeNamed": "Remover {{name}} da equipe",
+    "removeConfirm": "Remover {{name}} da equipe? O acesso ao painel é encerrado em até 15 minutos.",
+    "col": {
+      "member": "Membro",
+      "role": "Papel",
+      "since": "Desde",
+      "actions": "Ações"
+    },
+    "invite": {
+      "title": "Convidar para a equipe",
+      "hint": "O convite vale por 7 dias. A pessoa cria a própria senha pelo link.",
+      "role": "Papel",
+      "name": "Nome (opcional)",
+      "email": "E-mail (opcional)",
+      "emailHint": "Se informado, só esse e-mail consegue usar o convite.",
+      "created": "Convite de {{role}} criado. Envie o link para a pessoa.",
+      "waMessage": "{{greeting}} Este é o seu convite para entrar na equipe da academia como {{role}}. Crie sua conta pelo link: {{link}}"
+    },
+    "pending": {
+      "title": "Convites pendentes",
+      "loadError": "Não foi possível carregar os convites.",
+      "empty": "Nenhum convite pendente."
+    },
+    "accept": {
+      "subtitle": "Você foi convidado para a equipe como {{role}}.",
+      "hasAccount": "Já tem conta?",
+      "loggedAs": "Você está conectado como {{email}}.",
+      "otherEmail": "Você está conectado como {{email}}, mas o convite é para {{invited}}. Entre com a conta desse e-mail.",
+      "join": "Aceitar convite",
+      "useOther": "Usar outra conta"
     }
   },
   "account": {

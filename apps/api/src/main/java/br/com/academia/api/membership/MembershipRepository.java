@@ -26,4 +26,13 @@ public interface MembershipRepository extends JpaRepository<Membership, UUID> {
 			order by m.user.name
 			""")
 	List<Membership> findActiveInAcademyByRoles(UUID academyId, Collection<MembershipRole> roles);
+
+	@Query("select m from Membership m join fetch m.user where m.id = ?1 and m.academy.id = ?2 and m.active = true")
+	Optional<Membership> findActiveInAcademy(UUID id, UUID academyId);
+
+	@Query("""
+			select count(m) > 0 from Membership m
+			where m.user.id = ?1 and m.academy.id = ?2 and m.role in ?3
+			""")
+	boolean existsInAcademyWithRoles(UUID userId, UUID academyId, Collection<MembershipRole> roles);
 }

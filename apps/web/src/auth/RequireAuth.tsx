@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useLocation } from 'react-router'
 
+import { returnPath } from './returnPath'
 import { STAFF_ROLES, STUDENT_HOME } from './types'
 import { useAuth, useIsManager } from './useAuth'
 
@@ -12,10 +13,12 @@ export function RequireAuth() {
   return <Outlet />
 }
 
+/** Ao autenticar (login/cadastro), volta para a página que pediu o login. */
 export function RedirectIfAuthenticated() {
   const { status } = useAuth()
+  const location = useLocation()
   if (status === 'loading') return <div className="auth-screen" aria-busy="true" />
-  if (status === 'authenticated') return <Navigate to="/" replace />
+  if (status === 'authenticated') return <Navigate to={returnPath(location.state)} replace />
   return <Outlet />
 }
 

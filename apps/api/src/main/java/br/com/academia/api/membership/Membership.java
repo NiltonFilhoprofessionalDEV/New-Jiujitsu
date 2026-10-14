@@ -74,6 +74,11 @@ public class Membership {
 		this.active = true;
 	}
 
+	/** Vale a partir do próximo token de acesso (no máximo o TTL do token atual). */
+	public void changeRole(MembershipRole newRole) {
+		this.role = newRole;
+	}
+
 	public UUID getId() {
 		return id;
 	}
@@ -100,6 +105,10 @@ public class Membership {
 
 	public Instant getLastUsedAt() {
 		return lastUsedAt;
+	}
+
+	public Instant getCreatedAt() {
+		return createdAt;
 	}
 
 	public void markUsed() {
