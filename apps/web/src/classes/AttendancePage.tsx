@@ -2,10 +2,10 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Dialog } from '@/components/Dialog'
+import { PageHeader } from '@/components/PageHeader'
 import { COMPACT_LAYOUT, useMediaQuery } from '@/lib/useMediaQuery'
 
 import { AttendancePanel } from './AttendancePanel'
-import { ClassesHeader } from './ClassesHeader'
 import { useClasses } from './classesApi'
 import { DayClassList } from './DayClassList'
 import type { Weekday } from './types'
@@ -39,7 +39,7 @@ export function AttendancePage() {
 
   return (
     <div className="page page-wide">
-      <ClassesHeader />
+      <PageHeader eyebrow={t('common.yourAcademy')} title={t('classes.tabs.attendance')} description={t('pages.attendance')} />
       <WeekStrip date={date} classDays={classDays} onSelect={pickDate} />
       {savedTitle && (
         <div className="alert alert-success attendance-saved" role="status">

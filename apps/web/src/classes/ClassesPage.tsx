@@ -1,3 +1,4 @@
+import { Plus } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -5,9 +6,9 @@ import { MANAGER_ROLES } from '@/auth/types'
 import { useAuth } from '@/auth/useAuth'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { Dialog } from '@/components/Dialog'
+import { PageHeader } from '@/components/PageHeader'
 import { apiErrorMessage } from '@/lib/apiErrors'
 
-import { ClassesHeader } from './ClassesHeader'
 import { ClassesTable } from './ClassesTable'
 import { ClassForm } from './ClassForm'
 import { useArchiveClass, useClasses } from './classesApi'
@@ -41,14 +42,14 @@ export function ClassesPage() {
 
   return (
     <div className="page page-wide">
-      <ClassesHeader actions={canEdit && (
-        <button type="button" className="btn btn-primary" onClick={() => setModal({ type: 'new' })}>
-          {t('classes.new')}
-        </button>
-      )} />
+      <PageHeader eyebrow={t('common.yourAcademy')} title={t('classes.tabs.classes')} description={t('pages.classes')}
+        actions={canEdit && (
+          <button type="button" className="btn btn-primary" onClick={() => setModal({ type: 'new' })}>
+            <Plus size={16} aria-hidden /> {t('classes.new')}
+          </button>
+        )} />
 
       <div className="stack">
-        <p className="hint">{t('classes.intro')}</p>
         {created && <div className="alert alert-success" role="status">{t('classes.created')}</div>}
         {isLoading && <p className="empty">{t('common.loading')}</p>}
         {isError && <div className="alert alert-error">{t('classes.loadError')}</div>}

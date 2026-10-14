@@ -1,4 +1,4 @@
-import { MessageCircle } from 'lucide-react'
+import { MessageCircle, X } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -26,9 +26,9 @@ export function InviteList() {
 
   return (
     <section className="stack" aria-label={t('invites.listAria')}>
-      <div className="chips" role="tablist">
+      <div className="chips" role="group" aria-label={t('invites.filterAria')}>
         {TABS.map((k) => (
-          <button key={k} type="button" role="tab" aria-selected={tab === k}
+          <button key={k} type="button" aria-pressed={tab === k}
             className={tab === k ? 'chip active' : 'chip'} onClick={() => setTab(k)}>
             {t(`invites.tab.${k}`)}
           </button>
@@ -39,24 +39,13 @@ export function InviteList() {
       {isError && <div className="alert alert-error">{t('invites.loadError')}</div>}
       {invites?.length === 0 && <p className="empty">{tab === 'PENDING' ? t('invites.empty') : t('invites.emptyFilter')}</p>}
       {invites && invites.length > 0 && (
-        <div className="card table-card">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>{t('invites.th.guest')}</th>
-                <th>{t('invites.th.status')}</th>
-                <th className="hide-narrow">{t('invites.th.accesses')}</th>
-                <th className="hide-narrow">{t('invites.th.expires')}</th>
-                <th>{t('invites.th.actions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {invites.map((invite) => (
-                <InviteRow key={invite.id} invite={invite} busy={action.isPending}
-                  onAction={(type) => action.mutate({ id: invite.id, action: type })} />
-              ))}
-            </tbody>
-          </table>
+        <div className="card list-card">
+          <ul className="people-list">
+            {invites.map((invite) => (
+              <InviteRow key={invite.id} invite={invite} busy={action.isPending}
+                onAction={(type) => action.mutate({ id: invite.id, action: type })} />
+            ))}
+          </ul>
         </div>
       )}
     </section>
@@ -70,39 +59,43 @@ function InviteRow({ invite, busy, onAction }: RowProps) {
   const url = inviteUrl(invite.token)
   const greeting = invite.name ? t('invites.waGreetingNamed', { name: invite.name }) : t('invites.waGreeting')
   const open = invite.status === 'PENDING'
+  const details = [
+    invite.email,
+    invite.phone,
+    t('invites.accesses', { count: invite.opens }),
+    open && t('invites.validUntil', { date: formatDate(invite.expiresAt.slice(0, 10)) }),
+  ].filter(Boolean)
+
   return (
-    <tr>
-      <td>
-        <div className="row-title">{invite.name ?? invite.email ?? t('invites.openLink')}</div>
-        <div className="row-sub">
-          {[invite.email, invite.phone].filter(Boolean).join(' · ')}
+    <li className="invite-row">
+      <div className="person-main">
+        <span className="person-name">
+          <span className="row-title">{invite.name ?? invite.email ?? t('invites.openLink')}</span>
           {invite.kind === 'RESPONSIBLE' && <span className="pill pill-outline">{t('students.badge.responsible')}</span>}
-        </div>
-      </td>
-      <td><span className={STATUS_PILL[invite.status]}>{t(`invites.status.${invite.status}`)}</span></td>
-      <td className="hide-narrow">{t('invites.accesses', { count: invite.opens })}</td>
-      <td className="hide-narrow">{formatDate(invite.expiresAt.slice(0, 10))}</td>
-      <td>
-        <div className="row-actions">
-          {open && <CopyButton text={url} label={t('invites.copy')} />}
-          {open && (
-            <a className="btn btn-sm" target="_blank" rel="noreferrer"
-              href={whatsappUrl(invite.phone, t('invites.waMessage', { greeting, link: url }))}>
-              <MessageCircle size={15} aria-hidden /> {t('invites.sendWa')}
-            </a>
-          )}
-          {invite.status === 'EXPIRED' && (
-            <button type="button" className="btn btn-sm" disabled={busy} onClick={() => onAction('renew')}>
-              {t('invites.renew')}
-            </button>
-          )}
-          {(open || invite.status === 'EXPIRED') && (
-            <button type="button" className="btn btn-sm btn-danger-ghost" disabled={busy} onClick={() => onAction('revoke')}>
-              {t('invites.revoke')}
-            </button>
-          )}
-        </div>
-      </td>
-    </tr>
+          <span className={STATUS_PILL[invite.status]}>{t(`invites.status.${invite.status}`)}</span>
+        </span>
+        <span className="row-sub">{details.join(' · ')}</span>
+      </div>
+      <div className="row-actions">
+        {open && <CopyButton text={url} label={t('invites.copy')} />}
+        {open && (
+          <a className="btn btn-sm" target="_blank" rel="noreferrer"
+            href={whatsappUrl(invite.phone, t('invites.waMessage', { greeting, link: url }))}>
+            <MessageCircle size={15} aria-hidden /> {t('invites.sendWa')}
+          </a>
+        )}
+        {invite.status === 'EXPIRED' && (
+          <button type="button" className="btn btn-sm" disabled={busy} onClick={() => onAction('renew')}>
+            {t('invites.renew')}
+          </button>
+        )}
+        {(open || invite.status === 'EXPIRED') && (
+          <button type="button" className="btn btn-sm btn-icon btn-danger-ghost" disabled={busy}
+            onClick={() => onAction('revoke')} aria-label={t('invites.revoke')} title={t('invites.revoke')}>
+            <X size={16} aria-hidden />
+          </button>
+        )}
+      </div>
+    </li>
   )
 }

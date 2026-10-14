@@ -56,12 +56,25 @@
   white-space: nowrap;
 }
 
-.belt-swatch {
-  width: 28px;
-  height: 12px;
+.belt-icon {
   flex: none;
-  border-radius: 3px;
-  border: 1px solid var(--border-strong);
+  overflow: visible;
+}
+
+.belt-icon .belt-shape {
+  stroke: var(--belt-outline);
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+}
+
+.belt-icon .belt-crease {
+  stroke: var(--belt-outline);
+  stroke-width: 0.8;
+}
+
+.belt-icon .belt-tape {
+  stroke: #ffffff;
+  stroke-width: 0.9;
 }
 
 .belt-degrees {
@@ -83,25 +96,89 @@
 
 .detail-header {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
+  gap: 14px;
+}
+
+.detail-title {
+  display: grid;
+  flex: 1;
+  justify-items: start;
+  gap: 4px;
+  min-width: 0;
 }
 
 .detail-header h2 {
   font-size: 22px;
+  line-height: 1.2;
 }
 
 .detail-header p {
-  margin: 2px 0 6px;
+  margin: 0;
+}
+
+.detail-header p:empty {
+  display: none;
+}
+
+/* Faixa em destaque: o ícone grande já mostra a ponteira com os graus */
+.belt-hero {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.belt-hero .belt-badge {
+  gap: 14px;
+  font-size: 17px;
+  font-weight: 600;
 }
 
 .family-link {
-  justify-self: start;
-  height: 32px;
-  padding: 0 10px;
-  margin-left: -10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: none;
   color: var(--text);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.family-link:hover {
+  border-color: var(--border-strong);
+}
+
+.family-link .pill {
+  margin-left: auto;
+}
+
+.facts {
+  display: grid;
+  gap: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.fact-group {
+  display: grid;
+  gap: 10px;
+}
+
+.fact-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 .data-list {

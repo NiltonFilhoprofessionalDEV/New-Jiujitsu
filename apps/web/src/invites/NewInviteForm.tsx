@@ -30,11 +30,8 @@ export function NewInviteForm() {
   }
 
   return (
-    <section className="card stack" aria-labelledby="new-invite-title">
-      <div>
-        <h3 id="new-invite-title">{t('invites.form.title')}</h3>
-        <p className="hint">{t('invites.form.hint')}</p>
-      </div>
+    <section className="card stack" aria-label={t('invites.form.title')}>
+      <p className="hint">{t('invites.form.hint')}</p>
       {create.error && <div className="alert alert-error" role="alert">{apiErrorMessage(t, create.error)}</div>}
       {created && <CreatedInvite invite={created} />}
 

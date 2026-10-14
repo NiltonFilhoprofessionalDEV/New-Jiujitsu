@@ -12,16 +12,23 @@
 
 .grad-progress {
   display: grid;
-  justify-items: start;
-  gap: 4px;
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
   background: var(--surface-2);
   font-size: 14px;
 }
 
 .grad-progress p {
   margin: 0;
+}
+
+.grad-progress-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .grad-item-main {
@@ -31,28 +38,69 @@
   min-width: 0;
 }
 
+/* Página: prontos para graduar ao lado das regras (empilha no celular) */
+.belts-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 28px;
+}
+
+.belts-layout .section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.section-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+  color: var(--on-primary);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.ready-side {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+}
+
 /* Regras por faixa */
-.rules-fieldset {
+.rules-groups {
+  max-width: 280px;
+}
+
+.rules-fields {
   min-width: 0;
   margin: 0;
   padding: 0;
+  border: 0;
 }
 
-.rules-table td {
-  vertical-align: middle;
+.person-row.static {
+  cursor: default;
 }
 
-.rules-group th {
-  background: var(--surface-2);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.person-row.static:hover {
+  background: none;
 }
 
-.rules-input {
-  width: 110px;
+.row-chevron {
+  flex: none;
+  color: var(--text-subtle);
 }
 
-.rules-custom {
-  margin-left: 8px;
+@media (max-width: 1000px) {
+  .belts-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

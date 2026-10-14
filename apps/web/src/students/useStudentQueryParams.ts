@@ -3,10 +3,15 @@ import { useSearchParams } from 'react-router'
 
 import type { AgeFilter, KindFilter, StatusFilter } from './types'
 
-const STATUS: readonly StatusFilter[] = ['active', 'inactive', 'all']
+export const STATUS_FILTERS: readonly StatusFilter[] = ['active', 'inactive', 'all']
+export const AGE_FILTERS: readonly AgeFilter[] = ['all', 'kids', 'adult', 'under18', 'adult18']
 const KIND: readonly KindFilter[] = ['all', 'training', 'responsible']
-const AGE: readonly AgeFilter[] = ['all', 'kids', 'adult', 'under18', 'adult18']
 const DEFAULTS: Record<string, string> = { status: 'active', kind: 'all', age: 'all', page: '0' }
+
+/** Quantos filtros fogem do padrão (ativos, qualquer idade): vira o número no botão "Filtros". */
+export function activeFilterCount(status: StatusFilter, age: AgeFilter) {
+  return Number(status !== DEFAULTS.status) + Number(age !== DEFAULTS.age)
+}
 
 function oneOf<T extends string>(value: string | null, allowed: readonly T[], fallback: T): T {
   return allowed.includes(value as T) ? (value as T) : fallback
@@ -18,9 +23,9 @@ export function useStudentQueryParams() {
 
   const state = {
     q: params.get('q') ?? '',
-    status: oneOf(params.get('status'), STATUS, 'active'),
+    status: oneOf(params.get('status'), STATUS_FILTERS, 'active'),
     kind: oneOf(params.get('kind'), KIND, 'all'),
-    age: oneOf(params.get('age'), AGE, 'all'),
+    age: oneOf(params.get('age'), AGE_FILTERS, 'all'),
     page: Math.max(0, Number(params.get('page')) || 0),
     selectedId: params.get('id'),
     invitesOpen: params.get('convites') === '1',

@@ -57,6 +57,320 @@
   width: 100%;
 }
 
+.btn-icon {
+  width: 42px;
+  padding: 0;
+}
+
+.btn-sm.btn-icon {
+  width: 32px;
+}
+
+button.segment {
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+button.segment.active {
+  background: var(--primary);
+}
+
+button.segment:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Iniciais no lugar da foto */
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface-3);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 17px;
+  letter-spacing: 0.04em;
+}
+
+.avatar-lg {
+  width: 52px;
+  height: 52px;
+  font-size: 24px;
+}
+
+/* Explicação recolhida ("Como funciona?") */
+.help-note {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.help-note summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--accent-text);
+  cursor: pointer;
+  list-style: none;
+}
+
+.help-note summary::-webkit-details-marker {
+  display: none;
+}
+
+.help-note-body {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.help-note-body p {
+  margin: 0;
+}
+
+/* Menu "⋯" de ações secundárias */
+.action-menu {
+  position: relative;
+}
+
+.action-menu-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  display: grid;
+  min-width: 210px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.action-menu-list button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 40px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.action-menu-list button:hover {
+  background: var(--surface-2);
+}
+
+/* Busca com ícone */
+.search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-field svg {
+  position: absolute;
+  left: 14px;
+  color: var(--text-subtle);
+  pointer-events: none;
+}
+
+.toolbar .search-field .input {
+  width: 100%;
+  padding-left: 42px;
+}
+
+/* Barra de progresso até uma meta */
+.meter {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+}
+
+.meter-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.meter-head strong {
+  color: var(--text);
+  font-size: 15px;
+}
+
+.meter-goal {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.meter progress {
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--surface-3);
+  appearance: none;
+}
+
+.meter progress::-webkit-progress-bar {
+  background: var(--surface-3);
+}
+
+.meter progress::-webkit-progress-value {
+  border-radius: var(--radius-pill);
+  background: var(--text-subtle);
+}
+
+.meter progress::-moz-progress-bar {
+  border-radius: var(--radius-pill);
+  background: var(--text-subtle);
+}
+
+.meter.done progress::-webkit-progress-value {
+  background: var(--primary);
+}
+
+.meter.done progress::-moz-progress-bar {
+  background: var(--primary);
+}
+
+/* Lista de pessoas (alunos, prontos para graduar) */
+.card.list-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.people-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.people-list li + li {
+  border-top: 1px solid var(--border);
+}
+
+.person-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 64px;
+  padding: 10px 16px;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.person-row:hover {
+  background: var(--surface-2);
+  text-decoration: none;
+}
+
+.person-row[aria-current='true'] {
+  background: var(--primary-soft);
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+
+.person-main {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  min-width: 0;
+}
+
+.person-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.person-nick {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.person-main .row-sub {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.person-belt {
+  flex: none;
+}
+
+/* No celular o ícone (com as fitas dos graus) basta; o nome da faixa fica para leitores de tela */
+@media (max-width: 640px) {
+  .person-row {
+    padding: 10px 14px;
+  }
+
+  .person-belt .belt-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Filtros em painel */
+.filter-group {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.filter-group legend {
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.choice-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.choice-chips .chip {
+  height: 38px;
+}
+
 .card {
   background: var(--surface);
   border: 1px solid var(--border);

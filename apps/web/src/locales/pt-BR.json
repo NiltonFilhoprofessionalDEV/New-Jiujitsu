@@ -153,7 +153,22 @@
     "pageRange": "{{from}}–{{to}} de {{total}}",
     "copy": "Copiar",
     "copied": "Copiado!",
-    "copyPrompt": "Copie o link:"
+    "copyPrompt": "Copie o link:",
+    "howItWorks": "Como funciona?",
+    "moreActions": "Mais ações"
+  },
+  "pages": {
+    "students": "Alunos, responsáveis e famílias da academia.",
+    "classes": "Os horários fixos da semana e quem treina em cada turma.",
+    "attendance": "Escolha a aula do dia e marque quem treinou.",
+    "belts": "Quem já pode graduar e o que cada faixa exige.",
+    "subscriptions": "O plano, o vencimento e o desconto de cada aluno.",
+    "invoices": "As cobranças emitidas e o registro de pagamentos.",
+    "plans": "Valores e periodicidade das mensalidades.",
+    "reports": "Frequência, turmas e financeiro no período escolhido.",
+    "instructors": "Aulas dadas e presenças de cada professor.",
+    "team": "Professores e co-gestores que ajudam a tocar a academia.",
+    "settings": "Dados da academia, link de matrícula e sua senha."
   },
   "home": {
     "title": "Painel",
@@ -233,6 +248,13 @@
     "title": "Alunos",
     "newStudent": "Novo aluno",
     "newFamily": "Nova família",
+    "invite": "Convidar alunos",
+    "trainsSince": "Treina aqui desde {{date}}",
+    "facts": {
+      "contact": "Contato",
+      "personal": "Dados pessoais",
+      "training": "Treino"
+    },
     "searchPlaceholder": "Buscar por nome, e-mail, CPF ou família…",
     "searchAria": "Buscar aluno",
     "countOf": "{{shown}} de {{total}}",
@@ -260,18 +282,25 @@
       "enrollment": "Treina desde"
     },
     "filter": {
-      "statusAria": "Filtrar por matrícula",
-      "statusAll": "Matrícula: todas",
-      "active": "Ativos",
-      "inactive": "Inativos",
-      "ageAria": "Filtrar por idade",
-      "age": {
-        "all": "Idade: todas",
+      "button": "Filtros",
+      "buttonCount": "Filtros · {{count}}",
+      "title": "Filtrar alunos",
+      "statusAria": "Matrícula",
+      "ageAria": "Idade",
+      "statusOption": {
+        "active": "Ativos",
+        "inactive": "Inativos",
+        "all": "Todos"
+      },
+      "ageOption": {
+        "all": "Qualquer idade",
         "kids": "Infantil (até 15)",
         "adult": "Adulto (16+)",
         "under18": "Menores de 18",
         "adult18": "18 ou mais"
-      }
+      },
+      "clear": "Limpar filtros",
+      "apply": "Ver alunos"
     },
     "kind": {
       "aria": "Filtrar por tipo",
@@ -397,14 +426,21 @@
     },
     "th": {
       "guest": "Convidado",
-      "status": "Status",
-      "accesses": "Acessos",
       "expires": "Válido até",
       "actions": "Ações"
     },
+    "validUntil": "vale até {{date}}",
+    "filterAria": "Filtrar convites",
+    "sectionsAria": "Formas de convidar",
+    "section": {
+      "link": "Link da academia",
+      "person": "Convite pessoal",
+      "sent": "Enviados"
+    },
     "link": {
       "title": "Link de matrícula",
-      "hint": "Um link único da academia para divulgar no grupo, Instagram ou recepção.",
+      "hint": "Um link só da academia para divulgar no grupo, no Instagram ou na recepção. Quem se cadastra por ele aguarda a sua aprovação em Solicitações.",
+      "options": "Opções do link",
       "loading": "Carregando link...",
       "loadError": "Não foi possível carregar o link de matrícula.",
       "open": "Abrir",
@@ -412,7 +448,6 @@
       "rotateConfirm": "O link atual deixa de funcionar na hora. Quem ainda não se cadastrou vai precisar do novo link.",
       "acceptSignups": "Aceitar cadastros pelo link",
       "expiresAt": "Válido até (opcional)",
-      "approvalHint": "Quem se cadastra pelo link fica aguardando a sua aprovação em Solicitações.",
       "waMessage": "Faça sua matrícula na nossa academia pelo link: {{link}}",
       "accesses_zero": "Nenhum acesso ainda",
       "accesses_one": "{{count}} acesso",
@@ -424,8 +459,8 @@
       }
     },
     "form": {
-      "title": "Convidar uma pessoa",
-      "hint": "O convite vale por 7 dias e entra direto, sem precisar de aprovação.",
+      "title": "Convite pessoal",
+      "hint": "Um link só para uma pessoa. Vale por 7 dias e ela entra direto, sem precisar de aprovação.",
       "name": "Nome (opcional)",
       "email": "E-mail (opcional)",
       "phone": "WhatsApp (opcional)",
@@ -743,6 +778,7 @@
     "registerFor": "Registrar graduação · {{name}}",
     "loadError": "Não foi possível carregar as graduações.",
     "empty": "Nenhuma graduação registrada no sistema ainda.",
+    "history": "Histórico",
     "recordedBy": "por {{name}}",
     "exceptionBadge": "Exceção do gestor",
     "remove": "Remover graduação",
@@ -762,11 +798,12 @@
       "DEGREE": "Pronto para novo grau"
     },
     "progress": {
-      "atBelt": "Na faixa desde {{date}} · {{months}} · {{trainings}}",
-      "sinceLast": "Desde a última graduação ({{date}}): {{trainings}}",
-      "beltGoal": "Meta para nova faixa: {{goal}}",
-      "degreeGoal_one": "novo grau a cada treino",
-      "degreeGoal_other": "novo grau a cada {{count}} treinos",
+      "since": "Na faixa desde {{date}}",
+      "time": "Tempo na faixa",
+      "beltTrainings": "Treinos na faixa",
+      "nextDegree": "Treinos para o próximo grau",
+      "monthsUnit": "meses",
+      "trainingsUnit": "treinos",
       "noRule": "Sem critério configurado para esta faixa.",
       "blackBeltRuler": "Faixa preta e acima seguem a régua de tempo da IBJJF entre graus."
     },
@@ -784,25 +821,38 @@
       "intro": "Alunos ativos que já cumprem a regra da faixa atual. Abra a ficha para registrar a graduação.",
       "loadError": "Não foi possível carregar os alunos prontos.",
       "empty": "Nenhum aluno cumpre as regras de graduação no momento.",
-      "student": "Aluno",
-      "current": "Faixa atual",
-      "readyFor": "Pronto para",
-      "since": "Contando desde",
-      "progress": "Tempo · treinos"
+      "kind": {
+        "BELT": "Nova faixa",
+        "DEGREE": "Novo grau"
+      }
     }
   },
   "beltRules": {
-    "title": "Faixas e graduação",
-    "intro": "Defina o tempo mínimo e os treinos para cada faixa. Campos vazios não entram na conta.",
-    "introReadOnly": "Regras definidas pela gestão da academia para cada faixa.",
+    "title": "O que cada faixa exige",
+    "intro": "Toque numa faixa para definir o tempo mínimo e os treinos. Campo vazio não entra na conta. Quando o aluno cumpre tudo, ele aparece em \"Prontos para graduar\".",
+    "introReadOnly": "Regras definidas pela gestão da academia para cada faixa. Quando o aluno cumpre tudo, ele aparece em \"Prontos para graduar\".",
     "loadError": "Não foi possível carregar as regras.",
-    "belt": "Faixa",
-    "minMonths": "Tempo mínimo (meses)",
-    "minTrainings": "Treinos mínimos",
-    "trainingsPerDegree": "Treinos por grau",
+    "groupAria": "Grupo de faixas",
+    "editNamed": "Faixa {{belt}}",
+    "minMonths": "Tempo mínimo na faixa (meses)",
+    "minTrainings": "Treinos mínimos na faixa",
+    "trainingsPerDegree": "Treinos entre um grau e outro",
+    "emptyField": "Sem exigência",
+    "help": {
+      "minMonths": "Quanto tempo o aluno precisa ficar nesta faixa antes da próxima.",
+      "minTrainings": "Quantos treinos nesta faixa antes da próxima.",
+      "trainingsPerDegree": "Quantos treinos para ganhar cada grau."
+    },
+    "summary": {
+      "trainings_one": "{{count}} treino",
+      "trainings_other": "{{count}} treinos",
+      "perDegree_one": "grau a cada {{count}} treino",
+      "perDegree_other": "grau a cada {{count}} treinos",
+      "none": "Sem exigência definida"
+    },
     "custom": "Personalizada",
-    "save": "Salvar regras",
-    "saved": "Regras salvas!",
+    "save": "Salvar regra",
+    "savedNamed": "Regra da faixa {{belt}} salva.",
     "blackBelt": "Faixa preta: régua fixa da IBJJF — 3 anos entre os graus 0 a 3, 5 anos entre os graus 3 a 6 e 7 anos do 6º grau para a coral.",
     "defaultsNote": "Padrões: azul 24, roxa 18 e marrom 12 meses (tempos mínimos da IBJJF). Branca e faixas infantis vêm com 12 meses como referência da academia — na IBJJF, as infantis dependem da idade."
   },

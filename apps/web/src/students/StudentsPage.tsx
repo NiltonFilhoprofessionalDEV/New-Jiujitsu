@@ -1,10 +1,12 @@
+import { Link2, Plus, Search, SlidersHorizontal, UsersRound } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useAuth } from '@/auth/useAuth'
 import { MANAGER_ROLES } from '@/auth/types'
+import { ActionMenu } from '@/components/ActionMenu'
 import { Dialog } from '@/components/Dialog'
-import { PageTitle } from '@/components/PageTitle'
+import { PageHeader } from '@/components/PageHeader'
 import { InvitesPanel } from '@/invites/InvitesPanel'
 import { useDebouncedValue } from '@/lib/useDebouncedValue'
 import { COMPACT_LAYOUT, useMediaQuery } from '@/lib/useMediaQuery'
@@ -12,21 +14,22 @@ import { COMPACT_LAYOUT, useMediaQuery } from '@/lib/useMediaQuery'
 import { HouseholdPanel } from './HouseholdPanel'
 import { NewHouseholdForm } from './NewHouseholdForm'
 import { StudentDetailPanel } from './StudentDetailPanel'
+import { StudentFilters } from './StudentFilters'
 import { StudentForm } from './StudentForm'
-import { StudentTable } from './StudentTable'
+import { StudentList } from './StudentList'
 import { useStudentCounts, useStudentsPage } from './studentsApi'
-import type { AgeFilter, KindFilter, StatusFilter, StudentDetail } from './types'
-import { useStudentQueryParams } from './useStudentQueryParams'
+import type { KindFilter, StudentDetail } from './types'
+import { activeFilterCount, useStudentQueryParams } from './useStudentQueryParams'
 
 type Modal =
   | { type: 'newStudent' }
   | { type: 'editStudent'; student: StudentDetail }
   | { type: 'newFamily' }
   | { type: 'family'; id: string }
+  | { type: 'filters' }
   | null
 
 const KINDS: readonly KindFilter[] = ['all', 'training', 'responsible']
-const AGES: readonly AgeFilter[] = ['all', 'kids', 'adult', 'under18', 'adult18']
 
 export function StudentsPage() {
   const { t } = useTranslation()
@@ -48,52 +51,41 @@ export function StudentsPage() {
   const { data: counts } = useStudentCounts(filters)
   const select = (id: string | null) => update({ id }, false)
   const closeModal = () => setModal(null)
+  const filterCount = activeFilterCount(params.status, params.age)
   const detail = params.selectedId && (
     <StudentDetailPanel key={params.selectedId} studentId={params.selectedId} canEdit={canEdit}
       onEdit={(student) => setModal({ type: 'editStudent', student })}
       onOpenHousehold={(id) => setModal({ type: 'family', id })} onDeleted={() => select(null)} />
   )
 
+  const actions = canEdit && (
+    <>
+      <ActionMenu actions={[
+        { label: t('students.invite'), icon: Link2, onSelect: () => update({ convites: '1' }, false) },
+        { label: t('students.newFamily'), icon: UsersRound, onSelect: () => setModal({ type: 'newFamily' }) },
+      ]} />
+      <button type="button" className="btn btn-primary" onClick={() => setModal({ type: 'newStudent' })}>
+        <Plus size={18} aria-hidden /> {t('students.newStudent')}
+      </button>
+    </>
+  )
+
   return (
     <div className="page page-wide">
-      <div className="page-header">
-        <div>
-          <div className="eyebrow">{t('common.yourAcademy')}</div>
-          <PageTitle>{t('students.title')}</PageTitle>
-        </div>
-        {canEdit && (
-          <div className="page-actions">
-            <button type="button" className="btn" onClick={() => update({ convites: '1' }, false)}>
-              {t('topbar.invites')}
-            </button>
-            <button type="button" className="btn" onClick={() => setModal({ type: 'newFamily' })}>
-              {t('students.newFamily')}
-            </button>
-            <button type="button" className="btn btn-primary" onClick={() => setModal({ type: 'newStudent' })}>
-              {t('students.newStudent')}
-            </button>
-          </div>
-        )}
-      </div>
+      <PageHeader eyebrow={t('common.yourAcademy')} title={t('students.title')}
+        description={t('pages.students')} actions={actions} />
 
       <div className="toolbar">
-        <input type="search" className="input grow" value={search} onChange={(e) => setSearch(e.target.value)}
-          placeholder={t('students.searchPlaceholder')} aria-label={t('students.searchAria')} />
-        <select className="input" value={params.status} aria-label={t('students.filter.statusAria')}
-          onChange={(e) => update({ status: e.target.value as StatusFilter })}>
-          <option value="active">{t('students.filter.active')}</option>
-          <option value="inactive">{t('students.filter.inactive')}</option>
-          <option value="all">{t('students.filter.statusAll')}</option>
-        </select>
-        <select className="input" value={params.age} aria-label={t('students.filter.ageAria')}
-          onChange={(e) => update({ age: e.target.value as AgeFilter })}>
-          {AGES.map((a) => (
-            <option key={a} value={a}>{t(`students.filter.age.${a}`)}</option>
-          ))}
-        </select>
-        <span className="toolbar-count">
-          {t('students.countOf', { shown: page?.content.length ?? 0, total: page?.totalElements ?? 0 })}
-        </span>
+        <label className="search-field grow">
+          <Search size={18} aria-hidden />
+          <input type="search" className="input" value={search} onChange={(e) => setSearch(e.target.value)}
+            placeholder={t('students.searchPlaceholder')} aria-label={t('students.searchAria')} />
+        </label>
+        <button type="button" className={filterCount > 0 ? 'btn btn-outline-primary' : 'btn'}
+          onClick={() => setModal({ type: 'filters' })}>
+          <SlidersHorizontal size={16} aria-hidden />
+          {filterCount > 0 ? t('students.filter.buttonCount', { count: filterCount }) : t('students.filter.button')}
+        </button>
       </div>
 
       <div className="chips" role="tablist" aria-label={t('students.kind.aria')}>
@@ -118,9 +110,9 @@ export function StudentsPage() {
         <div>
           {isLoading && <p className="empty">{t('common.loading')}</p>}
           {isError && <div className="alert alert-error">{t('students.listError')}</div>}
-          {page && page.totalElements === 0 && <p className="empty">{t('students.empty')}</p>}
+          {page && page.totalElements === 0 && <div className="card empty-detail">{t('students.empty')}</div>}
           {page && page.totalElements > 0 && (
-            <StudentTable page={page} selectedId={params.selectedId} onSelect={select}
+            <StudentList page={page} selectedId={params.selectedId} onSelect={select}
               onPage={(p) => update({ page: p }, false)} />
           )}
         </div>
@@ -132,6 +124,9 @@ export function StudentsPage() {
         </Dialog>
       )}
 
+      <Dialog open={modal?.type === 'filters'} onClose={closeModal} title={t('students.filter.title')}>
+        <StudentFilters status={params.status} age={params.age} onChange={update} onDone={closeModal} />
+      </Dialog>
       <Dialog open={modal?.type === 'newStudent' || modal?.type === 'editStudent'} onClose={closeModal} wide
         title={modal?.type === 'editStudent' ? t('students.form.edit') : t('students.newStudent')}>
         <StudentForm student={modal?.type === 'editStudent' ? modal.student : undefined} onCancel={closeModal}
@@ -147,7 +142,7 @@ export function StudentsPage() {
         )}
       </Dialog>
       <Dialog open={canEdit && params.invitesOpen} onClose={() => update({ convites: null }, false)}
-        title={t('topbar.invites')} wide>
+        title={t('students.invite')} wide>
         {canEdit && params.invitesOpen && <InvitesPanel />}
       </Dialog>
     </div>

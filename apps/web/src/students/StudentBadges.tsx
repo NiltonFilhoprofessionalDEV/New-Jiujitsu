@@ -10,28 +10,15 @@ function isNew(enrollmentDate: string, today = new Date()): boolean {
   return today.getTime() - enrolled.getTime() < NEW_STUDENT_DAYS * DAY_MS
 }
 
+/** Só a situação da matrícula; o papel na família aparece no texto ao lado do nome. */
 export function StudentBadges({ student }: { student: StudentListItem }) {
   const { t } = useTranslation()
-  const dependent = student.household && !student.householdResponsible && student.kind === 'TRAINING' && !student.email
 
+  if (student.status === 'INACTIVE') return <span className="pill pill-muted">{t('students.badge.inactive')}</span>
+  if (!isNew(student.enrollmentDate)) return null
   return (
-    <span className="badges">
-      {student.status === 'INACTIVE' && <span className="pill pill-muted">{t('students.badge.inactive')}</span>}
-      {student.status === 'ACTIVE' && isNew(student.enrollmentDate) && (
-        <span className="pill pill-soft" title={t('students.badge.newTitle')}>
-          {t('students.badge.new')}
-        </span>
-      )}
-      {student.kind === 'RESPONSIBLE' && (
-        <span className="pill pill-outline" title={t('students.badge.guardianTitle')}>
-          {t('students.badge.guardian')}
-        </span>
-      )}
-      {dependent && (
-        <span className="pill pill-outline" title={t('students.badge.dependentTitle')}>
-          {t('students.badge.dependent')}
-        </span>
-      )}
+    <span className="pill pill-soft" title={t('students.badge.newTitle')}>
+      {t('students.badge.new')}
     </span>
   )
 }

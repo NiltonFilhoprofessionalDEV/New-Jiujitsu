@@ -3,14 +3,14 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ConfirmDialog } from '@/components/ConfirmDialog'
-import { DataItem } from '@/components/DataItem'
 import { GraduationSection } from '@/graduations/GraduationSection'
 import { apiErrorMessage } from '@/lib/apiErrors'
+import { initials } from '@/lib/text'
 
 import { BeltBadge } from './BeltBadge'
-import { ageFrom } from './belts'
-import { formatCpf, formatDate } from './format'
+import { formatDate } from './format'
 import { StudentBadges } from './StudentBadges'
+import { StudentFacts } from './StudentFacts'
 import { useDeleteStudent, useSetStudentActive, useStudent } from './studentsApi'
 import type { StudentDetail } from './types'
 
@@ -24,6 +24,8 @@ type Props = {
 
 type Confirm = 'deactivate' | 'delete' | null
 
+const BELT_HERO_SIZE = 56
+
 export function StudentDetailPanel({ studentId, canEdit, onEdit, onOpenHousehold, onDeleted }: Props) {
   const { t } = useTranslation()
   const { data: student, isLoading, isError } = useStudent(studentId)
@@ -34,9 +36,9 @@ export function StudentDetailPanel({ studentId, canEdit, onEdit, onOpenHousehold
   if (isLoading) return <div className="card empty">{t('common.loading')}</div>
   if (isError || !student) return <div className="card alert alert-error">{t('students.loadError')}</div>
 
-  const age = ageFrom(student.birthDate)
   const household = student.household
   const active = student.status === 'ACTIVE'
+  const training = student.kind === 'TRAINING'
   const actionError = setActive.error ?? remove.error
 
   async function onConfirm() {
@@ -54,66 +56,51 @@ export function StudentDetailPanel({ studentId, canEdit, onEdit, onOpenHousehold
   return (
     <section className="card detail-panel" aria-label={t('students.detail.aria', { name: student.name })}>
       <header className="detail-header">
-        <div>
+        <span className="avatar avatar-lg" aria-hidden>{initials(student.name)}</span>
+        <div className="detail-title">
           <h2>{student.name}</h2>
-          {student.nickname && <p className="empty">“{student.nickname}”</p>}
+          <p className="row-sub">
+            {[student.nickname && `“${student.nickname}”`, !training && t('students.badge.guardian')]
+              .filter(Boolean).join(' · ')}
+          </p>
           <StudentBadges student={student} />
         </div>
         {canEdit && (
-          <button type="button" className="btn" onClick={() => onEdit(student)}>
-            <Pencil size={16} aria-hidden /> {t('common.edit')}
+          <button type="button" className="btn btn-icon" onClick={() => onEdit(student)} aria-label={t('common.edit')}
+            title={t('common.edit')}>
+            <Pencil size={16} aria-hidden />
           </button>
         )}
       </header>
 
-      {student.kind === 'TRAINING' && <BeltBadge belt={student.belt} degrees={student.degrees} />}
+      {training && (
+        <div className="belt-hero">
+          <BeltBadge belt={student.belt} degrees={student.degrees} size={BELT_HERO_SIZE} />
+          <span className="row-sub">{t('students.trainsSince', { date: formatDate(student.enrollmentDate) })}</span>
+        </div>
+      )}
 
       {household && (
-        <button type="button" className="btn btn-ghost family-link" onClick={() => onOpenHousehold(household.id)}>
+        <button type="button" className="family-link" onClick={() => onOpenHousehold(household.id)}>
           <Users size={16} aria-hidden />
-          {t('students.familyName', { name: household.name })}
+          <span>{t('students.familyName', { name: household.name })}</span>
           {student.householdResponsible && <span className="pill pill-soft">{t('students.badge.responsible')}</span>}
         </button>
       )}
 
-      <dl className="data-list">
-        <DataItem label={t('students.form.email')} value={student.email ?? t('students.noEmail')} />
-        <DataItem label={t('students.form.cpf')} value={formatCpf(student.cpf)} />
-        <DataItem label={t('students.form.phone')} value={student.phone} />
-        <DataItem
-          label={t('students.form.birthDate')}
-          value={student.birthDate && `${formatDate(student.birthDate)} · ${t('students.years', { count: age ?? 0 })}`}
-        />
-        <DataItem label={t('students.form.gender')} value={student.gender && t(`students.gender.${student.gender}`)} />
-        <DataItem
-          label={t('students.form.enrollmentDate', { context: student.kind })}
-          value={formatDate(student.enrollmentDate)}
-        />
-        {student.kind === 'TRAINING' && (
-          <>
-            <DataItem label={t('students.form.degreeAwardedAt')} value={formatDate(student.degreeAwardedAt)} />
-            <DataItem label={t('students.form.beltRuler')} value={t(`students.ruler.${student.beltRuler}`)} />
-            <DataItem label={t('students.form.giSize')} value={student.giSize} />
-            <DataItem label={t('students.form.beltSize')} value={student.beltSize} />
-          </>
-        )}
-      </dl>
+      {training && <GraduationSection student={student} canEdit={canEdit} />}
 
-      {student.kind === 'TRAINING' && <GraduationSection student={student} canEdit={canEdit} />}
+      <StudentFacts student={student} />
 
       {canEdit && (
         <footer className="detail-actions">
           {active ? (
-            <button type="button" className="btn" onClick={() => setConfirm('deactivate')}>
+            <button type="button" className="btn btn-ghost" onClick={() => setConfirm('deactivate')}>
               {t('students.detail.deactivate')}
             </button>
           ) : (
-            <button
-              type="button"
-              className="btn btn-outline-primary"
-              disabled={setActive.isPending}
-              onClick={() => setActive.mutate({ id: student.id, active: true })}
-            >
+            <button type="button" className="btn btn-outline-primary" disabled={setActive.isPending}
+              onClick={() => setActive.mutate({ id: student.id, active: true })}>
               {t('students.detail.reactivate')}
             </button>
           )}

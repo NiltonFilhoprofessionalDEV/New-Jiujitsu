@@ -45,6 +45,8 @@
   --glow: 0 6px 20px rgb(212 18 10 / 0.3);
   --glow-sm: 0 4px 12px rgb(212 18 10 / 0.22);
   --overlay: rgb(10 10 11 / 0.5);
+  /* Contorno do ícone de faixa: separa a faixa branca do fundo claro e a preta do escuro */
+  --belt-outline: rgb(10 10 11 / 0.35);
 
   --radius-sm: 8px;
   --radius: 12px;
@@ -89,6 +91,7 @@
   --glow: 0 0 22px rgb(229 20 10 / 0.45);
   --glow-sm: 0 4px 14px rgb(229 20 10 / 0.35);
   --overlay: rgb(0 0 0 / 0.7);
+  --belt-outline: rgb(255 255 255 / 0.35);
 
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.5);
   --shadow: 0 12px 32px rgb(0 0 0 / 0.55);

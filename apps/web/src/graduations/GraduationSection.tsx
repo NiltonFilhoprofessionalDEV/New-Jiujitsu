@@ -69,7 +69,8 @@ export function GraduationSection({ student, canEdit }: Props) {
       {isLoading && <p className="empty">{t('common.loading')}</p>}
       {isError && <div className="alert alert-error">{t('graduation.loadError')}</div>}
       {data?.progress && <ProgressSummary progress={data.progress} />}
-      {data && data.history.length === 0 && <p className="empty">{t('graduation.empty')}</p>}
+      {!data?.progress && data?.history.length === 0 && <p className="empty">{t('graduation.empty')}</p>}
+      {data && data.history.length > 0 && <h3 className="fact-title">{t('graduation.history')}</h3>}
       {data && (
         <ul className="member-list grad-history">
           {data.history.map((item) => (

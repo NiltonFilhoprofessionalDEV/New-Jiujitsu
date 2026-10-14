@@ -2,54 +2,51 @@ import { useTranslation } from 'react-i18next'
 
 import { formatDate } from '@/students/format'
 
-import type { Progress, RuleTarget } from './types'
+import type { Progress } from './types'
 
-function RuleGoals({ rule }: { rule: RuleTarget | null }) {
-  const { t } = useTranslation()
-  if (!rule) return <p className="hint">{t('graduation.progress.blackBeltRuler')}</p>
+type MeterProps = { label: string; value: number; goal: number; unit: string }
 
-  const beltGoal = [
-    rule.minMonths !== null && t('graduation.months', { count: rule.minMonths }),
-    rule.minTrainings !== null && t('graduation.trainings', { count: rule.minTrainings }),
-  ].filter(Boolean)
-  if (beltGoal.length === 0 && rule.trainingsPerDegree === null) {
-    return <p className="hint">{t('graduation.progress.noRule')}</p>
-  }
+/** Barra de progresso até a meta da regra; cheia quando a meta foi atingida. */
+function Meter({ label, value, goal, unit }: MeterProps) {
+  const done = value >= goal
+  const max = Math.max(goal, 1)
   return (
-    <p className="hint">
-      {beltGoal.length > 0 && t('graduation.progress.beltGoal', { goal: beltGoal.join(' · ') })}
-      {beltGoal.length > 0 && rule.trainingsPerDegree !== null && ' · '}
-      {rule.trainingsPerDegree !== null && t('graduation.progress.degreeGoal', { count: rule.trainingsPerDegree })}
-    </p>
+    <div className={done ? 'meter done' : 'meter'}>
+      <div className="meter-head">
+        <span>{label}</span>
+        <strong>{value}<span className="meter-goal">/{goal} {unit}</span></strong>
+      </div>
+      <progress max={max} value={done ? max : value} aria-label={label} />
+    </div>
   )
 }
 
-/** Tempo e treinos na faixa atual e desde a última graduação, com a meta da regra em vigor. */
+/** Tempo e treinos na faixa atual medidos contra a regra em vigor. */
 export function ProgressSummary({ progress }: { progress: Progress }) {
   const { t } = useTranslation()
-  const sameStart = progress.lastSince === progress.beltSince
+  const { rule } = progress
+  const hasRule = rule && (rule.minMonths !== null || rule.minTrainings !== null || rule.trainingsPerDegree !== null)
 
   return (
     <div className="grad-progress">
-      {progress.ready && (
-        <span className="pill pill-soft">{t(`graduation.ready.${progress.ready}`)}</span>
+      <div className="grad-progress-head">
+        <span className="row-sub">{t('graduation.progress.since', { date: formatDate(progress.beltSince) })}</span>
+        {progress.ready && <span className="pill pill-soft">{t(`graduation.ready.${progress.ready}`)}</span>}
+      </div>
+      {rule?.minMonths != null && (
+        <Meter label={t('graduation.progress.time')} value={progress.monthsAtBelt} goal={rule.minMonths}
+          unit={t('graduation.progress.monthsUnit')} />
       )}
-      <p>
-        {t('graduation.progress.atBelt', {
-          date: formatDate(progress.beltSince),
-          months: t('graduation.months', { count: progress.monthsAtBelt }),
-          trainings: t('graduation.trainings', { count: progress.trainingsSinceBelt }),
-        })}
-      </p>
-      {!sameStart && (
-        <p>
-          {t('graduation.progress.sinceLast', {
-            date: formatDate(progress.lastSince),
-            trainings: t('graduation.trainings', { count: progress.trainingsSinceLast }),
-          })}
-        </p>
+      {rule?.minTrainings != null && (
+        <Meter label={t('graduation.progress.beltTrainings')} value={progress.trainingsSinceBelt}
+          goal={rule.minTrainings} unit={t('graduation.progress.trainingsUnit')} />
       )}
-      <RuleGoals rule={progress.rule} />
+      {rule?.trainingsPerDegree != null && (
+        <Meter label={t('graduation.progress.nextDegree')} value={progress.trainingsSinceLast}
+          goal={rule.trainingsPerDegree} unit={t('graduation.progress.trainingsUnit')} />
+      )}
+      {!rule && <p className="hint">{t('graduation.progress.blackBeltRuler')}</p>}
+      {rule && !hasRule && <p className="hint">{t('graduation.progress.noRule')}</p>}
     </div>
   )
 }
