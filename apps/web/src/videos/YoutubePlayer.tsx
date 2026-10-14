@@ -93,7 +93,7 @@ export function YoutubePlayer({ youtubeId, vertical, title, onWatched, onEnded }
   }, [youtubeId])
 
   return (
-    <div className={vertical ? 'video-frame vertical' : 'video-frame'}>
+    <div className={vertical ? 'video-frame vertical shadow-elevated' : 'video-frame shadow-elevated'}>
       {fallback ? (
         <iframe src={embedUrl(youtubeId)} title={title} allowFullScreen
           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" />

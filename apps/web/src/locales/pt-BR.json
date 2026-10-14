@@ -638,6 +638,13 @@
     "search": "Buscar vídeo pelo título",
     "filterAria": "Filtrar vídeos",
     "filter": { "all": "Todos", "unwatched": "Não assistidos", "favorites": "Favoritos" },
+    "featured": {
+      "new": "Para assistir agora",
+      "again": "Assista de novo",
+      "watch": "Assistir"
+    },
+    "allVideos": "Todos os vídeos",
+    "shorts": "Shorts",
     "playlists": "Playlists",
     "playlistProgress_zero": "Nenhum vídeo ainda",
     "playlistProgress_one": "{{watched}} de {{count}} vídeo assistido",

@@ -52,8 +52,16 @@ export function loadYoutubeApi(): Promise<YtNamespace> {
   return apiPromise
 }
 
-export function thumbnailUrl(youtubeId: string): string {
-  return `${THUMB_HOST}/vi/${encodeURIComponent(youtubeId)}/hqdefault.jpg`
+/** {@code maxres} (1280px) nem sempre existe; {@code hq} (480px) existe para todo vídeo. */
+export type ThumbQuality = 'hq' | 'maxres'
+
+const THUMB_FILE: Record<ThumbQuality, string> = { hq: 'hqdefault.jpg', maxres: 'maxresdefault.jpg' }
+
+/** Largura da imagem cinza que o YouTube devolve quando a capa HD não existe. */
+export const MISSING_THUMB_WIDTH = 120
+
+export function thumbnailUrl(youtubeId: string, quality: ThumbQuality = 'hq'): string {
+  return `${THUMB_HOST}/vi/${encodeURIComponent(youtubeId)}/${THUMB_FILE[quality]}`
 }
 
 export function embedUrl(youtubeId: string): string {
