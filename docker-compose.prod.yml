@@ -3,6 +3,9 @@
 #   cp .env.production.example .env.production   # preencha os valores
 #   docker compose --env-file .env.production -f docker-compose.prod.yml up -d --build
 #
+# Servidor com pouca memória (ex.: 1 GB): gere as imagens em outra máquina, transfira com
+# `docker save`/`docker load` e suba sem `--build`; o compose reaproveita as imagens nomeadas.
+#
 # Só o Caddy publica portas (80/443). API e banco ficam na rede interna.
 name: academia-prod
 
@@ -24,6 +27,7 @@ services:
 
   api:
     build: ./apps/api
+    image: academia-api:latest
     restart: unless-stopped
     depends_on:
       postgres:
@@ -38,15 +42,18 @@ services:
       SERVER_FORWARD_HEADERS_STRATEGY: native
       APP_TIME_ZONE: ${APP_TIME_ZONE:-America/Sao_Paulo}
       APP_RATE_LIMIT_PER_MINUTE: ${APP_RATE_LIMIT_PER_MINUTE:-600}
+      JAVA_TOOL_OPTIONS: ${API_JAVA_OPTS:--XX:MaxRAMPercentage=75 -XX:+ExitOnOutOfMemoryError}
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/api/v2/actuator/health | grep -q UP"]
       interval: 15s
       timeout: 5s
-      start_period: 60s
+      # CPUs pequenas (ex.: Oracle E2.1.Micro) levam mais de 1 min para subir o Spring
+      start_period: 180s
       retries: 5
 
   web:
     build: ./apps/web
+    image: academia-web:latest
     restart: unless-stopped
     depends_on:
       api:
