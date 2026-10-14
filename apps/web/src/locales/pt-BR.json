@@ -139,6 +139,11 @@
     "calendario": "Calendário",
     "configuracoes": "Configurações"
   },
+  "routeError": {
+    "title": "Algo deu errado",
+    "body": "Não foi possível abrir esta tela. Isso costuma acontecer logo depois de uma atualização do sistema.",
+    "reload": "Recarregar a página"
+  },
   "common": {
     "yourAcademy": "Sua academia",
     "comingSoon": "Esta tela faz parte das próximas entregas.",

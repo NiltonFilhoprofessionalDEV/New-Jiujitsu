@@ -1,29 +1,20 @@
+import type { ComponentType } from 'react'
 import { createBrowserRouter, Navigate } from 'react-router'
 
-import { StudentAccountPage } from '@/account/StudentAccountPage'
 import { LoginPage } from '@/auth/pages/LoginPage'
 import { RegisterAcademyPage } from '@/auth/pages/RegisterAcademyPage'
 import { RedirectIfAuthenticated, RequireAuth, RequireManager, RequireStaff } from '@/auth/RequireAuth'
 import { STUDENT_HOME } from '@/auth/types'
-import { InvoicesPage } from '@/billing/InvoicesPage'
-import { PlansPage } from '@/billing/PlansPage'
-import { SubscriptionsPage } from '@/billing/SubscriptionsPage'
-import { AttendancePage } from '@/classes/AttendancePage'
-import { ClassesPage } from '@/classes/ClassesPage'
-import { BeltsPage } from '@/graduations/BeltsPage'
 import { AppShell } from '@/layout/AppShell'
 import { MANAGER_NAV } from '@/layout/navItems'
 import { ComingSoonPage } from '@/pages/ComingSoonPage'
-import { HomePage } from '@/pages/HomePage'
-import { AcceptInvitePage } from '@/public/AcceptInvitePage'
-import { EnrollPage } from '@/public/EnrollPage'
-import { InstructorsReportPage } from '@/reports/InstructorsReportPage'
-import { ReportsPage } from '@/reports/ReportsPage'
-import { RequestsPage } from '@/requests/RequestsPage'
-import { SettingsPage } from '@/settings/SettingsPage'
-import { StudentsPage } from '@/students/StudentsPage'
-import { AcceptStaffInvitePage } from '@/team/AcceptStaffInvitePage'
-import { TeamPage } from '@/team/TeamPage'
+
+import { PageLoading, RouteError } from './RouteFallbacks'
+
+/** Cada tela vira um chunk próprio, baixado na primeira visita. */
+function page<M>(load: () => Promise<M>, pick: (module: M) => ComponentType) {
+  return async () => ({ Component: pick(await load()) })
+}
 
 const IMPLEMENTED = new Set(['/', '/alunos', '/aulas', '/equipe', '/requests', '/mensalidades', '/financeiro/alunos',
   '/financeiro/faturas', '/configuracoes', '/relatorios', '/relatorios/professores'])
@@ -34,52 +25,60 @@ const pendingRoute = (item: (typeof pendingItems)[number]) => ({
   element: <ComingSoonPage titleKey={item.labelKey} />,
 })
 
-export const router = createBrowserRouter([
-  { path: '/matricula/:token', element: <EnrollPage /> },
-  { path: '/convite/:token', element: <AcceptInvitePage /> },
-  { path: '/equipe/convite/:token', element: <AcceptStaffInvitePage /> },
+const managerRoutes = [
+  { path: 'equipe', lazy: page(() => import('@/team/TeamPage'), (m) => m.TeamPage) },
+  { path: 'mensalidades', lazy: page(() => import('@/billing/PlansPage'), (m) => m.PlansPage) },
+  { path: 'financeiro/alunos', lazy: page(() => import('@/billing/SubscriptionsPage'), (m) => m.SubscriptionsPage) },
+  { path: 'financeiro/faturas', lazy: page(() => import('@/billing/InvoicesPage'), (m) => m.InvoicesPage) },
+  ...pendingItems.filter((item) => item.managersOnly).map(pendingRoute),
+]
+
+const staffRoutes = [
+  { index: true, lazy: page(() => import('@/pages/HomePage'), (m) => m.HomePage) },
+  { path: 'alunos', lazy: page(() => import('@/students/StudentsPage'), (m) => m.StudentsPage) },
+  { path: 'aulas', lazy: page(() => import('@/classes/ClassesPage'), (m) => m.ClassesPage) },
+  { path: 'aulas/presenca', lazy: page(() => import('@/classes/AttendancePage'), (m) => m.AttendancePage) },
+  { path: 'aulas/faixas', lazy: page(() => import('@/graduations/BeltsPage'), (m) => m.BeltsPage) },
+  { path: 'requests', lazy: page(() => import('@/requests/RequestsPage'), (m) => m.RequestsPage) },
+  { path: 'configuracoes', lazy: page(() => import('@/settings/SettingsPage'), (m) => m.SettingsPage) },
+  { path: 'relatorios', lazy: page(() => import('@/reports/ReportsPage'), (m) => m.ReportsPage) },
   {
-    element: <RedirectIfAuthenticated />,
-    children: [
-      { path: '/login', element: <LoginPage /> },
-      { path: '/register-academy', element: <RegisterAcademyPage /> },
-    ],
+    path: 'relatorios/professores',
+    lazy: page(() => import('@/reports/InstructorsReportPage'), (m) => m.InstructorsReportPage),
   },
+  ...pendingItems.filter((item) => !item.managersOnly).map(pendingRoute),
+  { element: <RequireManager />, children: managerRoutes },
+]
+
+export const router = createBrowserRouter([
   {
-    element: <RequireAuth />,
+    hydrateFallbackElement: <PageLoading />,
+    errorElement: <RouteError />,
     children: [
-      { path: STUDENT_HOME, element: <StudentAccountPage /> },
+      { path: '/matricula/:token', lazy: page(() => import('@/public/EnrollPage'), (m) => m.EnrollPage) },
+      { path: '/convite/:token', lazy: page(() => import('@/public/AcceptInvitePage'), (m) => m.AcceptInvitePage) },
       {
-        element: <RequireStaff />,
+        path: '/equipe/convite/:token',
+        lazy: page(() => import('@/team/AcceptStaffInvitePage'), (m) => m.AcceptStaffInvitePage),
+      },
+      {
+        element: <RedirectIfAuthenticated />,
         children: [
+          { path: '/login', element: <LoginPage /> },
+          { path: '/register-academy', element: <RegisterAcademyPage /> },
+        ],
+      },
+      {
+        element: <RequireAuth />,
+        children: [
+          { path: STUDENT_HOME, lazy: page(() => import('@/account/StudentAccountPage'), (m) => m.StudentAccountPage) },
           {
-            element: <AppShell />,
-            children: [
-              { index: true, element: <HomePage /> },
-              { path: 'alunos', element: <StudentsPage /> },
-              { path: 'aulas', element: <ClassesPage /> },
-              { path: 'aulas/presenca', element: <AttendancePage /> },
-              { path: 'aulas/faixas', element: <BeltsPage /> },
-              { path: 'requests', element: <RequestsPage /> },
-              { path: 'configuracoes', element: <SettingsPage /> },
-              { path: 'relatorios', element: <ReportsPage /> },
-              { path: 'relatorios/professores', element: <InstructorsReportPage /> },
-              ...pendingItems.filter((item) => !item.managersOnly).map(pendingRoute),
-              {
-                element: <RequireManager />,
-                children: [
-                  { path: 'equipe', element: <TeamPage /> },
-                  { path: 'mensalidades', element: <PlansPage /> },
-                  { path: 'financeiro/alunos', element: <SubscriptionsPage /> },
-                  { path: 'financeiro/faturas', element: <InvoicesPage /> },
-                  ...pendingItems.filter((item) => item.managersOnly).map(pendingRoute),
-                ],
-              },
-            ],
+            element: <RequireStaff />,
+            children: [{ element: <AppShell />, children: staffRoutes }],
           },
         ],
       },
+      { path: '*', element: <Navigate to="/" replace /> },
     ],
   },
-  { path: '*', element: <Navigate to="/" replace /> },
 ])
