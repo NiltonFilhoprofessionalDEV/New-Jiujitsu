@@ -1,0 +1,58 @@
+/* Graduação na ficha do aluno */
+.grad-section {
+  display: grid;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.grad-section .roster-head {
+  margin-bottom: 0;
+}
+
+.grad-progress {
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  font-size: 14px;
+}
+
+.grad-progress p {
+  margin: 0;
+}
+
+.grad-item-main {
+  display: grid;
+  flex: 1 1 auto;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* Regras por faixa */
+.rules-fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.rules-table td {
+  vertical-align: middle;
+}
+
+.rules-group th {
+  background: var(--surface-2);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.rules-input {
+  width: 110px;
+}
+
+.rules-custom {
+  margin-left: 8px;
+}

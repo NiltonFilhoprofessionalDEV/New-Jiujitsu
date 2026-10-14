@@ -1,0 +1,81 @@
+.pill-success {
+  height: 22px;
+  padding: 0 8px;
+  background: color-mix(in srgb, var(--success) 14%, transparent);
+  color: var(--success);
+}
+
+.checkbox-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.checkbox-inline input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+}
+
+.link-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.link-settings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.link-settings .field {
+  min-width: 180px;
+}
+
+.notice {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.notice p {
+  margin: 0;
+}
+
+/* Telas públicas (cadastro pelo link / aceite de convite) */
+.auth-card:has(.form-grid) {
+  max-width: 520px;
+}
+
+.signup-done {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.signup-done svg {
+  color: var(--success);
+}
+
+.request-card {
+  display: grid;
+  gap: 12px;
+}
+
+.request-card .data-list {
+  margin: 0;
+}
+
+.request-list {
+  display: grid;
+  gap: 12px;
+}

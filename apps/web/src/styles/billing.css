@@ -1,0 +1,48 @@
+/* Financeiro: planos, mensalidades e faturas */
+.pill-danger {
+  height: 22px;
+  padding: 0 8px;
+  background: var(--primary-soft);
+  color: var(--danger);
+}
+
+.callout-danger {
+  border: 1px solid var(--primary-soft-border);
+  background: var(--primary-soft);
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.stat-overdue strong {
+  color: var(--danger);
+}
+
+.stat-paid strong {
+  color: var(--success);
+}
+
+.plan-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.plan-flags legend {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.plan-flags .hint {
+  flex-basis: 100%;
+}
+
+.picked-student {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

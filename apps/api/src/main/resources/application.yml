@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: api
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5433/academia}
+    username: ${DATABASE_USERNAME:academia}
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+  jackson:
+    default-property-inclusion: always
+
+server:
+  # "framework" somente atrás de um proxy confiável (ex.: Railway), para o IP real chegar ao rate limit
+  forward-headers-strategy: ${SERVER_FORWARD_HEADERS_STRATEGY:none}
+  servlet:
+    context-path: /api/v2
+  error:
+    include-message: never
+    include-stacktrace: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+app:
+  jwt:
+    secret: ${APP_JWT_SECRET}
+    issuer: academia-api
+    access-ttl: 15m
+    refresh-ttl: 30d
+  cookie:
+    secure: ${APP_COOKIE_SECURE:true}
+  cors:
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:}
+  login:
+    max-attempts: 10
+    window: 15m
+  # Folgado o bastante para o Wi-Fi da academia (vários alunos no mesmo IP) e curto para conter abuso
+  signup:
+    max-attempts: ${APP_SIGNUP_MAX_ATTEMPTS:30}
+    window: 1h
+  # Fuso usado para "hoje" (idade, data de matrícula). A fase 1 atende academias no Brasil.
+  time-zone: ${APP_TIME_ZONE:America/Sao_Paulo}
+  billing:
+    # Emissão diária das mensalidades (no fuso acima)
+    cron: ${APP_BILLING_CRON:0 0 6 * * *}

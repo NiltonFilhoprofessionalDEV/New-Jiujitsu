@@ -1,0 +1,220 @@
+.page-wide {
+  max-width: 1280px;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(320px, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.split > div:last-child {
+  position: sticky;
+  top: calc(var(--topbar-h) + 16px);
+}
+
+.empty-detail {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* Linhas da lista */
+.row-link {
+  display: grid;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.row-title {
+  font-weight: 600;
+}
+
+.row-link:hover .row-title {
+  color: var(--primary);
+}
+
+.row-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.row-link + .badges {
+  margin-top: 4px;
+}
+
+/* Faixa */
+.belt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.belt-swatch {
+  width: 28px;
+  height: 12px;
+  flex: none;
+  border-radius: 3px;
+  border: 1px solid var(--border-strong);
+}
+
+.belt-degrees {
+  color: var(--text-muted);
+}
+
+/* Ficha */
+.detail-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.detail-header h2 {
+  font-size: 22px;
+}
+
+.detail-header p {
+  margin: 2px 0 6px;
+}
+
+.family-link {
+  justify-self: start;
+  height: 32px;
+  padding: 0 10px;
+  margin-left: -10px;
+  color: var(--text);
+}
+
+.data-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+  margin: 0;
+}
+
+.data-list dt {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.data-list dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+/* Família */
+.member-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.member-list:empty {
+  display: none;
+}
+
+.member-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.member-list .icon-btn {
+  margin-left: auto;
+}
+
+.member-list .icon-btn:hover {
+  background: var(--surface-2);
+}
+
+.row-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.radio-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.radio-inline input {
+  accent-color: var(--primary);
+}
+
+.picker {
+  display: grid;
+  gap: 8px;
+}
+
+.picker-list {
+  max-height: 220px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.picker-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+}
+
+.picker-list li + li {
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 1000px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+
+  .split > div:last-child {
+    position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .hide-narrow {
+    display: none;
+  }
+
+  .data-list {
+    grid-template-columns: 1fr;
+  }
+}
