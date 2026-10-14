@@ -325,8 +325,16 @@ button.segment:focus-visible {
   white-space: nowrap;
 }
 
+.row-grow {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Coluna de largura fixa: o ícone fica na mesma posição em todas as linhas */
 .person-belt {
+  display: flex;
   flex: none;
+  width: 156px;
 }
 
 @media (max-width: 640px) {
@@ -384,7 +392,13 @@ button.segment:focus-visible {
     padding: 10px 14px;
   }
 
-  .person-belt .belt-label {
+  .people-list .person-belt,
+  .roster .person-belt {
+    width: auto;
+  }
+
+  .people-list .person-belt .belt-label,
+  .roster .person-belt .belt-label {
     position: absolute;
     width: 1px;
     height: 1px;

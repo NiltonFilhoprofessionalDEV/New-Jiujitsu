@@ -271,6 +271,7 @@
     "degree_zero": "Sem grau",
     "degree_one": "{{count}} grau",
     "degree_other": "{{count}} graus",
+    "noDegree": "Sem grau",
     "degreeShort_one": "{{count}}º grau",
     "degreeShort_other": "{{count}}º grau",
     "years_zero": "menos de 1 ano",

@@ -31,7 +31,7 @@ export function BeltCard({ overview }: { overview: Overview }) {
           {graduations.map((g) => (
             <li key={`${g.graduatedOn}-${g.belt}-${g.degrees}`}>
               <span className="row-sub">{formatDate(g.graduatedOn)} · {t(`graduation.kind.${g.kind}`)}</span>
-              <BeltBadge belt={g.belt} degrees={g.degrees} />
+              <span className="person-belt"><BeltBadge belt={g.belt} degrees={g.degrees} /></span>
             </li>
           ))}
         </ul>

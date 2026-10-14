@@ -53,10 +53,9 @@ export function TopStudents({ rows }: { rows: Report['topStudents'] }) {
       <ol className="plain-list">
         {rows.map((s) => (
           <li key={s.studentId}>
-            <span>
-              <span className="row-title">{s.name}</span> <BeltBadge belt={s.belt} degrees={s.degrees} />
-            </span>
+            <span className="row-title row-grow">{s.name}</span>
             <span className="row-sub">{t('reports.top.trainings', { count: s.checkIns })}</span>
+            <span className="person-belt"><BeltBadge belt={s.belt} degrees={s.degrees} /></span>
           </li>
         ))}
       </ol>

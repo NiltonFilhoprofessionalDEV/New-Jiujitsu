@@ -38,9 +38,9 @@ export function ClassStudentsPanel({ trainingClass, canEdit }: Props) {
         <ul className="member-list">
           {students.map((s) => (
             <li key={s.id}>
-              <span>{s.name}</span>
+              <span className="row-grow">{s.name}</span>
               {s.status === 'INACTIVE' && <span className="pill pill-muted">{t('students.badge.inactive')}</span>}
-              <BeltBadge belt={s.belt} degrees={s.degrees} />
+              <span className="person-belt"><BeltBadge belt={s.belt} degrees={s.degrees} /></span>
               {canEdit && (
                 <button type="button" className="icon-btn" disabled={enrollment.isPending}
                   aria-label={t('classes.students.remove', { name: s.name })}

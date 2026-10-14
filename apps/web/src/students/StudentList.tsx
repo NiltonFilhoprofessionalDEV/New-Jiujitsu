@@ -45,9 +45,9 @@ export function StudentList({ page, selectedId, onSelect, onPage }: Props) {
                 </span>
                 <span className="row-sub">{contextLine(s)}</span>
               </span>
-              {s.kind === 'TRAINING' && (
-                <span className="person-belt"><BeltBadge belt={s.belt} degrees={s.degrees} /></span>
-              )}
+              <span className="person-belt">
+                {s.kind === 'TRAINING' && <BeltBadge belt={s.belt} degrees={s.degrees} />}
+              </span>
             </button>
           </li>
         ))}

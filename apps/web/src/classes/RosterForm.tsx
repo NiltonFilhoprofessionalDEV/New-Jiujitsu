@@ -105,7 +105,7 @@ export function RosterForm({ classId, date, session, onSaved }: Props) {
                 <span>{student.name}</span>
               </label>
               {!enrolled && <span className="pill pill-outline">{t('attendance.walkIn')}</span>}
-              <BeltBadge belt={student.belt} degrees={student.degrees} />
+              <span className="person-belt"><BeltBadge belt={student.belt} degrees={student.degrees} /></span>
             </li>
           ))}
         </ul>
