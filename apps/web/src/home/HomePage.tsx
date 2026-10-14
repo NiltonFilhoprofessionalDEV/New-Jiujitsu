@@ -31,10 +31,10 @@ export function HomePage() {
           <p className="page-sub home-date">{new Intl.DateTimeFormat(i18n.language, DATE_FORMAT).format(now)}</p>
         </div>
       </header>
+      <Overview classes={classes} />
       <TodayPanel classes={classes} now={now} date={today} />
       {isManager && <RequestsCard />}
       <QuickActions isManager={isManager} />
-      <Overview classes={classes} />
     </div>
   )
 }

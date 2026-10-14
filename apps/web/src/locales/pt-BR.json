@@ -141,6 +141,7 @@
     "cancel": "Cancelar",
     "confirm": "Confirmar",
     "close": "Fechar",
+    "back": "Voltar",
     "save": "Salvar",
     "saving": "Salvando...",
     "edit": "Editar",
@@ -326,6 +327,7 @@
       "submitCreate": "Cadastrar"
     },
     "detail": {
+      "title": "Ficha do aluno",
       "aria": "Ficha de {{name}}",
       "deactivate": "Desativar matrícula",
       "deactivateConfirm": "Desativar a matrícula de {{name}}? Ele deixa de ser membro ativo e sai da lista padrão.",
@@ -733,7 +735,7 @@
     "noStudents": "Nenhum aluno inscrito nesta aula.",
     "futureHint": "Esta aula ainda não aconteceu: a presença só pode ser marcada a partir do dia da aula. As notas já podem ser salvas.",
     "save": "Salvar chamada",
-    "saved": "Chamada salva!"
+    "saved": "Chamada de {{title}} salva."
   },
   "graduation": {
     "title": "Graduação",

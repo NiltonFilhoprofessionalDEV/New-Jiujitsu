@@ -25,5 +25,15 @@ export function useAttendanceParams() {
     [setParams],
   )
 
-  return { date, classId, selectDate, selectClass }
+  const closeClass = useCallback(
+    () =>
+      setParams((current) => {
+        const next = new URLSearchParams(current)
+        next.delete('aula')
+        return next
+      }, { replace: true }),
+    [setParams],
+  )
+
+  return { date, classId, selectDate, selectClass, closeClass }
 }

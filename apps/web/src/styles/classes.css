@@ -181,11 +181,16 @@ textarea.input {
   grid-template-columns: minmax(260px, 1fr) minmax(0, 1.6fr);
 }
 
-.day-classes {
+.attendance-saved {
+  margin-bottom: 16px;
+}
+
+/* As duas colunas têm o mesmo cabeçalho: os cards começam na mesma altura */
+.attendance-split > section {
   gap: 10px;
 }
 
-.day-classes .section-title {
+.attendance-split > section > .section-title {
   margin: 0;
 }
 
@@ -214,8 +219,8 @@ textarea.input {
   color: var(--accent-text);
 }
 
-.attendance-header h2 {
-  margin: 2px 0;
+.attendance-header h3 {
+  margin: 0 0 2px;
   font-size: 20px;
 }
 
@@ -272,5 +277,18 @@ textarea.input {
 @media (max-width: 1000px) {
   .attendance-split {
     grid-template-columns: 1fr;
+  }
+}
+
+/* No celular a linha inteira da chamada é alvo de toque confortável */
+@media (pointer: coarse) {
+  .roster li {
+    min-height: 52px;
+    padding: 10px 14px;
+  }
+
+  .roster input[type='checkbox'] {
+    width: 22px;
+    height: 22px;
   }
 }

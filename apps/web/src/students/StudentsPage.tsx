@@ -7,6 +7,7 @@ import { Dialog } from '@/components/Dialog'
 import { PageTitle } from '@/components/PageTitle'
 import { InvitesPanel } from '@/invites/InvitesPanel'
 import { useDebouncedValue } from '@/lib/useDebouncedValue'
+import { COMPACT_LAYOUT, useMediaQuery } from '@/lib/useMediaQuery'
 
 import { HouseholdPanel } from './HouseholdPanel'
 import { NewHouseholdForm } from './NewHouseholdForm'
@@ -36,6 +37,7 @@ export function StudentsPage() {
   const [search, setSearch] = useState(params.q)
   const debouncedSearch = useDebouncedValue(search)
   const [modal, setModal] = useState<Modal>(null)
+  const compact = useMediaQuery(COMPACT_LAYOUT)
 
   useEffect(() => {
     if (debouncedSearch !== params.q) update({ q: debouncedSearch })
@@ -46,6 +48,11 @@ export function StudentsPage() {
   const { data: counts } = useStudentCounts(filters)
   const select = (id: string | null) => update({ id }, false)
   const closeModal = () => setModal(null)
+  const detail = params.selectedId && (
+    <StudentDetailPanel key={params.selectedId} studentId={params.selectedId} canEdit={canEdit}
+      onEdit={(student) => setModal({ type: 'editStudent', student })}
+      onOpenHousehold={(id) => setModal({ type: 'family', id })} onDeleted={() => select(null)} />
+  )
 
   return (
     <div className="page page-wide">
@@ -117,16 +124,13 @@ export function StudentsPage() {
               onPage={(p) => update({ page: p }, false)} />
           )}
         </div>
-        <div>
-          {params.selectedId ? (
-            <StudentDetailPanel key={params.selectedId} studentId={params.selectedId} canEdit={canEdit}
-              onEdit={(student) => setModal({ type: 'editStudent', student })}
-              onOpenHousehold={(id) => setModal({ type: 'family', id })} onDeleted={() => select(null)} />
-          ) : (
-            <div className="card empty-detail">{t('students.emptyDetail')}</div>
-          )}
-        </div>
+        {!compact && <div>{detail || <div className="card empty-detail">{t('students.emptyDetail')}</div>}</div>}
       </div>
+      {compact && (
+        <Dialog open={Boolean(params.selectedId)} onClose={() => select(null)} title={t('students.detail.title')} wide>
+          {detail}
+        </Dialog>
+      )}
 
       <Dialog open={modal?.type === 'newStudent' || modal?.type === 'editStudent'} onClose={closeModal} wide
         title={modal?.type === 'editStudent' ? t('students.form.edit') : t('students.newStudent')}>

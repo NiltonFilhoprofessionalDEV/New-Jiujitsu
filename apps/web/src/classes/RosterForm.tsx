@@ -6,7 +6,7 @@ import { BeltBadge } from '@/students/BeltBadge'
 import { StudentPicker } from '@/students/StudentPicker'
 import type { StudentListItem } from '@/students/types'
 
-import type { useSaveAttendance } from './classesApi'
+import { useSaveAttendance } from './classesApi'
 import type { AttendanceSession, RosterEntry } from './types'
 
 const MAX_NOTES = 2000
@@ -20,13 +20,16 @@ function walkInEntry(s: StudentListItem): RosterEntry {
 }
 
 type Props = {
+  classId: string
+  date: string
   session: AttendanceSession
-  /** Vem do pai: o formulário remonta depois de salvar e o estado da mutation precisa sobreviver. */
-  save: ReturnType<typeof useSaveAttendance>
+  /** Depois de salvar, quem abriu a chamada a fecha. */
+  onSaved: () => void
 }
 
-export function RosterForm({ session, save }: Props) {
+export function RosterForm({ classId, date, session, onSaved }: Props) {
   const { t } = useTranslation()
+  const save = useSaveAttendance(classId, date)
   const [roster, setRoster] = useState(session.roster)
   const [present, setPresent] = useState(
     () => new Set(session.roster.filter((e) => e.present).map((e) => e.student.id)),
@@ -35,9 +38,9 @@ export function RosterForm({ session, save }: Props) {
   const [adding, setAdding] = useState(false)
   const { canMark } = session
 
-  /** Edição depois de salvar invalida o aviso de "salvo". */
+  /** Editar depois de uma falha tira o aviso de erro. */
   function markEdited() {
-    if (save.isSuccess || save.isError) save.reset()
+    if (save.isError) save.reset()
   }
 
   function toggle(id: string) {
@@ -56,7 +59,8 @@ export function RosterForm({ session, save }: Props) {
     setPresent((current) => new Set(current).add(s.id))
   }
 
-  const onSave = () => save.mutate({ presentStudentIds: [...present], notes: notes.trim() || null })
+  const onSave = () =>
+    save.mutate({ presentStudentIds: [...present], notes: notes.trim() || null }, { onSuccess: onSaved })
 
   return (
     <div className="stack">
@@ -65,7 +69,6 @@ export function RosterForm({ session, save }: Props) {
           {apiErrorMessage(t, save.error)}
         </div>
       )}
-      {save.isSuccess && <div className="alert alert-success" role="status">{t('attendance.saved')}</div>}
       {!canMark && <p className="hint">{t('attendance.futureHint')}</p>}
 
       <div className="field">
@@ -108,7 +111,7 @@ export function RosterForm({ session, save }: Props) {
         </ul>
       </div>
 
-      <div className="form-actions">
+      <div className="form-actions sheet-footer">
         <button type="button" className="btn btn-primary" disabled={save.isPending} onClick={onSave}>
           {save.isPending ? t('common.saving') : t('attendance.save')}
         </button>

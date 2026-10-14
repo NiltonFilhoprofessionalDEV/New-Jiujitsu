@@ -459,55 +459,128 @@
   border-radius: var(--radius);
 }
 
-/* Modal */
+/* Painel lateral: desliza da direita; no celular ocupa a tela, como uma tela empilhada */
 .dialog {
-  width: min(520px, calc(100vw - 32px));
-  max-height: calc(100vh - 48px);
+  inset: 0 0 0 auto;
+  width: min(480px, 100vw);
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
   padding: 0;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 0;
+  border-left: 1px solid var(--border);
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
   background: var(--surface);
   color: var(--text);
   box-shadow: var(--shadow);
 }
 
+.dialog[open] {
+  display: flex;
+  flex-direction: column;
+  animation: sheet-in 0.32s var(--sheet-ease);
+}
+
 .dialog-wide {
-  width: min(720px, calc(100vw - 32px));
+  width: min(680px, 100vw);
 }
 
 .dialog::backdrop {
   background: var(--overlay);
   backdrop-filter: blur(3px);
+  animation: fade-in 0.32s ease;
+}
+
+.dialog.closing {
+  pointer-events: none;
+  animation: sheet-out 0.2s ease-in forwards;
+}
+
+.dialog.closing::backdrop {
+  animation: fade-out 0.2s ease-in forwards;
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes sheet-out {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
 }
 
 .dialog-header {
-  position: sticky;
-  top: 0;
-  z-index: 1;
   display: flex;
+  flex: none;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
+  gap: 8px;
+  padding: calc(14px + env(safe-area-inset-top)) 16px 14px 20px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
 }
 
 .dialog-header h2 {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 400;
   letter-spacing: 0.03em;
+  text-overflow: ellipsis;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .dialog-header .icon-btn:hover {
   background: var(--surface-2);
 }
 
+.dialog-header .sheet-back {
+  display: none;
+}
+
 .dialog-body {
   display: grid;
+  flex: 1;
+  align-content: start;
   gap: 16px;
-  padding: 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 20px 20px calc(24px + env(safe-area-inset-bottom));
+}
+
+/*
+ * A ação principal fica sempre ao alcance, mesmo com o conteúdo rolado. Só vale quando ela encerra
+ * o painel: as margens negativas a levam até as bordas e cobririam o que viesse depois.
+ */
+.dialog-body > form:last-child > .form-actions:last-child,
+.dialog-body > .form-actions:last-child,
+.dialog-body .sheet-footer {
+  position: sticky;
+  bottom: calc(-24px - env(safe-area-inset-bottom));
+  z-index: 1;
+  margin: 0 -20px calc(-24px - env(safe-area-inset-bottom));
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border);
+  background: var(--surface);
 }
 
 .dialog-text {
@@ -517,5 +590,30 @@
 @media (max-width: 600px) {
   .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .dialog,
+  .dialog-wide {
+    width: 100vw;
+    border-left: 0;
+    border-radius: 0;
+  }
+
+  .dialog-header {
+    padding-left: 8px;
+  }
+
+  .dialog-header .sheet-back {
+    display: grid;
+  }
+
+  .dialog-header .sheet-close {
+    display: none;
+  }
+
+  .dialog-body > form:last-child > .form-actions:last-child .btn,
+  .dialog-body > .form-actions:last-child .btn,
+  .dialog-body .sheet-footer .btn {
+    flex: 1;
   }
 }
