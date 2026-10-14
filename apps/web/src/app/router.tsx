@@ -17,6 +17,8 @@ import { ComingSoonPage } from '@/pages/ComingSoonPage'
 import { HomePage } from '@/pages/HomePage'
 import { AcceptInvitePage } from '@/public/AcceptInvitePage'
 import { EnrollPage } from '@/public/EnrollPage'
+import { InstructorsReportPage } from '@/reports/InstructorsReportPage'
+import { ReportsPage } from '@/reports/ReportsPage'
 import { RequestsPage } from '@/requests/RequestsPage'
 import { SettingsPage } from '@/settings/SettingsPage'
 import { StudentsPage } from '@/students/StudentsPage'
@@ -24,7 +26,7 @@ import { AcceptStaffInvitePage } from '@/team/AcceptStaffInvitePage'
 import { TeamPage } from '@/team/TeamPage'
 
 const IMPLEMENTED = new Set(['/', '/alunos', '/aulas', '/equipe', '/requests', '/mensalidades', '/financeiro/alunos',
-  '/financeiro/faturas', '/configuracoes'])
+  '/financeiro/faturas', '/configuracoes', '/relatorios', '/relatorios/professores'])
 
 const pendingItems = MANAGER_NAV.flatMap((g) => g.items).filter((item) => !IMPLEMENTED.has(item.to))
 const pendingRoute = (item: (typeof pendingItems)[number]) => ({
@@ -60,6 +62,8 @@ export const router = createBrowserRouter([
               { path: 'aulas/faixas', element: <BeltsPage /> },
               { path: 'requests', element: <RequestsPage /> },
               { path: 'configuracoes', element: <SettingsPage /> },
+              { path: 'relatorios', element: <ReportsPage /> },
+              { path: 'relatorios/professores', element: <InstructorsReportPage /> },
               ...pendingItems.filter((item) => !item.managersOnly).map(pendingRoute),
               {
                 element: <RequireManager />,

@@ -11,6 +11,7 @@ import br.com.academia.api.billing.InvoiceDtos.Bucket;
 import br.com.academia.api.billing.InvoiceDtos.InvoiceFilter;
 import br.com.academia.api.billing.InvoiceDtos.InvoiceRow;
 import br.com.academia.api.billing.InvoiceDtos.OverdueSummary;
+import br.com.academia.api.billing.InvoiceDtos.PeriodSummary;
 import br.com.academia.api.billing.InvoiceDtos.Situation;
 import br.com.academia.api.billing.InvoiceDtos.SituationFilter;
 import br.com.academia.api.billing.InvoiceDtos.Totals;
@@ -31,6 +32,8 @@ class InvoiceQuery {
 	private static final String OPEN = "i.status = 'OPEN' and i.due_date >= :today";
 	private static final String OVERDUE = "i.status = 'OPEN' and i.due_date < :today";
 	private static final String PAID = "i.status = 'PAID'";
+	private static final String BILLED_IN_PERIOD = "i.status <> 'CANCELED' and i.due_date between :from and :to";
+	private static final String PAID_IN_PERIOD = "i.status = 'PAID' and i.paid_on between :from and :to";
 
 	private final JdbcClient jdbc;
 
@@ -82,6 +85,18 @@ class InvoiceQuery {
 				.param("limit", limit)
 				.query((rs, n) -> row(rs, today))
 				.list();
+	}
+
+	PeriodSummary period(UUID academyId, LocalDate from, LocalDate to, LocalDate today) {
+		String sql = "select " + bucket(BILLED_IN_PERIOD) + ", " + bucket(PAID_IN_PERIOD)
+				+ " from invoices i where i.academy_id = :academyId";
+		return jdbc.sql(sql)
+				.param("academyId", academyId)
+				.param("from", from)
+				.param("to", to)
+				.query((rs, n) -> new PeriodSummary(new Bucket(rs.getLong(1), rs.getLong(2)),
+						new Bucket(rs.getLong(3), rs.getLong(4)), overdue(academyId, today)))
+				.single();
 	}
 
 	OverdueSummary overdue(UUID academyId, LocalDate today) {

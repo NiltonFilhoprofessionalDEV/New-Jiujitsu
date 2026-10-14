@@ -52,6 +52,7 @@
     "REQUEST_NOT_FOUND": "Solicitação não encontrada.",
     "REQUEST_ALREADY_DECIDED": "Esta solicitação já foi analisada.",
     "INVALID_FILTER": "Filtro inválido.",
+    "INVALID_PERIOD": "Período inválido: a data inicial deve vir antes da final, com no máximo 366 dias.",
     "CLASS_NOT_FOUND": "Aula não encontrada. Ela pode ter sido removida.",
     "INVALID_CLASS_TIME": "O término precisa ser depois do início.",
     "INVALID_INSTRUCTOR": "Escolha um professor ou gestor desta academia.",
@@ -506,6 +507,63 @@
       "mismatch": "As senhas não conferem.",
       "submit": "Alterar senha",
       "saved": "Senha alterada."
+    }
+  },
+  "reports": {
+    "title": "Relatórios",
+    "presetsAria": "Períodos rápidos",
+    "lastDays_one": "Último dia",
+    "lastDays_other": "{{count}} dias",
+    "from": "De",
+    "to": "Até",
+    "stats": {
+      "active": "Alunos ativos",
+      "new": "Matrículas no período",
+      "checkIns": "Presenças no período",
+      "trained": "Alunos que treinaram"
+    },
+    "finance": {
+      "title": "Financeiro",
+      "billed_zero": "Emitido · nenhuma fatura com vencimento no período",
+      "billed_one": "Emitido · {{count}} fatura com vencimento no período",
+      "billed_other": "Emitido · {{count}} faturas com vencimento no período",
+      "received_zero": "Recebido · nenhum pagamento no período",
+      "received_one": "Recebido · {{count}} pagamento no período",
+      "received_other": "Recebido · {{count}} pagamentos no período",
+      "overdue_zero": "Em atraso hoje · nenhum aluno",
+      "overdue_one": "Em atraso hoje · {{count}} aluno",
+      "overdue_other": "Em atraso hoje · {{count}} alunos"
+    },
+    "col": {
+      "sessions": "Aulas dadas",
+      "checkIns": "Presenças",
+      "average": "Média por aula"
+    },
+    "classes": {
+      "title": "Frequência por turma",
+      "empty": "Nenhuma presença registrada no período.",
+      "noInstructor": "Sem professor",
+      "col": { "class": "Turma" }
+    },
+    "top": {
+      "title": "Mais assíduos",
+      "empty": "Ninguém treinou no período.",
+      "trainings_one": "{{count}} treino",
+      "trainings_other": "{{count}} treinos"
+    },
+    "absent": {
+      "title": "Alunos sumidos",
+      "hint": "Ativos que não treinam desde {{date}}. Vale um contato antes que cancelem.",
+      "empty": "Todos os alunos ativos treinaram nas últimas 2 semanas.",
+      "last": "Último treino em {{date}}",
+      "never": "Nunca treinou",
+      "more_one": "E mais {{count}} aluno.",
+      "more_other": "E mais {{count}} alunos."
+    },
+    "instructors": {
+      "title": "Professores",
+      "intro": "Aulas dadas e presenças no período pelas turmas que cada pessoa da equipe dá hoje. Aula dada é a que teve pelo menos uma presença.",
+      "col": { "name": "Nome", "classes": "Turmas" }
     }
   },
   "account": {

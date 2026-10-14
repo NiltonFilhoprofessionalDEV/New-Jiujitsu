@@ -73,6 +73,10 @@ public final class InvoiceDtos {
 	public record InvoiceList(PageResponse<InvoiceRow> page, Totals totals, OverdueSummary overdue) {
 	}
 
+	/** Emitido: vencimento no período, sem canceladas. Recebido: pago no período, qualquer vencimento. */
+	public record PeriodSummary(Bucket billed, Bucket received, OverdueSummary overdue) {
+	}
+
 	public record PayRequest(@NotNull LocalDate paidOn, @NotNull PaymentMethod method) {
 	}
 }

@@ -10,6 +10,7 @@ import br.com.academia.api.billing.InvoiceDtos.InvoiceFilter;
 import br.com.academia.api.billing.InvoiceDtos.InvoiceList;
 import br.com.academia.api.billing.InvoiceDtos.InvoiceRow;
 import br.com.academia.api.billing.InvoiceDtos.PayRequest;
+import br.com.academia.api.billing.InvoiceDtos.PeriodSummary;
 import br.com.academia.api.common.ApiException;
 import br.com.academia.api.common.PageResponse;
 import br.com.academia.api.student.Student;
@@ -47,6 +48,11 @@ public class InvoiceService {
 	@Transactional(readOnly = true)
 	public List<InvoiceRow> forStudent(UUID academyId, UUID studentId, int limit) {
 		return query.forStudent(academyId, studentId, today(), limit);
+	}
+
+	@Transactional(readOnly = true)
+	public PeriodSummary periodSummary(UUID academyId, LocalDate from, LocalDate to) {
+		return query.period(academyId, from, to, today());
 	}
 
 	@Transactional
