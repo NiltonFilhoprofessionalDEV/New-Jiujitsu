@@ -4,7 +4,7 @@ import { Navigate } from 'react-router'
 
 import { STAFF_ROLES } from '@/auth/types'
 import { useAuth } from '@/auth/useAuth'
-import { PageTitle } from '@/components/PageTitle'
+import { PageHeader } from '@/components/PageHeader'
 import { Topbar } from '@/layout/Topbar'
 import { PasswordForm } from '@/settings/PasswordForm'
 
@@ -31,12 +31,8 @@ export function StudentAccountPage() {
       <Topbar />
       <main className="main">
         <div className="page">
-          <div className="page-header">
-            <div>
-              <div className="eyebrow">{activeMembership.academy.name}</div>
-              <PageTitle>{t('account.hello', { name: session.user.name.split(' ')[0] })}</PageTitle>
-            </div>
-          </div>
+          <PageHeader eyebrow={activeMembership.academy.name}
+            title={t('account.hello', { name: session.user.name.split(' ')[0] })} />
           <div className="stack">
             {isLoading && <p className="empty">{t('common.loading')}</p>}
             {isError && <div className="alert alert-error">{t('account.loadError')}</div>}

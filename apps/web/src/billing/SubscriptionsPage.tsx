@@ -1,16 +1,19 @@
+import { Plus } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { Dialog } from '@/components/Dialog'
-import { PageTitle } from '@/components/PageTitle'
+import { HelpNote } from '@/components/HelpNote'
+import { PageHeader } from '@/components/PageHeader'
+import { SearchField } from '@/components/SearchField'
 import { apiErrorMessage } from '@/lib/apiErrors'
 import { fold } from '@/lib/text'
 
 import { useCancelSubscription, usePlans, useSubscriptions } from './billingApi'
 import { SubscriptionForm } from './SubscriptionForm'
-import { SubscriptionsTable } from './SubscriptionsTable'
+import { SubscriptionList } from './SubscriptionList'
 import type { Subscription } from './types'
 
 type Modal = { type: 'link' } | { type: 'edit'; s: Subscription } | { type: 'cancel'; s: Subscription } | null
@@ -38,21 +41,17 @@ export function SubscriptionsPage() {
 
   return (
     <div className="page page-wide">
-      <div className="page-header">
-        <div>
-          <div className="eyebrow">{t('nav.groups.financeiro')}</div>
-          <PageTitle>{t('subscriptions.title')}</PageTitle>
-        </div>
-        <div className="page-actions">
+      <PageHeader eyebrow={t('nav.groups.financeiro')} title={t('subscriptions.title')}
+        description={t('pages.subscriptions')}
+        actions={(
           <button type="button" className="btn btn-primary" disabled={!hasActivePlan}
             onClick={() => setModal({ type: 'link' })}>
-            {t('subscriptions.link')}
+            <Plus size={16} aria-hidden /> {t('subscriptions.link')}
           </button>
-        </div>
-      </div>
+        )} />
 
       <div className="stack">
-        <p className="hint">{t('subscriptions.intro')}</p>
+        <HelpNote><p>{t('subscriptions.intro')}</p></HelpNote>
         {plans.length > 0 && !hasActivePlan && <div className="callout">{t('subscriptions.noActivePlan')}</div>}
         {!isLoading && plans.length === 0 && (
           <div className="callout">
@@ -60,15 +59,14 @@ export function SubscriptionsPage() {
           </div>
         )}
         <div className="toolbar">
-          <input type="search" className="input grow" value={search} onChange={(e) => setSearch(e.target.value)}
-            placeholder={t('subscriptions.search')} aria-label={t('subscriptions.search')} />
+          <SearchField value={search} onChange={setSearch} label={t('subscriptions.search')} />
           <span className="toolbar-count">{t('subscriptions.count', { count: shown.length })}</span>
         </div>
         {isLoading && <p className="empty">{t('common.loading')}</p>}
         {isError && <div className="alert alert-error">{t('subscriptions.loadError')}</div>}
         {subscriptions && shown.length === 0 && <div className="card empty-detail">{t('subscriptions.empty')}</div>}
         {shown.length > 0 && (
-          <SubscriptionsTable subscriptions={shown} onEdit={(s) => setModal({ type: 'edit', s })}
+          <SubscriptionList subscriptions={shown} onEdit={(s) => setModal({ type: 'edit', s })}
             onCancel={(s) => setModal({ type: 'cancel', s })} />
         )}
       </div>

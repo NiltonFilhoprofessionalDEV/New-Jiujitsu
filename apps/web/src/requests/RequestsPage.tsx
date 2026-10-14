@@ -4,10 +4,11 @@ import { Link } from 'react-router'
 
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { DataItem } from '@/components/DataItem'
-import { PageTitle } from '@/components/PageTitle'
+import { PageHeader } from '@/components/PageHeader'
 import { useDecideRequest, useEnrollmentRequests } from '@/invites/invitesApi'
 import type { EnrollmentRequestItem } from '@/invites/types'
 import { apiErrorMessage } from '@/lib/apiErrors'
+import { initials } from '@/lib/text'
 import { BeltBadge } from '@/students/BeltBadge'
 import { formatCpf, formatDate } from '@/students/format'
 
@@ -34,13 +35,7 @@ export function RequestsPage() {
 
   return (
     <div className="page">
-      <div className="page-header">
-        <div>
-          <div className="eyebrow">{t('common.yourAcademy')}</div>
-          <PageTitle>{t('requests.title')}</PageTitle>
-          <p className="hint">{t('requests.subtitle')}</p>
-        </div>
-      </div>
+      <PageHeader eyebrow={t('common.yourAcademy')} title={t('requests.title')} description={t('requests.subtitle')} />
 
       <div className="stack">
         {approved && (
@@ -84,13 +79,16 @@ function RequestCard({ request, busy, onApprove, onReject }: CardProps) {
   return (
     <article className="card request-card" aria-label={request.name}>
       <header className="detail-header">
-        <div>
+        <span className="avatar avatar-lg" aria-hidden>{initials(request.name)}</span>
+        <div className="detail-title">
           <h2>{request.name}</h2>
-          {request.nickname && <p className="empty">“{request.nickname}”</p>}
+          <p className="row-sub">
+            {[request.nickname && `“${request.nickname}”`, t('requests.sentAt', { date: formatDate(request.createdAt) })]
+              .filter(Boolean).join(' · ')}
+          </p>
+          <BeltBadge belt={request.belt} degrees={request.degrees} />
         </div>
-        <span className="hint">{t('requests.sentAt', { date: formatDate(request.createdAt) })}</span>
       </header>
-      <BeltBadge belt={request.belt} degrees={request.degrees} />
       <dl className="data-list">
         <DataItem label={t('students.form.email')} value={request.email} />
         <DataItem label={t('students.form.cpf')} value={formatCpf(request.cpf)} />

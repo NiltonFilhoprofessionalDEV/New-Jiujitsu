@@ -57,12 +57,12 @@
   width: 100%;
 }
 
-.btn-icon {
+.btn.btn-icon {
   width: 42px;
   padding: 0;
 }
 
-.btn-sm.btn-icon {
+.btn.btn-sm.btn-icon {
   width: 32px;
 }
 
@@ -327,6 +327,55 @@ button.segment:focus-visible {
 
 .person-belt {
   flex: none;
+}
+
+@media (max-width: 640px) {
+  .chips {
+    flex-wrap: nowrap;
+    margin-inline: -16px;
+    padding-inline: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .chips .chip {
+    flex: none;
+  }
+}
+
+/* Linha de lista com ações (convites, mensalidades, faturas): quebra em duas linhas no celular */
+.list-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  padding: 12px 16px;
+}
+
+.list-row .person-main {
+  flex: 1 1 240px;
+}
+
+.list-row .row-sub {
+  white-space: normal;
+}
+
+.list-row .row-actions {
+  flex-wrap: wrap;
+}
+
+.row-money {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  .row-money {
+    justify-items: start;
+    text-align: left;
+  }
 }
 
 /* No celular o ícone (com as fitas dos graus) basta; o nome da faixa fica para leitores de tela */
@@ -636,7 +685,7 @@ button.segment:focus-visible {
 /* Tabela */
 .table-card {
   padding: 0;
-  overflow: hidden;
+  overflow-x: auto;
 }
 
 .table {

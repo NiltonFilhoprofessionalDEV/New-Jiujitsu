@@ -1,4 +1,4 @@
-import { Link2, Plus, Search, SlidersHorizontal, UsersRound } from 'lucide-react'
+import { Link2, Plus, SlidersHorizontal, UsersRound } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -7,6 +7,7 @@ import { MANAGER_ROLES } from '@/auth/types'
 import { ActionMenu } from '@/components/ActionMenu'
 import { Dialog } from '@/components/Dialog'
 import { PageHeader } from '@/components/PageHeader'
+import { SearchField } from '@/components/SearchField'
 import { InvitesPanel } from '@/invites/InvitesPanel'
 import { useDebouncedValue } from '@/lib/useDebouncedValue'
 import { COMPACT_LAYOUT, useMediaQuery } from '@/lib/useMediaQuery'
@@ -76,11 +77,8 @@ export function StudentsPage() {
         description={t('pages.students')} actions={actions} />
 
       <div className="toolbar">
-        <label className="search-field grow">
-          <Search size={18} aria-hidden />
-          <input type="search" className="input" value={search} onChange={(e) => setSearch(e.target.value)}
-            placeholder={t('students.searchPlaceholder')} aria-label={t('students.searchAria')} />
-        </label>
+        <SearchField value={search} onChange={setSearch} label={t('students.searchAria')}
+          placeholder={t('students.searchPlaceholder')} />
         <button type="button" className={filterCount > 0 ? 'btn btn-outline-primary' : 'btn'}
           onClick={() => setModal({ type: 'filters' })}>
           <SlidersHorizontal size={16} aria-hidden />

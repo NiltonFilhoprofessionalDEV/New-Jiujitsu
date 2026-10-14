@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { useIsManager } from '@/auth/useAuth'
-import { PageTitle } from '@/components/PageTitle'
+import { PageHeader } from '@/components/PageHeader'
 import { EnrollmentLinkCard } from '@/invites/EnrollmentLinkCard'
 
 import { AcademyProfileForm } from './AcademyProfileForm'
@@ -13,12 +13,8 @@ export function SettingsPage() {
   const isManager = useIsManager()
   return (
     <div className="page">
-      <div className="page-header">
-        <div>
-          <div className="eyebrow">{t('common.yourAcademy')}</div>
-          <PageTitle>{t('settings.title')}</PageTitle>
-        </div>
-      </div>
+      <PageHeader eyebrow={t('common.yourAcademy')} title={t('settings.title')}
+        description={isManager ? t('pages.settings') : undefined} />
       <div className="stack">
         {isManager && <AcademyProfileForm />}
         {isManager && <EnrollmentLinkCard />}

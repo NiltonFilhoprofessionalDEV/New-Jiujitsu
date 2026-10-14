@@ -67,7 +67,7 @@ function InviteRow({ invite, busy, onAction }: RowProps) {
   ].filter(Boolean)
 
   return (
-    <li className="invite-row">
+    <li className="list-row">
       <div className="person-main">
         <span className="person-name">
           <span className="row-title">{invite.name ?? invite.email ?? t('invites.openLink')}</span>

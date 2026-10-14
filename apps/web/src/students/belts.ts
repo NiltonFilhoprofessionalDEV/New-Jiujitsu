@@ -9,6 +9,9 @@ export type BeltInfo = {
   colors: [string, string?]
 }
 
+/** Tamanho do ícone onde a faixa é o destaque (ficha e área do aluno). */
+export const BELT_HERO_SIZE = 56
+
 const WHITE = '#f4f4f5'
 const BLACK = '#0a0a0b'
 const RED = '#dc2626'

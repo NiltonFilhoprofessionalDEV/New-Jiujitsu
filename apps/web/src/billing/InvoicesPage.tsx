@@ -4,12 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { todayIso } from '@/classes/dates'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { Dialog } from '@/components/Dialog'
-import { PageTitle } from '@/components/PageTitle'
+import { PageHeader } from '@/components/PageHeader'
+import { SearchField } from '@/components/SearchField'
 import { apiErrorMessage } from '@/lib/apiErrors'
 import { useDebouncedValue } from '@/lib/useDebouncedValue'
 
 import { useInvoiceAction, useInvoices } from './billingApi'
-import { InvoicesTable, type RowAction } from './InvoicesTable'
+import { InvoiceList, type RowAction } from './InvoiceList'
 import { InvoiceSummary } from './InvoiceSummary'
 import { formatMoney } from './money'
 import { PayForm } from './PayForm'
@@ -46,20 +47,13 @@ export function InvoicesPage() {
 
   return (
     <div className="page page-wide">
-      <div className="page-header">
-        <div>
-          <div className="eyebrow">{t('nav.groups.financeiro')}</div>
-          <PageTitle>{t('invoices.title')}</PageTitle>
-        </div>
-      </div>
+      <PageHeader eyebrow={t('nav.groups.financeiro')} title={t('invoices.title')} description={t('pages.invoices')} />
 
       <div className="stack">
-        <p className="hint">{t('invoices.intro')}</p>
         {data && <InvoiceSummary data={data} onShowOverdue={() => update({ situation: 'overdue', month: '' })} />}
         <div className="toolbar">
-          <input type="search" className="input grow" value={search}
-            onChange={(e) => { setSearch(e.target.value); update({ page: 0 }) }}
-            placeholder={t('invoices.search')} aria-label={t('invoices.search')} />
+          <SearchField value={search} label={t('invoices.search')}
+            onChange={(value) => { setSearch(value); update({ page: 0 }) }} />
           <input type="month" className="input" value={query.month} aria-label={t('invoices.month')}
             onChange={(e) => update({ month: e.target.value })} />
           {query.month && (
@@ -80,7 +74,7 @@ export function InvoicesPage() {
         {isError && <div className="alert alert-error">{t('invoices.loadError')}</div>}
         {data && data.page.totalElements === 0 && <div className="card empty-detail">{t('invoices.empty')}</div>}
         {data && data.page.totalElements > 0 && (
-          <InvoicesTable page={data.page} onPage={(page) => setFilters((f) => ({ ...f, page }))}
+          <InvoiceList page={data.page} onPage={(page) => setFilters((f) => ({ ...f, page }))}
             onAction={(a, invoice) => setModal({ action: a, invoice })} />
         )}
       </div>

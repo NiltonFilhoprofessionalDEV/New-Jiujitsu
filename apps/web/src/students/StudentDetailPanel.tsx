@@ -8,6 +8,7 @@ import { apiErrorMessage } from '@/lib/apiErrors'
 import { initials } from '@/lib/text'
 
 import { BeltBadge } from './BeltBadge'
+import { BELT_HERO_SIZE } from './belts'
 import { formatDate } from './format'
 import { StudentBadges } from './StudentBadges'
 import { StudentFacts } from './StudentFacts'
@@ -23,8 +24,6 @@ type Props = {
 }
 
 type Confirm = 'deactivate' | 'delete' | null
-
-const BELT_HERO_SIZE = 56
 
 export function StudentDetailPanel({ studentId, canEdit, onEdit, onOpenHousehold, onDeleted }: Props) {
   const { t } = useTranslation()

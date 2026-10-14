@@ -9,7 +9,7 @@ import { Dialog } from '@/components/Dialog'
 import { PageHeader } from '@/components/PageHeader'
 import { apiErrorMessage } from '@/lib/apiErrors'
 
-import { ClassesTable } from './ClassesTable'
+import { ClassList } from './ClassList'
 import { ClassForm } from './ClassForm'
 import { useArchiveClass, useClasses } from './classesApi'
 import { ClassStudentsPanel } from './ClassStudentsPanel'
@@ -55,7 +55,7 @@ export function ClassesPage() {
         {isError && <div className="alert alert-error">{t('classes.loadError')}</div>}
         {classes && classes.length === 0 && <div className="card empty-detail">{t('classes.empty')}</div>}
         {classes && classes.length > 0 && (
-          <ClassesTable classes={classes} canEdit={canEdit}
+          <ClassList classes={classes} canEdit={canEdit}
             onStudents={(c) => setModal({ type: 'students', trainingClass: c })}
             onEdit={(c) => setModal({ type: 'edit', trainingClass: c })}
             onArchive={(c) => setModal({ type: 'archive', trainingClass: c })} />

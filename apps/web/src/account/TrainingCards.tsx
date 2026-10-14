@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { timeRange } from '@/classes/dates'
 import { BeltBadge } from '@/students/BeltBadge'
+import { BELT_HERO_SIZE } from '@/students/belts'
 import { formatDate } from '@/students/format'
 
 import type { Overview } from './types'
@@ -13,16 +14,18 @@ export function BeltCard({ overview }: { overview: Overview }) {
   return (
     <section className="card stack" aria-labelledby="belt-title">
       <h3 id="belt-title">{t('account.belt.title')}</h3>
-      <BeltBadge belt={student.belt} degrees={student.degrees} />
-      {progress && (
-        <p className="hint">
-          {t('account.belt.progress', {
-            since: formatDate(progress.beltSince),
-            months: t('graduation.months', { count: progress.monthsAtBelt }),
-            trainings: t('graduation.trainings', { count: progress.trainingsSinceBelt }),
-          })}
-        </p>
-      )}
+      <div className="belt-hero">
+        <BeltBadge belt={student.belt} degrees={student.degrees} size={BELT_HERO_SIZE} />
+        {progress && (
+          <span className="row-sub">
+            {t('account.belt.progress', {
+              since: formatDate(progress.beltSince),
+              months: t('graduation.months', { count: progress.monthsAtBelt }),
+              trainings: t('graduation.trainings', { count: progress.trainingsSinceBelt }),
+            })}
+          </span>
+        )}
+      </div>
       {graduations.length > 0 && (
         <ul className="plain-list">
           {graduations.map((g) => (

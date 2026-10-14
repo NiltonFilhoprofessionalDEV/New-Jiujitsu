@@ -276,11 +276,6 @@
     "years_zero": "menos de 1 ano",
     "years_one": "{{count}} ano",
     "years_other": "{{count}} anos",
-    "col": {
-      "name": "Nome",
-      "belt": "Faixa",
-      "enrollment": "Treina desde"
-    },
     "filter": {
       "button": "Filtros",
       "buttonCount": "Filtros · {{count}}",
@@ -424,11 +419,6 @@
       "EXPIRED": "Expirado",
       "REVOKED": "Revogado"
     },
-    "th": {
-      "guest": "Convidado",
-      "expires": "Válido até",
-      "actions": "Ações"
-    },
     "validUntil": "vale até {{date}}",
     "filterAria": "Filtrar convites",
     "sectionsAria": "Formas de convidar",
@@ -520,12 +510,7 @@
     "remove": "Remover da equipe",
     "removeNamed": "Remover {{name}} da equipe",
     "removeConfirm": "Remover {{name}} da equipe? O acesso ao painel é encerrado em até 15 minutos.",
-    "col": {
-      "member": "Membro",
-      "role": "Papel",
-      "since": "Desde",
-      "actions": "Ações"
-    },
+    "since": "desde {{date}}",
     "invite": {
       "title": "Convidar para a equipe",
       "hint": "O convite vale por 7 dias. A pessoa cria a própria senha pelo link.",
@@ -538,8 +523,7 @@
     },
     "pending": {
       "title": "Convites pendentes",
-      "loadError": "Não foi possível carregar os convites.",
-      "empty": "Nenhum convite pendente."
+      "loadError": "Não foi possível carregar os convites."
     },
     "accept": {
       "subtitle": "Você foi convidado para a equipe como {{role}}.",
@@ -687,31 +671,21 @@
   },
   "classes": {
     "title": "Aulas",
-    "intro": "Crie as aulas semanais da sua academia — escolha os dias e o horário.",
-    "new": "Nova aula",
-    "edit": "Editar aula",
+    "new": "Nova turma",
+    "edit": "Editar turma",
     "editNamed": "Editar {{title}}",
-    "created": "Aula criada!",
-    "empty": "Nenhuma aula cadastrada ainda.",
-    "loadError": "Não foi possível carregar as aulas.",
-    "archive": "Remover aula",
+    "created": "Turma criada.",
+    "empty": "Nenhuma turma cadastrada. Crie a primeira com os dias e o horário dos treinos.",
+    "loadError": "Não foi possível carregar as turmas.",
+    "archive": "Remover turma",
     "archiveNamed": "Remover {{title}}",
-    "archiveConfirm": "Remover a aula \"{{title}}\"? Ela sai da grade, mas as presenças já registradas continuam no histórico dos alunos.",
+    "archiveConfirm": "Remover a turma \"{{title}}\"? Ela sai da grade, mas as presenças já registradas continuam no histórico dos alunos.",
     "tabs": {
-      "aria": "Seções de aulas",
       "classes": "Turmas",
       "attendance": "Chamada",
       "belts": "Graduações"
     },
-    "table": {
-      "title": "Título",
-      "days": "Dias",
-      "time": "Horário",
-      "location": "Local",
-      "instructor": "Professor",
-      "enrolled": "Inscritos",
-      "actions": "Ações"
-    },
+    "everyDay": "Todos os dias",
     "form": {
       "title": "Título",
       "titlePlaceholder": "Ex.: Fundamentos, No-Gi, Kids",
@@ -726,7 +700,7 @@
       "noInstructor": "Sem professor fixo",
       "capacity": "Capacidade",
       "noLimit": "Sem limite",
-      "submitCreate": "Criar aula"
+      "submitCreate": "Criar turma"
     },
     "students": {
       "title": "Inscritos · {{title}}",
@@ -735,12 +709,12 @@
       "count_one": "1 inscrito",
       "count_other": "{{count}} inscritos",
       "countOf": "{{count}} de {{capacity}} vagas ocupadas",
-      "empty": "Nenhum aluno inscrito nesta aula.",
+      "empty": "Nenhum aluno inscrito nesta turma.",
       "loadError": "Não foi possível carregar os inscritos.",
       "add": "Inscrever aluno",
       "enroll": "Inscrever",
-      "remove": "Tirar {{name}} da aula",
-      "full": "A aula está lotada. Aumente a capacidade ou tire alguém para inscrever outro aluno."
+      "remove": "Tirar {{name}} da turma",
+      "full": "A turma está lotada. Aumente a capacidade ou tire alguém para inscrever outro aluno."
     },
     "picker": {
       "searchStudent": "Buscar aluno ativo…",
@@ -864,7 +838,7 @@
     "intro": "Planos definem valor, periodicidade e dia de vencimento. Marque um plano padrão (e um padrão kids, para menores de 18) para que todo aluno novo já entre nele.",
     "loadError": "Não foi possível carregar os planos.",
     "empty": "Nenhum plano cadastrado. Crie o primeiro para começar a cobrar mensalidades.",
-    "dayOf": "Dia {{day}}",
+    "dayOf": "Vence dia {{day}}",
     "interval": {
       "1": "Mensal",
       "2": "Bimestral",
@@ -872,13 +846,9 @@
       "6": "Semestral",
       "12": "Anual"
     },
-    "col": {
-      "name": "Plano",
-      "price": "Valor",
-      "dueDay": "Vencimento",
-      "subscribers": "Alunos",
-      "actions": "Ações"
-    },
+    "subscribers_zero": "nenhum aluno",
+    "subscribers_one": "{{count}} aluno",
+    "subscribers_other": "{{count}} alunos",
     "badge": {
       "default": "Padrão",
       "kidsDefault": "Padrão kids",
@@ -921,18 +891,10 @@
     "paused": "Matrícula inativa",
     "pausedHint": "Enquanto a matrícula estiver inativa, nenhuma fatura é emitida.",
     "discountOf": "Desconto de {{value}}",
-    "next": "Próximo: {{date}}",
+    "next": "próximo vencimento {{date}}",
     "overdue": "{{value}} vencido",
     "overdueSince": "Em atraso desde {{date}}",
     "upToDate": "Em dia",
-    "col": {
-      "student": "Aluno",
-      "plan": "Plano",
-      "amount": "Valor",
-      "due": "Vencimento",
-      "situation": "Situação",
-      "actions": "Ações"
-    },
     "picker": {
       "searchStudent": "Buscar aluno ativo",
       "noAvailable": "Nenhum aluno ativo sem mensalidade encontrado."
@@ -962,7 +924,6 @@
   },
   "invoices": {
     "title": "Faturas",
-    "intro": "Faturas emitidas pelas mensalidades. Registre aqui os recebimentos (dinheiro, Pix, cartão...).",
     "overdueAlert_one": "{{count}} aluno inadimplente · {{value}} em atraso",
     "overdueAlert_other": "{{count}} alunos inadimplentes · {{value}} em atraso",
     "showOverdue": "Ver vencidas",
@@ -990,13 +951,7 @@
     },
     "loadError": "Não foi possível carregar as faturas.",
     "empty": "Nenhuma fatura encontrada com estes filtros.",
-    "col": {
-      "student": "Aluno",
-      "due": "Vencimento",
-      "amount": "Valor",
-      "situation": "Situação",
-      "actions": "Ações"
-    },
+    "dueOn": "vence {{date}}",
     "situation": {
       "OPEN": "A vencer",
       "OVERDUE": "Vencida",

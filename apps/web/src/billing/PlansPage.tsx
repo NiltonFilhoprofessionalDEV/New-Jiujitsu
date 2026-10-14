@@ -1,9 +1,10 @@
-import { Pencil } from 'lucide-react'
+import { Pencil, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Dialog } from '@/components/Dialog'
-import { PageTitle } from '@/components/PageTitle'
+import { HelpNote } from '@/components/HelpNote'
+import { PageHeader } from '@/components/PageHeader'
 
 import { usePlans } from './billingApi'
 import { formatMoney } from './money'
@@ -20,24 +21,23 @@ export function PlansPage() {
 
   return (
     <div className="page page-wide">
-      <div className="page-header">
-        <div>
-          <div className="eyebrow">{t('common.yourAcademy')}</div>
-          <PageTitle>{t('plans.title')}</PageTitle>
-        </div>
-        <div className="page-actions">
+      <PageHeader eyebrow={t('nav.groups.financeiro')} title={t('plans.title')} description={t('pages.plans')}
+        actions={(
           <button type="button" className="btn btn-primary" onClick={() => setModal({ type: 'new' })}>
-            {t('plans.new')}
+            <Plus size={16} aria-hidden /> {t('plans.new')}
           </button>
-        </div>
-      </div>
+        )} />
 
       <div className="stack">
-        <p className="hint">{t('plans.intro')}</p>
+        <HelpNote><p>{t('plans.intro')}</p></HelpNote>
         {isLoading && <p className="empty">{t('common.loading')}</p>}
         {isError && <div className="alert alert-error">{t('plans.loadError')}</div>}
         {plans && plans.length === 0 && <div className="card empty-detail">{t('plans.empty')}</div>}
-        {plans && plans.length > 0 && <PlansTable plans={plans} onEdit={(plan) => setModal({ type: 'edit', plan })} />}
+        {plans && plans.length > 0 && (
+          <ul className="plan-grid">
+            {plans.map((p) => <PlanCard key={p.id} plan={p} onEdit={() => setModal({ type: 'edit', plan: p })} />)}
+          </ul>
+        )}
       </div>
 
       <Dialog open={modal !== null} onClose={close} wide
@@ -48,48 +48,32 @@ export function PlansPage() {
   )
 }
 
-function PlansTable({ plans, onEdit }: { plans: Plan[]; onEdit: (plan: Plan) => void }) {
+function PlanCard({ plan, onEdit }: { plan: Plan; onEdit: () => void }) {
   const { t } = useTranslation()
   return (
-    <div className="card table-card">
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">{t('plans.col.name')}</th>
-            <th scope="col">{t('plans.col.price')}</th>
-            <th scope="col" className="hide-narrow">{t('plans.col.dueDay')}</th>
-            <th scope="col">{t('plans.col.subscribers')}</th>
-            <th scope="col" className="col-actions">{t('plans.col.actions')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {plans.map((p) => (
-            <tr key={p.id}>
-              <td>
-                <div className="row-title">{p.name}</div>
-                {p.description && <div className="row-sub">{p.description}</div>}
-                <span className="badges">
-                  {p.isDefault && <span className="pill pill-soft">{t('plans.badge.default')}</span>}
-                  {p.isKidsDefault && <span className="pill pill-soft">{t('plans.badge.kidsDefault')}</span>}
-                  {!p.active && <span className="pill pill-muted">{t('plans.badge.inactive')}</span>}
-                </span>
-              </td>
-              <td className="nowrap">
-                <div className="row-title">{formatMoney(p.priceCents)}</div>
-                <div className="row-sub">{t(`plans.interval.${p.intervalMonths}`)}</div>
-              </td>
-              <td className="hide-narrow nowrap">{t('plans.dayOf', { day: p.dueDay })}</td>
-              <td>{p.subscribers}</td>
-              <td className="col-actions">
-                <button type="button" className="icon-btn" onClick={() => onEdit(p)}
-                  aria-label={t('plans.editNamed', { name: p.name })} title={t('common.edit')}>
-                  <Pencil size={16} aria-hidden />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <li className={plan.active ? 'card plan-card' : 'card plan-card inactive'}>
+      <header className="plan-card-head">
+        <div className="plan-card-title">
+          <h3>{plan.name}</h3>
+          <span className="badges">
+            {plan.isDefault && <span className="pill pill-soft">{t('plans.badge.default')}</span>}
+            {plan.isKidsDefault && <span className="pill pill-soft">{t('plans.badge.kidsDefault')}</span>}
+            {!plan.active && <span className="pill pill-muted">{t('plans.badge.inactive')}</span>}
+          </span>
+        </div>
+        <button type="button" className="btn btn-sm btn-icon" onClick={onEdit}
+          aria-label={t('plans.editNamed', { name: plan.name })} title={t('common.edit')}>
+          <Pencil size={15} aria-hidden />
+        </button>
+      </header>
+      <p className="plan-price">
+        <strong>{formatMoney(plan.priceCents)}</strong>
+        <span>{t(`plans.interval.${plan.intervalMonths}`)}</span>
+      </p>
+      {plan.description && <p className="hint">{plan.description}</p>}
+      <p className="row-sub">
+        {t('plans.dayOf', { day: plan.dueDay })} · {t('plans.subscribers', { count: plan.subscribers })}
+      </p>
+    </li>
   )
 }

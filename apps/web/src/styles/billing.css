@@ -41,6 +41,65 @@
   flex-basis: 100%;
 }
 
+.plan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plan-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.plan-card.inactive {
+  opacity: 0.7;
+}
+
+.plan-card p {
+  margin: 0;
+}
+
+.plan-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.plan-card-title {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.plan-card-title h3 {
+  font-size: 17px;
+}
+
+.plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.plan-price strong {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.plan-price span {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
 .picked-student {
   display: flex;
   align-items: center;
