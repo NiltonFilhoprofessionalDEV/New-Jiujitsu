@@ -1,0 +1,7 @@
+# Segredos de desenvolvimento nunca entram na imagem
+.env
+.env.*
+target/
+.idea/
+.vscode/
+*.iml
