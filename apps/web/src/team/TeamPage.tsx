@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { useAuth } from '@/auth/useAuth'
+import { PageTitle } from '@/components/PageTitle'
 
 import { StaffInviteForm } from './StaffInviteForm'
 import { StaffInviteList } from './StaffInviteList'
@@ -18,7 +19,7 @@ export function TeamPage() {
       <div className="page-header">
         <div>
           <div className="eyebrow">{t('common.yourAcademy')}</div>
-          <h1>{t('team.title')}</h1>
+          <PageTitle>{t('team.title')}</PageTitle>
         </div>
       </div>
 

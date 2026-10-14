@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
+import { PageTitle } from '@/components/PageTitle'
 import { apiErrorMessage } from '@/lib/apiErrors'
 
 import { perSession } from './average'
@@ -17,7 +18,7 @@ export function InstructorsReportPage() {
       <div className="page-header">
         <div>
           <div className="eyebrow">{t('nav.groups.relatorios')}</div>
-          <h1>{t('reports.instructors.title')}</h1>
+          <PageTitle>{t('reports.instructors.title')}</PageTitle>
         </div>
       </div>
       <div className="stack">

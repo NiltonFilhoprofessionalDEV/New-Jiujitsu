@@ -4,6 +4,7 @@ import { Navigate } from 'react-router'
 
 import { STAFF_ROLES } from '@/auth/types'
 import { useAuth } from '@/auth/useAuth'
+import { PageTitle } from '@/components/PageTitle'
 import { Topbar } from '@/layout/Topbar'
 import { PasswordForm } from '@/settings/PasswordForm'
 
@@ -33,7 +34,7 @@ export function StudentAccountPage() {
           <div className="page-header">
             <div>
               <div className="eyebrow">{activeMembership.academy.name}</div>
-              <h1>{t('account.hello', { name: session.user.name.split(' ')[0] })}</h1>
+              <PageTitle>{t('account.hello', { name: session.user.name.split(' ')[0] })}</PageTitle>
             </div>
           </div>
           <div className="stack">

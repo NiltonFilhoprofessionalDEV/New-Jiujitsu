@@ -16,7 +16,14 @@ body {
   font-size: 15px;
   line-height: 1.5;
   color: var(--text);
-  background: var(--bg);
+  /* Brilho vermelho vindo do topo + grade fina de tatame */
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 55% 42% at 50% -8%, var(--ambient), transparent 70%),
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 100% 100%, 56px 56px, 56px 56px;
+  background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -28,7 +35,7 @@ h3 {
 }
 
 a {
-  color: var(--primary);
+  color: var(--accent-text);
   text-decoration: none;
 }
 
@@ -45,7 +52,7 @@ textarea {
 }
 
 :focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--accent-text);
   outline-offset: 2px;
 }
 
@@ -56,4 +63,27 @@ textarea {
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+/* Tipografia da marca */
+.page-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(34px, 4.2vw, 46px);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.pulse-letter {
+  color: var(--primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }

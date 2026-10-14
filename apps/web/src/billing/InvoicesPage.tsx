@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { todayIso } from '@/classes/dates'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { Dialog } from '@/components/Dialog'
+import { PageTitle } from '@/components/PageTitle'
 import { apiErrorMessage } from '@/lib/apiErrors'
 import { useDebouncedValue } from '@/lib/useDebouncedValue'
 
@@ -48,7 +49,7 @@ export function InvoicesPage() {
       <div className="page-header">
         <div>
           <div className="eyebrow">{t('nav.groups.financeiro')}</div>
-          <h1>{t('invoices.title')}</h1>
+          <PageTitle>{t('invoices.title')}</PageTitle>
         </div>
       </div>
 

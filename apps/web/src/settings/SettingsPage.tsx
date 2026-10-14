@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { useIsManager } from '@/auth/useAuth'
+import { PageTitle } from '@/components/PageTitle'
 import { EnrollmentLinkCard } from '@/invites/EnrollmentLinkCard'
 
 import { AcademyProfileForm } from './AcademyProfileForm'
@@ -15,7 +16,7 @@ export function SettingsPage() {
       <div className="page-header">
         <div>
           <div className="eyebrow">{t('common.yourAcademy')}</div>
-          <h1>{t('settings.title')}</h1>
+          <PageTitle>{t('settings.title')}</PageTitle>
         </div>
       </div>
       <div className="stack">

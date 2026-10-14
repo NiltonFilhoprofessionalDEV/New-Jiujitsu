@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { DataItem } from '@/components/DataItem'
+import { PageTitle } from '@/components/PageTitle'
 import { useDecideRequest, useEnrollmentRequests } from '@/invites/invitesApi'
 import type { EnrollmentRequestItem } from '@/invites/types'
 import { apiErrorMessage } from '@/lib/apiErrors'
@@ -36,7 +37,7 @@ export function RequestsPage() {
       <div className="page-header">
         <div>
           <div className="eyebrow">{t('common.yourAcademy')}</div>
-          <h1>{t('requests.title')}</h1>
+          <PageTitle>{t('requests.title')}</PageTitle>
           <p className="hint">{t('requests.subtitle')}</p>
         </div>
       </div>

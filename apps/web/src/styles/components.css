@@ -3,26 +3,30 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: var(--radius-sm);
+  height: 42px;
+  padding: 0 18px;
+  border-radius: var(--radius);
   border: 1px solid var(--border-strong);
-  background: var(--surface);
+  background: var(--surface-2);
   color: var(--text);
   font-weight: 600;
   font-size: 14px;
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
 
 .btn:hover {
-  background: var(--surface-2);
+  background: var(--surface-3);
   text-decoration: none;
 }
 
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
 .btn:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
@@ -30,17 +34,23 @@
   background: var(--primary);
   border-color: var(--primary);
   color: var(--on-primary);
+  box-shadow: var(--glow-sm);
 }
 
 .btn-primary:hover {
   background: var(--primary-hover);
   border-color: var(--primary-hover);
+  box-shadow: var(--glow);
 }
 
 .btn-outline-primary {
   border-color: var(--primary);
-  color: var(--primary);
+  color: var(--accent-text);
   background: transparent;
+}
+
+.btn-outline-primary:hover {
+  background: var(--primary-soft);
 }
 
 .btn-block {
@@ -58,13 +68,14 @@
 .field {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+  align-content: start;
   gap: 6px;
 }
 
 .field label {
   font-size: 13px;
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--text);
 }
 
 .input {
@@ -72,7 +83,12 @@
   padding: 0 12px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-strong);
-  background: var(--surface);
+  background: var(--surface-2);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.input::placeholder {
+  color: var(--text-subtle);
 }
 
 .input-sm {
@@ -111,11 +127,11 @@
 }
 
 .eyebrow {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--accent-text);
 }
 
 .pill {
@@ -140,7 +156,11 @@
 
 .stat strong {
   display: block;
-  font-size: 22px;
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
 }
 
 .stat span {
@@ -149,11 +169,12 @@
 }
 
 .section-title {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text);
   margin: 28px 0 10px;
 }
 
@@ -194,7 +215,7 @@
   padding: 0;
   border: 0;
   background: none;
-  color: var(--primary);
+  color: var(--accent-text);
   font-weight: 600;
   cursor: pointer;
 }
@@ -218,7 +239,7 @@
   height: 22px;
   padding: 0 8px;
   background: var(--primary-soft);
-  color: var(--primary);
+  color: var(--accent-text);
 }
 
 .pill-muted {
@@ -276,20 +297,26 @@
 }
 
 .chip {
-  height: 30px;
-  padding: 0 12px;
+  height: 32px;
+  padding: 0 14px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-pill);
   background: var(--surface);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.chip:hover {
+  border-color: var(--text-subtle);
 }
 
 .chip.active {
   border-color: var(--primary);
   background: var(--primary);
   color: var(--on-primary);
+  box-shadow: var(--glow-sm);
 }
 
 /* Tabela */
@@ -305,20 +332,26 @@
 }
 
 .table th {
-  padding: 10px 14px;
+  padding: 12px 14px;
   text-align: left;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: var(--text-muted);
   background: var(--surface-2);
 }
 
 .table td {
-  padding: 10px 14px;
+  padding: 12px 14px;
   border-top: 1px solid var(--border);
   vertical-align: middle;
+}
+
+.table tbody tr:hover td {
+  background: color-mix(in srgb, var(--surface-2) 60%, transparent);
 }
 
 .table tr.selected td {
@@ -443,7 +476,8 @@
 }
 
 .dialog::backdrop {
-  background: rgb(10 10 11 / 0.55);
+  background: var(--overlay);
+  backdrop-filter: blur(3px);
 }
 
 .dialog-header {
@@ -459,7 +493,11 @@
 }
 
 .dialog-header h2 {
-  font-size: 18px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .dialog-header .icon-btn:hover {

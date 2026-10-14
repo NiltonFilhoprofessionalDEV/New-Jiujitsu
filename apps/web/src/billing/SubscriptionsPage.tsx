@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { Dialog } from '@/components/Dialog'
+import { PageTitle } from '@/components/PageTitle'
 import { apiErrorMessage } from '@/lib/apiErrors'
 import { fold } from '@/lib/text'
 
@@ -40,7 +41,7 @@ export function SubscriptionsPage() {
       <div className="page-header">
         <div>
           <div className="eyebrow">{t('nav.groups.financeiro')}</div>
-          <h1>{t('subscriptions.title')}</h1>
+          <PageTitle>{t('subscriptions.title')}</PageTitle>
         </div>
         <div className="page-actions">
           <button type="button" className="btn btn-primary" disabled={!hasActivePlan}

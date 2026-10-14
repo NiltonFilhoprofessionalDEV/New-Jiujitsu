@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Dialog } from '@/components/Dialog'
+import { PageTitle } from '@/components/PageTitle'
 
 import { usePlans } from './billingApi'
 import { formatMoney } from './money'
@@ -22,7 +23,7 @@ export function PlansPage() {
       <div className="page-header">
         <div>
           <div className="eyebrow">{t('common.yourAcademy')}</div>
-          <h1>{t('plans.title')}</h1>
+          <PageTitle>{t('plans.title')}</PageTitle>
         </div>
         <div className="page-actions">
           <button type="button" className="btn btn-primary" onClick={() => setModal({ type: 'new' })}>

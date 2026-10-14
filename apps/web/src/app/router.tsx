@@ -6,8 +6,6 @@ import { RegisterAcademyPage } from '@/auth/pages/RegisterAcademyPage'
 import { RedirectIfAuthenticated, RequireAuth, RequireManager, RequireStaff } from '@/auth/RequireAuth'
 import { STUDENT_HOME } from '@/auth/types'
 import { AppShell } from '@/layout/AppShell'
-import { MANAGER_NAV } from '@/layout/navItems'
-import { ComingSoonPage } from '@/pages/ComingSoonPage'
 
 import { PageLoading, RouteError } from './RouteFallbacks'
 
@@ -16,25 +14,15 @@ function page<M>(load: () => Promise<M>, pick: (module: M) => ComponentType) {
   return async () => ({ Component: pick(await load()) })
 }
 
-const IMPLEMENTED = new Set(['/', '/alunos', '/aulas', '/equipe', '/requests', '/mensalidades', '/financeiro/alunos',
-  '/financeiro/faturas', '/configuracoes', '/relatorios', '/relatorios/professores'])
-
-const pendingItems = MANAGER_NAV.flatMap((g) => g.items).filter((item) => !IMPLEMENTED.has(item.to))
-const pendingRoute = (item: (typeof pendingItems)[number]) => ({
-  path: item.to.slice(1),
-  element: <ComingSoonPage titleKey={item.labelKey} />,
-})
-
 const managerRoutes = [
   { path: 'equipe', lazy: page(() => import('@/team/TeamPage'), (m) => m.TeamPage) },
   { path: 'mensalidades', lazy: page(() => import('@/billing/PlansPage'), (m) => m.PlansPage) },
   { path: 'financeiro/alunos', lazy: page(() => import('@/billing/SubscriptionsPage'), (m) => m.SubscriptionsPage) },
   { path: 'financeiro/faturas', lazy: page(() => import('@/billing/InvoicesPage'), (m) => m.InvoicesPage) },
-  ...pendingItems.filter((item) => item.managersOnly).map(pendingRoute),
 ]
 
 const staffRoutes = [
-  { index: true, lazy: page(() => import('@/pages/HomePage'), (m) => m.HomePage) },
+  { index: true, lazy: page(() => import('@/home/HomePage'), (m) => m.HomePage) },
   { path: 'alunos', lazy: page(() => import('@/students/StudentsPage'), (m) => m.StudentsPage) },
   { path: 'aulas', lazy: page(() => import('@/classes/ClassesPage'), (m) => m.ClassesPage) },
   { path: 'aulas/presenca', lazy: page(() => import('@/classes/AttendancePage'), (m) => m.AttendancePage) },
@@ -46,7 +34,6 @@ const staffRoutes = [
     path: 'relatorios/professores',
     lazy: page(() => import('@/reports/InstructorsReportPage'), (m) => m.InstructorsReportPage),
   },
-  ...pendingItems.filter((item) => !item.managersOnly).map(pendingRoute),
   { element: <RequireManager />, children: managerRoutes },
 ]
 

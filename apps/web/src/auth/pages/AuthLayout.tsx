@@ -1,22 +1,19 @@
 import type { ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
+
+import { PageTitle } from '@/components/PageTitle'
+import { BrandLogo } from '@/layout/BrandLogo'
 
 export function AuthLayout({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
-  const { t } = useTranslation()
   return (
     <div className="auth-screen">
-      <div className="card auth-card">
-        <div className="auth-brand">
-          <span className="brand-mark" aria-hidden>
-            J
-          </span>
-          {t('app.tagline')}
-        </div>
-        <div>
-          <h1>{title}</h1>
-          <p className="empty">{subtitle}</p>
-        </div>
-        {children}
+      <div className="auth-panel">
+        <header className="auth-head">
+          <BrandLogo />
+          <span className="auth-rule" aria-hidden />
+          <PageTitle className="auth-title">{title}</PageTitle>
+          <p className="auth-sub">{subtitle}</p>
+        </header>
+        <div className="card auth-card">{children}</div>
       </div>
     </div>
   )

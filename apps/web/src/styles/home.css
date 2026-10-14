@@ -1,0 +1,276 @@
+/* Painel inicial */
+.home .page-header {
+  margin-bottom: 32px;
+}
+
+.home-date::first-letter {
+  text-transform: uppercase;
+}
+
+.home-section {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.home > .queue-card {
+  margin-bottom: 22px;
+}
+
+.home-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.home-section-head .section-title,
+.overview .section-title {
+  margin: 0;
+}
+
+.live-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.home-placeholder {
+  height: 74px;
+}
+
+.home-empty {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Aula acontecendo agora / fila de matrículas */
+.live-class,
+.queue-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  color: inherit;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.live-class:hover,
+.queue-card:hover {
+  border-color: var(--primary-soft-border);
+  text-decoration: none;
+}
+
+.live-class {
+  border-color: var(--primary-soft-border);
+  background: linear-gradient(90deg, var(--primary-soft), transparent 60%), var(--surface);
+}
+
+.live-dot {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  flex: none;
+  margin: 0 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: var(--glow-sm);
+}
+
+.live-dot::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  animation: pulse-ring 1.6s ease-out infinite;
+}
+
+@keyframes pulse-ring {
+  from {
+    opacity: 0.8;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.4);
+  }
+}
+
+.page-loading {
+  display: grid;
+  place-items: center;
+  min-height: 60vh;
+}
+
+.live-main {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.live-main strong {
+  font-size: 15px;
+}
+
+.live-count {
+  display: grid;
+  justify-items: end;
+  text-align: right;
+}
+
+.live-count strong {
+  font-size: 14px;
+}
+
+.live-chevron {
+  flex: none;
+  color: var(--text-subtle);
+}
+
+.queue-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.queue-card.waiting .queue-icon {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--on-primary);
+  box-shadow: var(--glow-sm);
+}
+
+/* Próxima aula */
+.next-class {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px;
+}
+
+.next-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.next-title {
+  display: block;
+  margin-top: 4px;
+  font-size: 18px;
+}
+
+/* Atalhos */
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.quick-tile {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  min-height: 104px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+
+.quick-tile:hover {
+  border-color: var(--border-strong);
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.quick-tile svg {
+  margin-bottom: 6px;
+}
+
+.quick-tile strong {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.quick-tile span {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.quick-tile.pulse {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--on-primary);
+  box-shadow: var(--glow-sm);
+}
+
+.quick-tile.pulse:hover {
+  box-shadow: var(--glow);
+}
+
+.quick-tile.inverse {
+  border-color: var(--inverse-bg);
+  background: var(--inverse-bg);
+  color: var(--inverse-text);
+}
+
+.quick-tile.pulse span,
+.quick-tile.inverse span {
+  color: inherit;
+  opacity: 0.8;
+}
+
+/* Visão geral */
+.overview {
+  gap: 14px;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.overview-stat {
+  display: grid;
+  gap: 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.overview-stat span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 560px) {
+  .quick-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .live-count .hint {
+    display: none;
+  }
+}

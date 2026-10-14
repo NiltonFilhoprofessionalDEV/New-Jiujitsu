@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
+import { PageTitle } from '@/components/PageTitle'
 import { apiErrorMessage } from '@/lib/apiErrors'
 
 import { PeriodPicker } from './PeriodPicker'
@@ -17,7 +18,7 @@ export function ReportsPage() {
       <div className="page-header">
         <div>
           <div className="eyebrow">{t('nav.groups.relatorios')}</div>
-          <h1>{t('reports.title')}</h1>
+          <PageTitle>{t('reports.title')}</PageTitle>
         </div>
       </div>
       <div className="stack">

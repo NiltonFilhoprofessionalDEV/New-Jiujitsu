@@ -35,7 +35,7 @@
 }
 
 .row-link:hover .row-title {
-  color: var(--primary);
+  color: var(--accent-text);
 }
 
 .row-sub {

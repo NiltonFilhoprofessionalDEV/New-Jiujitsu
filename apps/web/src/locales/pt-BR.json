@@ -1,9 +1,9 @@
 {
   "app": {
-    "tagline": "Gestão de academias de Jiu-Jitsu"
+    "name": "BJJ Pulse"
   },
   "auth": {
-    "loginTitle": "Entrar",
+    "loginTitle": "Entrar na sua conta",
     "loginSubtitle": "Acesse o painel da sua academia.",
     "email": "E-mail",
     "password": "Senha",
@@ -94,17 +94,11 @@
   },
   "topbar": {
     "menu": "Abrir ou fechar o menu",
-    "search": "Buscar funcionalidade",
+    "closeMenu": "Fechar o menu",
     "invites": "Convites",
-    "requests": "Solicitações",
-    "messages": "Mensagens dos alunos",
-    "notifications": "Notificações",
-    "help": "Ajuda e suporte",
-    "trial": "Versão de teste",
     "themeLight": "Ativar modo claro",
     "themeDark": "Ativar modo escuro",
-    "logout": "Sair",
-    "switchAcademy": "Trocar de academia"
+    "logout": "Sair"
   },
   "roles": {
     "OWNER": "Gestor",
@@ -114,29 +108,26 @@
     "RESPONSIBLE": "Responsável"
   },
   "nav": {
+    "aria": "Menu principal",
+    "withPending": "{{label}} ({{count}} pendentes)",
     "groups": {
-      "academia": "Academia",
+      "principal": "Principal",
       "financeiro": "Financeiro",
       "relatorios": "Relatórios",
-      "comunicacao": "Comunicação",
-      "conta": "Conta"
+      "mais": "Mais"
     },
     "inicio": "Início",
+    "chamada": "Chamada",
+    "turmas": "Turmas",
     "alunos": "Alunos",
-    "aulas": "Aulas",
-    "equipe": "Equipe",
-    "planosDeMensalidade": "Planos de mensalidade",
-    "certificados": "Certificados",
-    "movimentacoes": "Movimentações",
-    "mensalidade": "Mensalidade",
+    "graduacoes": "Graduações",
+    "mensalidades": "Mensalidades",
     "faturas": "Faturas",
-    "cobranca": "Cobrança",
+    "planos": "Planos",
+    "solicitacoes": "Solicitações",
     "relatorios": "Relatórios",
     "professores": "Professores",
-    "mensagens": "Mensagens",
-    "solicitacoes": "Solicitações",
-    "notificacoes": "Notificações",
-    "calendario": "Calendário",
+    "equipe": "Equipe",
     "configuracoes": "Configurações"
   },
   "routeError": {
@@ -146,7 +137,6 @@
   },
   "common": {
     "yourAcademy": "Sua academia",
-    "comingSoon": "Esta tela faz parte das próximas entregas.",
     "loading": "Carregando...",
     "cancel": "Cancelar",
     "confirm": "Confirmar",
@@ -165,15 +155,50 @@
     "copyPrompt": "Copie o link:"
   },
   "home": {
-    "title": "Painel de gestão",
-    "firstSteps": "Primeiros passos",
-    "stepPlan": "Plano",
-    "stepClass": "Aula",
-    "stepStudent": "Aluno",
+    "title": "Painel",
+    "overview": "Visão geral",
+    "now": {
+      "title": "Agora no tatame",
+      "live_one": "{{count}} aula em andamento",
+      "live_other": "{{count}} aulas em andamento",
+      "empty": "Nenhuma aula acontecendo agora.",
+      "since": "Desde {{time}}",
+      "until": "até {{time}}",
+      "present_zero": "Nenhum presente",
+      "present_one": "{{count}} presente",
+      "present_other": "{{count}} presentes",
+      "enrolled_zero": "nenhum inscrito",
+      "enrolled_one": "de {{count}} inscrito",
+      "enrolled_other": "de {{count}} inscritos"
+    },
+    "next": {
+      "title": "Próxima aula",
+      "none": "Não há mais aulas hoje.",
+      "seeClasses": "Ver turmas",
+      "today": "Hoje · {{time}}",
+      "instructor": "Prof. {{name}}",
+      "open": "Abrir chamada"
+    },
+    "queue": {
+      "title": "Matrículas pendentes",
+      "empty": "Nenhum pedido aguardando.",
+      "waiting_one": "{{count}} pedido aguardando aprovação",
+      "waiting_other": "{{count}} pedidos aguardando aprovação"
+    },
+    "actions": {
+      "title": "Atalhos",
+      "attendance": { "title": "Chamada", "hint": "Marcar presença" },
+      "classes": { "title": "Turmas", "hint": "Horários e inscrições" },
+      "students": { "title": "Alunos", "hint": "Cadastros e famílias" },
+      "graduate": { "title": "Graduar", "hint": "Faixas e graus" },
+      "invite": { "title": "Convidar", "hint": "Link de matrícula" },
+      "invoices": { "title": "Faturas", "hint": "Cobranças em aberto" },
+      "reports": { "title": "Relatórios", "hint": "Frequência e turmas" }
+    },
     "stats": {
       "activeStudents": "Alunos ativos",
-      "responsibles": "Responsáveis",
-      "families": "Famílias",
+      "presentToday": "Presenças hoje",
+      "classesToday": "Aulas hoje",
       "readyToGraduate": "Prontos para graduar"
     }
   },
@@ -637,9 +662,9 @@
     "archiveConfirm": "Remover a aula \"{{title}}\"? Ela sai da grade, mas as presenças já registradas continuam no histórico dos alunos.",
     "tabs": {
       "aria": "Seções de aulas",
-      "classes": "Aulas",
-      "attendance": "Presença",
-      "belts": "Faixas"
+      "classes": "Turmas",
+      "attendance": "Chamada",
+      "belts": "Graduações"
     },
     "table": {
       "title": "Título",
@@ -692,7 +717,7 @@
     "dayError": "Não foi possível carregar as aulas do dia.",
     "pickClass": "Escolha uma aula do dia para fazer a chamada.",
     "sessionError": "Não foi possível carregar a chamada.",
-    "presentOf": "{{present}} presentes · {{total}} inscritos",
+    "presentOf": "Presentes: {{present}}/{{total}}",
     "instructor": "Professor:",
     "today": "Hoje",
     "prevWeek": "Semana anterior",

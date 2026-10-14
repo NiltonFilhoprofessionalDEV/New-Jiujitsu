@@ -2,6 +2,8 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
 
+import { PageTitle } from '@/components/PageTitle'
+
 const TABS = [
   { to: '/aulas', labelKey: 'classes.tabs.classes', end: true },
   { to: '/aulas/presenca', labelKey: 'classes.tabs.attendance', end: false },
@@ -16,7 +18,7 @@ export function ClassesHeader({ actions }: { actions?: ReactNode }) {
       <div className="page-header">
         <div>
           <div className="eyebrow">{t('common.yourAcademy')}</div>
-          <h1>{t('classes.title')}</h1>
+          <PageTitle>{t('classes.title')}</PageTitle>
         </div>
         {actions && <div className="page-actions">{actions}</div>}
       </div>

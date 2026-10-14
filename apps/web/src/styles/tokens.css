@@ -1,82 +1,96 @@
+/* BJJ Pulse — escuro é o padrão; [data-theme='light'] é a alternativa. */
 :root {
-  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'DM Sans Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Bebas Neue', 'Arial Narrow', Impact, sans-serif;
 
-  --red-50: #fff1f2;
-  --red-100: #ffe1e4;
-  --red-500: #e11d2e;
-  --red-600: #c8102e;
-  --red-700: #a50d26;
+  --pulse: #e5140a;
+  --pulse-hot: #ff3326;
 
-  --bg: #ffffff;
-  --surface: #ffffff;
-  --surface-2: #f5f5f6;
-  --surface-3: #ebebed;
-  --border: #e2e2e5;
-  --border-strong: #cfcfd4;
-  --text: #0a0a0b;
-  --text-muted: #5c5c66;
-  --text-subtle: #8a8a94;
-
-  --primary: var(--red-600);
-  --primary-hover: var(--red-700);
-  --primary-soft: var(--red-50);
-  --primary-soft-border: var(--red-100);
-  --on-primary: #ffffff;
-
-  --success: #16a34a;
-  --warning: #b45309;
-  --warning-soft: #fffbeb;
-  --warning-border: #f5c451;
-  --danger: var(--red-600);
-
-  --topbar-bg: #0a0a0b;
-  --topbar-text: #ffffff;
-  --topbar-muted: #a1a1aa;
-  --sidebar-bg: #ffffff;
-  --sidebar-active-bg: var(--red-50);
-  --sidebar-active-text: var(--red-600);
-
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 14px;
-  --radius-pill: 999px;
-  --shadow-sm: 0 1px 2px rgb(10 10 11 / 0.06);
-  --shadow: 0 4px 16px rgb(10 10 11 / 0.08);
-
-  --topbar-h: 56px;
-  --sidebar-w: 58px;
-  --sidebar-w-open: 240px;
-
-  color-scheme: light;
-}
-
-:root[data-theme='dark'] {
-  --bg: #0e0e10;
-  --surface: #17171a;
-  --surface-2: #1d1d21;
-  --surface-3: #26262b;
-  --border: #2a2a30;
-  --border-strong: #3a3a42;
+  --bg: #070707;
+  --surface: #111113;
+  --surface-2: #19191c;
+  --surface-3: #232327;
+  --border: #232327;
+  --border-strong: #34343b;
   --text: #f4f4f5;
   --text-muted: #a1a1aa;
-  --text-subtle: #71717a;
+  --text-subtle: #6e6e78;
 
-  --primary: var(--red-500);
-  --primary-hover: var(--red-600);
-  --primary-soft: rgb(225 29 46 / 0.14);
-  --primary-soft-border: rgb(225 29 46 / 0.35);
+  /* --primary preenche (botões, chips); --accent-text é o vermelho legível como texto */
+  --primary: var(--pulse);
+  --primary-hover: var(--pulse-hot);
+  --primary-soft: rgb(229 20 10 / 0.14);
+  --primary-soft-border: rgb(229 20 10 / 0.4);
+  --on-primary: #ffffff;
+  --accent-text: #ff4a3d;
+  --inverse-bg: #f4f4f5;
+  --inverse-text: #070707;
 
+  --success: #22c55e;
   --warning: #fbbf24;
   --warning-soft: rgb(251 191 36 / 0.1);
   --warning-border: rgb(251 191 36 / 0.5);
+  --danger: var(--accent-text);
 
-  --topbar-bg: #0a0a0b;
-  --sidebar-bg: #121215;
-  --sidebar-active-bg: rgb(225 29 46 / 0.16);
-  --sidebar-active-text: #ff5c6c;
+  /* O menu lateral é escuro nos dois temas: é a assinatura da marca */
+  --side-bg: #0b0b0c;
+  --side-border: #1d1d21;
+  --side-text: #f4f4f5;
+  --side-muted: #8b8b94;
+  --side-hover: #17171a;
+  --side-glow: 0 0 22px rgb(229 20 10 / 0.45);
 
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
-  --shadow: 0 4px 16px rgb(0 0 0 / 0.45);
+  --ambient: rgb(229 20 10 / 0.22);
+  --grid-line: rgb(255 255 255 / 0.028);
+  --glow: 0 0 22px rgb(229 20 10 / 0.45);
+  --glow-sm: 0 4px 14px rgb(229 20 10 / 0.35);
+  --overlay: rgb(0 0 0 / 0.7);
+
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.5);
+  --shadow: 0 12px 32px rgb(0 0 0 / 0.55);
+
+  --topbar-h: 56px;
+  --sidebar-w: 248px;
 
   color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bg: #f4f4f5;
+  --surface: #ffffff;
+  --surface-2: #f4f4f5;
+  --surface-3: #e8e8eb;
+  --border: #e4e4e7;
+  --border-strong: #cfcfd5;
+  --text: #0a0a0b;
+  --text-muted: #55555f;
+  --text-subtle: #85858f;
+
+  --primary: #d4120a;
+  --primary-hover: #b10f08;
+  --primary-soft: #fff0ef;
+  --primary-soft-border: #ffd0cc;
+  --accent-text: #c2110a;
+  --inverse-bg: #0a0a0b;
+  --inverse-text: #ffffff;
+
+  --success: #15803d;
+  --warning: #b45309;
+  --warning-soft: #fffbeb;
+  --warning-border: #f5c451;
+
+  --ambient: rgb(229 20 10 / 0.1);
+  --grid-line: rgb(10 10 11 / 0.035);
+  --glow: 0 6px 20px rgb(212 18 10 / 0.3);
+  --glow-sm: 0 4px 12px rgb(212 18 10 / 0.22);
+  --overlay: rgb(10 10 11 / 0.5);
+
+  --shadow-sm: 0 1px 2px rgb(10 10 11 / 0.06);
+  --shadow: 0 12px 32px rgb(10 10 11 / 0.12);
+
+  color-scheme: light;
 }

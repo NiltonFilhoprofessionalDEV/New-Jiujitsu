@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/auth/useAuth'
 import { MANAGER_ROLES } from '@/auth/types'
 import { Dialog } from '@/components/Dialog'
+import { PageTitle } from '@/components/PageTitle'
 import { InvitesPanel } from '@/invites/InvitesPanel'
 import { useDebouncedValue } from '@/lib/useDebouncedValue'
 
@@ -51,7 +52,7 @@ export function StudentsPage() {
       <div className="page-header">
         <div>
           <div className="eyebrow">{t('common.yourAcademy')}</div>
-          <h1>{t('students.title')}</h1>
+          <PageTitle>{t('students.title')}</PageTitle>
         </div>
         {canEdit && (
           <div className="page-actions">
