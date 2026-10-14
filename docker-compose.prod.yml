@@ -60,6 +60,7 @@ services:
         condition: service_healthy
     environment:
       APP_DOMAIN: ${APP_DOMAIN:?defina APP_DOMAIN}
+      APP_EXTRA_DOMAINS: ${APP_EXTRA_DOMAINS:-}
       ACME_EMAIL: ${ACME_EMAIL:?defina ACME_EMAIL}
     ports:
       - "80:80"

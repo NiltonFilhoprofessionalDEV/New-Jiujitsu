@@ -1,10 +1,15 @@
 # HTTPS automático (Let's Encrypt) para APP_DOMAIN; o DNS do domínio precisa apontar para este servidor
 # e as portas 80 e 443 precisam estar abertas. Com APP_DOMAIN=localhost o Caddy usa um certificado local.
+# APP_EXTRA_DOMAINS (opcional, ex.: www.dominio) também ganha certificado e redireciona para APP_DOMAIN.
 {
 	email {$ACME_EMAIL}
 }
 
-{$APP_DOMAIN} {
+{$APP_DOMAIN} {$APP_EXTRA_DOMAINS} {
+	# Um único host canônico: o cookie de sessão é por host
+	@extra not host {$APP_DOMAIN}
+	redir @extra https://{$APP_DOMAIN}{uri} permanent
+
 	encode zstd gzip
 
 	header {
