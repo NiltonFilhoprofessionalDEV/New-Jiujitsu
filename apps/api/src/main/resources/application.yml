@@ -52,6 +52,9 @@ app:
   signup:
     max-attempts: ${APP_SIGNUP_MAX_ATTEMPTS:30}
     window: 1h
+  # Teto geral por IP. Alto o bastante para a academia inteira atrás de um mesmo Wi-Fi.
+  rate-limit:
+    requests-per-minute: ${APP_RATE_LIMIT_PER_MINUTE:600}
   # Fuso usado para "hoje" (idade, data de matrícula). A fase 1 atende academias no Brasil.
   time-zone: ${APP_TIME_ZONE:America/Sao_Paulo}
   billing:

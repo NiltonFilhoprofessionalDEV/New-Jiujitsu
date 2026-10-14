@@ -60,7 +60,7 @@ class PasswordChangeIntegrationTest {
 	}
 
 	@Test
-	void shortNewPasswordIsRejected() throws Exception {
+	void shortOrOverBcryptLimitPasswordIsRejected() throws Exception {
 		String email = uniqueEmail();
 		String token = read(mvc.perform(json(post(CTX + "/auth/register-academy"), registerBody(email)))
 				.andExpect(status().isCreated()).andReturn(), "$.accessToken");
@@ -68,6 +68,10 @@ class PasswordChangeIntegrationTest {
 		changePassword(token, PASSWORD, "curta")
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.code").value("VALIDATION_ERROR"));
+		// 60 caracteres passam no @Size, mas são 120 bytes: o BCrypt lançaria exceção (500)
+		changePassword(token, PASSWORD, "ç".repeat(60))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.fields.newPassword").exists());
 	}
 
 	private MvcResult login(String email, String password) throws Exception {

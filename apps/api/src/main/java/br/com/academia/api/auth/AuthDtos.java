@@ -3,6 +3,7 @@ package br.com.academia.api.auth;
 import java.util.List;
 import java.util.UUID;
 
+import br.com.academia.api.common.BcryptSafe;
 import br.com.academia.api.membership.Membership;
 import br.com.academia.api.membership.MembershipRole;
 import jakarta.validation.constraints.Email;
@@ -19,20 +20,20 @@ public final class AuthDtos {
 			@NotBlank @Size(max = 120) String academyName,
 			@NotBlank @Size(max = 120) String name,
 			@NotBlank @Email @Size(max = 254) String email,
-			@NotBlank @Size(min = 8, max = 72, message = "A senha deve ter entre 8 e 72 caracteres") String password) {
+			@NotBlank @Size(min = 8, max = 72, message = "A senha deve ter entre 8 e 72 caracteres") @BcryptSafe String password) {
 	}
 
 	public record LoginRequest(
 			@NotBlank @Email @Size(max = 254) String email,
-			@NotBlank @Size(max = 72) String password) {
+			@NotBlank @Size(max = 72) @BcryptSafe String password) {
 	}
 
 	public record SwitchAcademyRequest(@NotNull UUID membershipId) {
 	}
 
 	public record ChangePasswordRequest(
-			@NotBlank @Size(max = 72) String currentPassword,
-			@NotBlank @Size(min = 8, max = 72, message = "A senha deve ter entre 8 e 72 caracteres") String newPassword) {
+			@NotBlank @Size(max = 72) @BcryptSafe String currentPassword,
+			@NotBlank @Size(min = 8, max = 72, message = "A senha deve ter entre 8 e 72 caracteres") @BcryptSafe String newPassword) {
 	}
 
 	public record AcademySummary(UUID id, String name, String slug) {

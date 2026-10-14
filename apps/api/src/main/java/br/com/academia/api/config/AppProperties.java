@@ -18,6 +18,7 @@ public record AppProperties(
 		@NotNull Cors cors,
 		@NotNull Login login,
 		@NotNull Signup signup,
+		@NotNull RateLimit rateLimit,
 		@NotNull ZoneId timeZone) {
 
 	public record Jwt(
@@ -43,5 +44,9 @@ public record AppProperties(
 
 	/** Cadastros públicos (link de matrícula e convites) por IP, contando sucessos e falhas. */
 	public record Signup(@Min(1) int maxAttempts, @NotNull Duration window) {
+	}
+
+	/** Teto geral de requisições por IP, por minuto. */
+	public record RateLimit(@Min(1) int requestsPerMinute) {
 	}
 }

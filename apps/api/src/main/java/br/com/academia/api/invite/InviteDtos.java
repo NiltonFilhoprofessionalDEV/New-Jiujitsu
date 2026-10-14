@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import br.com.academia.api.common.BcryptSafe;
 import br.com.academia.api.invite.EnrollmentLink.State;
 import br.com.academia.api.student.StudentEnums.Kind;
 import jakarta.validation.constraints.Email;
@@ -24,7 +25,7 @@ public final class InviteDtos {
 			@NotBlank @Size(max = 120) String name,
 			@Size(max = 60) String nickname,
 			@NotBlank @Email @Size(max = 254) String email,
-			@NotBlank @Size(min = 8, max = 72, message = "A senha deve ter entre 8 e 72 caracteres") String password,
+			@NotBlank @Size(min = 8, max = 72, message = "A senha deve ter entre 8 e 72 caracteres") @BcryptSafe String password,
 			@Size(max = 14) String cpf,
 			@Size(max = 30) String phone,
 			@PastOrPresent LocalDate birthDate,

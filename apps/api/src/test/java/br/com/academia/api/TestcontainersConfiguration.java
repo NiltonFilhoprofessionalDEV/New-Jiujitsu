@@ -27,6 +27,8 @@ public class TestcontainersConfiguration {
 		return registry -> {
 			registry.add("app.jwt.secret", () -> encoded);
 			registry.add("app.cookie.secure", () -> "true");
+			// Toda a suíte sai do mesmo IP; o teto geral tem teste próprio
+			registry.add("app.rate-limit.requests-per-minute", () -> "1000000");
 		};
 	}
 
