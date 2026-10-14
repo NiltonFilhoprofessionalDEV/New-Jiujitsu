@@ -1,5 +1,7 @@
 package br.com.academia.api.academy;
 
+import static br.com.academia.api.common.TextNormalizer.blankToNull;
+
 import java.time.Instant;
 import java.util.UUID;
 
@@ -62,13 +64,13 @@ public class Academy {
 	}
 
 	public void updateProfile(AcademyProfile profile) {
-		this.name = profile.name();
-		this.cnpj = profile.cnpj();
-		this.email = profile.email();
-		this.phone = profile.phone();
-		this.address = profile.address();
-		this.city = profile.city();
-		this.state = profile.state();
+		this.name = profile.name().trim();
+		this.cnpj = blankToNull(profile.cnpj());
+		this.email = blankToNull(profile.email());
+		this.phone = blankToNull(profile.phone());
+		this.address = blankToNull(profile.address());
+		this.city = blankToNull(profile.city());
+		this.state = blankToNull(profile.state());
 	}
 
 	public AcademyProfile toProfile() {

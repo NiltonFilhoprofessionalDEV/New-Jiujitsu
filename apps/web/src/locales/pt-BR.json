@@ -83,7 +83,9 @@
     "MEMBER_NOT_FOUND": "Membro da equipe não encontrado. Ele pode ter sido removido.",
     "CANNOT_REMOVE_SELF": "Você não pode remover a si mesmo da equipe.",
     "ALREADY_STAFF": "Esta conta já faz parte da equipe da academia.",
-    "INVITE_EMAIL_MISMATCH": "Este convite foi enviado para outro e-mail. Entre com a conta desse e-mail."
+    "INVITE_EMAIL_MISMATCH": "Este convite foi enviado para outro e-mail. Entre com a conta desse e-mail.",
+    "WRONG_PASSWORD": "A senha atual não confere.",
+    "PASSWORD_UNCHANGED": "A nova senha precisa ser diferente da atual."
   },
   "topbar": {
     "menu": "Abrir ou fechar o menu",
@@ -474,6 +476,32 @@
       "otherEmail": "Você está conectado como {{email}}, mas o convite é para {{invited}}. Entre com a conta desse e-mail.",
       "join": "Aceitar convite",
       "useOther": "Usar outra conta"
+    }
+  },
+  "settings": {
+    "title": "Configurações",
+    "saved": "Alterações salvas.",
+    "academy": {
+      "title": "Dados da academia",
+      "hint": "Aparecem nos convites, no link de matrícula e no topo do painel.",
+      "loadError": "Não foi possível carregar os dados da academia.",
+      "name": "Nome da academia",
+      "phone": "Telefone / WhatsApp",
+      "email": "E-mail de contato",
+      "cnpj": "CNPJ (opcional)",
+      "address": "Endereço",
+      "city": "Cidade",
+      "state": "UF"
+    },
+    "password": {
+      "title": "Alterar senha",
+      "hint": "Ao trocar a senha, os outros aparelhos conectados com a sua conta são desconectados.",
+      "current": "Senha atual",
+      "new": "Nova senha",
+      "confirm": "Confirme a nova senha",
+      "mismatch": "As senhas não conferem.",
+      "submit": "Alterar senha",
+      "saved": "Senha alterada."
     }
   },
   "account": {

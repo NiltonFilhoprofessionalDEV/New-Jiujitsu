@@ -65,6 +65,10 @@ public class User {
 		return passwordHash;
 	}
 
+	public void changePassword(String newPasswordHash) {
+		this.passwordHash = newPasswordHash;
+	}
+
 	public String getName() {
 		return name;
 	}

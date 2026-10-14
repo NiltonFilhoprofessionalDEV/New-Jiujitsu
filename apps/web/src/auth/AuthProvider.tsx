@@ -66,6 +66,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [enter],
   )
 
+  const changePassword = useCallback(
+    (currentPassword: string, newPassword: string) =>
+      enter(api.post<Session>('/auth/password', { currentPassword, newPassword })),
+    [enter],
+  )
+
   const logout = useCallback(async () => {
     try {
       await api.post('/auth/logout')
@@ -78,9 +84,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = useMemo<AuthContextValue>(() => {
     const activeMembership = session?.memberships.find((m) => m.id === session.activeMembershipId) ?? null
     return {
-      status, session, activeMembership, login, registerAcademy, acceptInvite, acceptStaffInvite, switchAcademy, logout,
+      status, session, activeMembership, login, registerAcademy, acceptInvite, acceptStaffInvite, switchAcademy,
+      changePassword, logout,
     }
-  }, [status, session, login, registerAcademy, acceptInvite, acceptStaffInvite, switchAcademy, logout])
+  }, [status, session, login, registerAcademy, acceptInvite, acceptStaffInvite, switchAcademy, changePassword, logout])
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

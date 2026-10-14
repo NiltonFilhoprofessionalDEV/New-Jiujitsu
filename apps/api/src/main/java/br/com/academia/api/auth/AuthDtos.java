@@ -30,6 +30,11 @@ public final class AuthDtos {
 	public record SwitchAcademyRequest(@NotNull UUID membershipId) {
 	}
 
+	public record ChangePasswordRequest(
+			@NotBlank @Size(max = 72) String currentPassword,
+			@NotBlank @Size(min = 8, max = 72, message = "A senha deve ter entre 8 e 72 caracteres") String newPassword) {
+	}
+
 	public record AcademySummary(UUID id, String name, String slug) {
 	}
 

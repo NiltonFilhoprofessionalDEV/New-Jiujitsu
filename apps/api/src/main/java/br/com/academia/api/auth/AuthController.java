@@ -1,5 +1,6 @@
 package br.com.academia.api.auth;
 
+import br.com.academia.api.auth.AuthDtos.ChangePasswordRequest;
 import br.com.academia.api.auth.AuthDtos.LoginRequest;
 import br.com.academia.api.auth.AuthDtos.RegisterAcademyRequest;
 import br.com.academia.api.auth.AuthDtos.SessionResponse;
@@ -23,10 +24,12 @@ public class AuthController {
 	static final String REFRESH_COOKIE = SessionCookies.REFRESH_COOKIE;
 
 	private final AuthService auth;
+	private final PasswordService passwords;
 	private final SessionCookies cookies;
 
-	public AuthController(AuthService auth, SessionCookies cookies) {
+	public AuthController(AuthService auth, PasswordService passwords, SessionCookies cookies) {
 		this.auth = auth;
+		this.passwords = passwords;
 		this.cookies = cookies;
 	}
 
@@ -54,6 +57,11 @@ public class AuthController {
 			@CookieValue(name = REFRESH_COOKIE, required = false) String refreshToken) {
 		CurrentUser me = CurrentUser.get();
 		return cookies.respond(HttpStatus.OK, auth.switchAcademy(me.userId(), body.membershipId(), refreshToken));
+	}
+
+	@PostMapping("/password")
+	public ResponseEntity<SessionResponse> changePassword(@Valid @RequestBody ChangePasswordRequest body) {
+		return cookies.respond(HttpStatus.OK, passwords.change(CurrentUser.get(), body));
 	}
 
 	@PostMapping("/logout")

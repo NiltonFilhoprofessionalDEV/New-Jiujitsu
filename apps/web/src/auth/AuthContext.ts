@@ -25,6 +25,8 @@ export type AuthContextValue = {
   /** Convite de equipe: {@code input} cria a conta; {@code null} aceita com a conta já logada. */
   acceptStaffInvite: (token: string, input: StaffSignupInput | null) => Promise<void>
   switchAcademy: (membershipId: string) => Promise<void>
+  /** Troca a senha; as outras sessões caem e esta recebe uma sessão nova. */
+  changePassword: (currentPassword: string, newPassword: string) => Promise<void>
   logout: () => Promise<void>
 }
 

@@ -18,12 +18,13 @@ import { HomePage } from '@/pages/HomePage'
 import { AcceptInvitePage } from '@/public/AcceptInvitePage'
 import { EnrollPage } from '@/public/EnrollPage'
 import { RequestsPage } from '@/requests/RequestsPage'
+import { SettingsPage } from '@/settings/SettingsPage'
 import { StudentsPage } from '@/students/StudentsPage'
 import { AcceptStaffInvitePage } from '@/team/AcceptStaffInvitePage'
 import { TeamPage } from '@/team/TeamPage'
 
 const IMPLEMENTED = new Set(['/', '/alunos', '/aulas', '/equipe', '/requests', '/mensalidades', '/financeiro/alunos',
-  '/financeiro/faturas'])
+  '/financeiro/faturas', '/configuracoes'])
 
 const pendingItems = MANAGER_NAV.flatMap((g) => g.items).filter((item) => !IMPLEMENTED.has(item.to))
 const pendingRoute = (item: (typeof pendingItems)[number]) => ({
@@ -58,6 +59,7 @@ export const router = createBrowserRouter([
               { path: 'aulas/presenca', element: <AttendancePage /> },
               { path: 'aulas/faixas', element: <BeltsPage /> },
               { path: 'requests', element: <RequestsPage /> },
+              { path: 'configuracoes', element: <SettingsPage /> },
               ...pendingItems.filter((item) => !item.managersOnly).map(pendingRoute),
               {
                 element: <RequireManager />,
