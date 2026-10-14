@@ -29,6 +29,7 @@ const videoRoutes = [
 
 const studentRoutes = [
   { index: true, lazy: page(() => import('@/account/StudentAccountPage'), (m) => m.StudentAccountPage) },
+  { path: 'ajustes', lazy: page(() => import('@/account/StudentSettingsPage'), (m) => m.StudentSettingsPage) },
   ...videoRoutes,
 ]
 

@@ -6,9 +6,7 @@ import { useAuth } from '@/auth/useAuth'
 import { problemOf } from '@/lib/api'
 import { apiErrorMessage } from '@/lib/apiErrors'
 
-/** Usado pela equipe e pela área do aluno. */
-export function PasswordForm() {
-  const { t } = useTranslation()
+function usePasswordChange() {
   const { changePassword } = useAuth()
   const [mismatch, setMismatch] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -34,12 +32,14 @@ export function PasswordForm() {
     })
   }
 
+  return { change, fieldErrors, mismatch, saved, onSubmit }
+}
+
+function PasswordFields() {
+  const { t } = useTranslation()
+  const { change, fieldErrors, mismatch, saved, onSubmit } = usePasswordChange()
   return (
-    <section className="card stack" aria-labelledby="password-title">
-      <div>
-        <h3 id="password-title">{t('settings.password.title')}</h3>
-        <p className="hint">{t('settings.password.hint')}</p>
-      </div>
+    <>
       {change.error && <div className="alert alert-error" role="alert">{apiErrorMessage(t, change.error)}</div>}
       {saved && <div className="notice" role="status">{t('settings.password.saved')}</div>}
       <form className="form-grid" onSubmit={onSubmit}>
@@ -68,6 +68,31 @@ export function PasswordForm() {
           </button>
         </div>
       </form>
+    </>
+  )
+}
+
+/**
+ * Usado pela equipe (card nas Configurações) e pela área do aluno ({@code embedded}: dentro do painel de
+ * Ajustes, que já mostra o título).
+ */
+export function PasswordForm({ embedded = false }: { embedded?: boolean }) {
+  const { t } = useTranslation()
+  if (embedded) {
+    return (
+      <div className="stack">
+        <p className="hint">{t('settings.password.hint')}</p>
+        <PasswordFields />
+      </div>
+    )
+  }
+  return (
+    <section className="card stack" aria-labelledby="password-title">
+      <div>
+        <h3 id="password-title">{t('settings.password.title')}</h3>
+        <p className="hint">{t('settings.password.hint')}</p>
+      </div>
+      <PasswordFields />
     </section>
   )
 }

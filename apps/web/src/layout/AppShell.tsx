@@ -4,11 +4,12 @@ import { Outlet } from 'react-router'
 
 import { useIsManager } from '@/auth/useAuth'
 
-import { navFor } from './navItems'
+import { BottomNav } from './BottomNav'
+import { navFor, STAFF_TABS } from './navItems'
 import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
 
-/** Menu lateral fixo no computador; no celular vira gaveta aberta pela barra superior. */
+/** Menu lateral fixo no computador; no celular, barra de abas embaixo e o menu completo em gaveta ("Mais"). */
 export function AppShell() {
   const { t } = useTranslation()
   const isManager = useIsManager()
@@ -26,12 +27,13 @@ export function AppShell() {
 
   return (
     <div className="shell" data-menu-open={menuOpen}>
-      <Topbar onToggleMenu={() => setMenuOpen((open) => !open)} />
+      <Topbar />
       <Sidebar groups={navFor(isManager)} onNavigate={close} />
       <button type="button" className="scrim" tabIndex={-1} aria-label={t('topbar.closeMenu')} onClick={close} />
       <main className="main">
         <Outlet />
       </main>
+      <BottomNav items={STAFF_TABS} onMore={() => setMenuOpen((open) => !open)} moreOpen={menuOpen} />
     </div>
   )
 }

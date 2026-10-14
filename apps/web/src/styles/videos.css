@@ -638,38 +638,6 @@
   white-space: nowrap;
 }
 
-/* Abas da área do aluno */
-.student-tabs {
-  display: flex;
-  gap: 6px;
-  max-width: 1100px;
-  margin: 0 auto 24px;
-}
-
-.student-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 40px;
-  padding: 0 16px;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-pill);
-  color: var(--text-muted);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.student-tab:hover {
-  color: var(--text);
-}
-
-.student-tab.active {
-  border-color: var(--primary);
-  background: var(--primary);
-  color: var(--on-primary);
-  box-shadow: var(--glow-sm);
-}
-
 @media (max-width: 1000px) {
   .video-layout.with-queue {
     grid-template-columns: 1fr;
@@ -695,15 +663,6 @@
 
   .video-grid {
     gap: 18px;
-  }
-
-  .student-tabs {
-    margin-bottom: 16px;
-  }
-
-  .student-tab {
-    flex: 1;
-    justify-content: center;
   }
 
   .playlist-order li .playlist-order-thumb {

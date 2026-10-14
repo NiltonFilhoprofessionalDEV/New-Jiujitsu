@@ -100,7 +100,6 @@
     "COMMENT_NOT_YOURS": "Só o autor ou um gestor pode apagar este comentário."
   },
   "topbar": {
-    "menu": "Abrir ou fechar o menu",
     "closeMenu": "Fechar o menu",
     "invites": "Convites",
     "themeLight": "Ativar modo claro",
@@ -117,6 +116,8 @@
   "nav": {
     "aria": "Menu principal",
     "withPending": "{{label}} ({{count}} pendentes)",
+    "tabsAria": "Atalhos principais",
+    "more": "Mais",
     "groups": {
       "principal": "Principal",
       "financeiro": "Financeiro",
@@ -705,7 +706,23 @@
   },
   "account": {
     "navAria": "Área do aluno",
-    "tabs": { "account": "Minha conta", "videos": "Vídeos" },
+    "tabs": { "account": "Início", "videos": "Vídeos", "settings": "Ajustes" },
+    "hero": {
+      "belt": "Faixa {{belt}}",
+      "months": "Meses na faixa",
+      "beltTrainings": "Treinos na faixa",
+      "total": "Presenças"
+    },
+    "graduations": { "title": "Graduações" },
+    "settings": {
+      "title": "Ajustes",
+      "security": "Conta e segurança",
+      "passwordHint": "Troque a senha que você usa para entrar",
+      "appearance": "Aparência",
+      "darkMode": "Modo escuro",
+      "darkModeHint": "Cores escuras, mais confortáveis à noite",
+      "session": "Sessão"
+    },
     "hello": "Olá, {{name}}!",
     "me": "Eu",
     "profilesAria": "Escolha de quem ver os dados",
@@ -721,10 +738,6 @@
       "present": "Presença marcada",
       "undo": "Desfazer",
       "window": "Check-in das {{from}} às {{to}}"
-    },
-    "belt": {
-      "title": "Minha faixa",
-      "progress": "Na faixa desde {{since}} · {{months}} · {{trainings}} desde então"
     },
     "classes": {
       "title": "Minhas turmas",

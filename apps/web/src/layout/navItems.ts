@@ -11,10 +11,13 @@ import {
   Settings,
   ShieldCheck,
   UserCog,
+  UserRound,
   Users,
   Wallet,
   type LucideIcon,
 } from 'lucide-react'
+
+import { STUDENT_HOME } from '@/auth/types'
 
 /**
  * {@code managersOnly}: some do menu do professor (a API também nega o acesso).
@@ -60,6 +63,19 @@ export const MANAGER_NAV: NavGroup[] = [
       { to: '/configuracoes', labelKey: 'nav.configuracoes', icon: Settings },
     ],
   },
+]
+
+/** Atalhos da barra inferior da equipe no celular; o resto do menu fica em "Mais". */
+const STAFF_TAB_PATHS = ['/', '/aulas/presenca', '/alunos', '/videos']
+
+export const STAFF_TABS: NavItem[] = MANAGER_NAV.flatMap((g) => g.items)
+  .filter((item) => STAFF_TAB_PATHS.includes(item.to))
+
+/** Área do aluno: abas no topo (computador) e na barra inferior (celular). */
+export const STUDENT_NAV: NavItem[] = [
+  { to: STUDENT_HOME, labelKey: 'account.tabs.account', icon: UserRound, end: true },
+  { to: `${STUDENT_HOME}/videos`, labelKey: 'account.tabs.videos', icon: PlaySquare },
+  { to: `${STUDENT_HOME}/ajustes`, labelKey: 'account.tabs.settings', icon: Settings },
 ]
 
 /** Menu visível para o papel; grupos que ficam vazios somem. */

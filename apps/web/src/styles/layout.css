@@ -404,7 +404,8 @@
     background: var(--overlay);
   }
 
+  /* O rodapé abre espaço para a barra de abas fixa (BottomNav) */
   .main {
-    padding: 24px 16px 48px;
+    padding: 24px 16px calc(96px + env(safe-area-inset-bottom));
   }
 }

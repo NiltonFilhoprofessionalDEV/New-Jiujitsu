@@ -1,0 +1,72 @@
+/*
+ * Entrada única de estilos. Tailwind v4 sem o preflight: o CSS próprio (camada "legacy") continua valendo
+ * nas telas ainda não migradas, e as utilities ficam numa camada posterior para sempre vencerem.
+ */
+@layer theme, base, legacy, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@import './tokens.css' layer(legacy);
+@import './base.css' layer(legacy);
+@import './components.css' layer(legacy);
+@import './layout.css' layer(legacy);
+@import './home.css' layer(legacy);
+@import './students.css' layer(legacy);
+@import './invites.css' layer(legacy);
+@import './classes.css' layer(legacy);
+@import './graduations.css' layer(legacy);
+@import './billing.css' layer(legacy);
+@import './account.css' layer(legacy);
+@import './reports.css' layer(legacy);
+@import './videos.css' layer(legacy);
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* Nomes do shadcn apontando para os tokens da marca (tokens.css): os dois temas continuam vindo de lá. */
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--text);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--text);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--on-primary);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-border: var(--primary-soft-border);
+  --color-secondary: var(--surface-2);
+  --color-secondary-foreground: var(--text);
+  --color-muted: var(--surface-2);
+  --color-muted-foreground: var(--text-muted);
+  --color-subtle: var(--text-subtle);
+  --color-accent: var(--surface-2);
+  --color-accent-foreground: var(--text);
+  --color-surface-3: var(--surface-3);
+  --color-brand: var(--accent-text);
+  --color-pulse: var(--pulse);
+  --color-destructive: var(--danger);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--border-strong);
+  --color-ring: var(--accent-text);
+
+  /* "ink": as superfícies escuras da marca (menu lateral, destaques), iguais nos dois temas */
+  --color-ink: var(--side-bg);
+  --color-ink-2: var(--side-hover);
+  --color-ink-border: var(--side-border);
+  --color-ink-foreground: var(--side-text);
+  --color-ink-muted: var(--side-muted);
+
+  --font-heading: var(--font-display);
+  --font-body: var(--font-sans);
+
+  --shadow-glow: var(--glow);
+  --shadow-glow-sm: var(--glow-sm);
+  --shadow-elevated: var(--shadow);
+
+  --ease-sheet: var(--sheet-ease);
+}

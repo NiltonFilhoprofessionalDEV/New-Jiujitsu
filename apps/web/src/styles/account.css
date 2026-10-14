@@ -1,4 +1,4 @@
-/* Área do aluno */
+/* Área do aluno (as telas usam Tailwind; aqui ficam a moldura e as listas ainda compartilhadas com Relatórios) */
 .student-shell {
   min-height: 100%;
   display: grid;
@@ -15,8 +15,7 @@
   align-items: start;
 }
 
-.plain-list,
-.today-list {
+.plain-list {
   display: grid;
   gap: 10px;
   margin: 0;
@@ -37,26 +36,4 @@
 .plain-list li:last-child {
   padding-bottom: 0;
   border-bottom: 0;
-}
-
-.today-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px 16px;
-  padding: 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-
-.today-action,
-.invoice-side {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.today-action .pill {
-  gap: 4px;
 }
