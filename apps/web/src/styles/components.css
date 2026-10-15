@@ -149,7 +149,8 @@ button.segment:focus-visible {
   right: 0;
   z-index: 20;
   display: grid;
-  min-width: 210px;
+  min-width: min(210px, calc(100vw - 16px));
+  max-width: calc(100vw - 16px);
   margin: 0;
   padding: 6px;
   list-style: none;
@@ -157,6 +158,11 @@ button.segment:focus-visible {
   border-radius: var(--radius);
   background: var(--surface);
   box-shadow: var(--shadow);
+}
+
+.action-menu-list.align-start {
+  right: auto;
+  left: 0;
 }
 
 .action-menu-list button {
