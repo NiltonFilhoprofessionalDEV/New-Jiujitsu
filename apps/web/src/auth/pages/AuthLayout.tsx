@@ -3,7 +3,10 @@ import type { ReactNode } from 'react'
 import { PageTitle } from '@/components/PageTitle'
 import { BrandLogo } from '@/layout/BrandLogo'
 
-export function AuthLayout({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
+type Props = { title: string; subtitle: string; children: ReactNode; after?: ReactNode }
+
+/** {@code after} fica abaixo do cartão, fora do formulário. */
+export function AuthLayout({ title, subtitle, children, after }: Props) {
   return (
     <div className="auth-screen">
       <div className="auth-panel">
@@ -14,6 +17,7 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
           <p className="auth-sub">{subtitle}</p>
         </header>
         <div className="card auth-card">{children}</div>
+        {after}
       </div>
     </div>
   )

@@ -1,6 +1,9 @@
+import { Download } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
+
+import { InstallApp } from '@/pwa/InstallApp'
 
 import { authErrorMessage } from '../authErrors'
 import { useAuth } from '../useAuth'
@@ -27,7 +30,7 @@ export function LoginPage() {
   }
 
   return (
-    <AuthLayout title={t('auth.loginTitle')} subtitle={t('auth.loginSubtitle')}>
+    <AuthLayout title={t('auth.loginTitle')} subtitle={t('auth.loginSubtitle')} after={<InstallCta />}>
       <form onSubmit={onSubmit} className="field" style={{ gap: 14 }} noValidate>
         {error && (
           <div className="alert alert-error" role="alert">
@@ -57,5 +60,19 @@ export function LoginPage() {
         {t('auth.noAccount')} <Link to="/register-academy">{t('auth.registerAcademy')}</Link>
       </p>
     </AuthLayout>
+  )
+}
+
+function InstallCta() {
+  const { t } = useTranslation()
+  return (
+    <InstallApp>
+      {(install) => (
+        <button type="button" className="install-cta" onClick={install} title={t('install.ctaHint')}>
+          <Download size={15} aria-hidden />
+          {t('install.cta')}
+        </button>
+      )}
+    </InstallApp>
   )
 }

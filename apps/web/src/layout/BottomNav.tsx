@@ -11,6 +11,8 @@ type Props = {
   /** Com "Mais": abre o menu completo (equipe). */
   onMore?: () => void
   moreOpen?: boolean
+  /** Fecha o menu em tela cheia do celular, que deixa esta barra à vista. */
+  onNavigate?: () => void
 }
 
 const tabClass = (active: boolean) => cn(
@@ -20,7 +22,7 @@ const tabClass = (active: boolean) => cn(
 )
 
 /** Barra de abas fixa no rodapé, só no celular: os destinos principais ao alcance do polegar. */
-export function BottomNav({ items, onMore, moreOpen = false }: Props) {
+export function BottomNav({ items, onMore, moreOpen = false, onNavigate }: Props) {
   const { t } = useTranslation()
   const { pathname } = useLocation()
   const onTab = items.some((item) => matchPath({ path: item.to, end: item.end ?? false }, pathname))
@@ -29,7 +31,8 @@ export function BottomNav({ items, onMore, moreOpen = false }: Props) {
     <nav aria-label={t('nav.tabsAria')}
       className="fixed inset-x-0 bottom-0 z-20 flex h-[calc(64px+env(safe-area-inset-bottom))] border-t border-ink-border bg-ink/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md min-[861px]:hidden">
       {items.map(({ to, labelKey, icon: Icon, end }) => (
-        <NavLink key={to} to={to} end={end} className={({ isActive }) => tabClass(isActive && !moreOpen)}>
+        <NavLink key={to} to={to} end={end} onClick={onNavigate}
+          className={({ isActive }) => tabClass(isActive && !moreOpen)}>
           {({ isActive }) => (
             <>
               <Icon size={22} aria-hidden className={isActive && !moreOpen ? 'text-pulse' : undefined} />

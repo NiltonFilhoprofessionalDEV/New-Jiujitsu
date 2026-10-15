@@ -1,4 +1,4 @@
-import { ChevronRight, KeyRound, LogOut, Moon, type LucideIcon } from 'lucide-react'
+import { ChevronRight, Download, KeyRound, LogOut, Moon, type LucideIcon } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { Switch } from '@/components/ui/switch'
 import { initials } from '@/lib/text'
 import { cn } from '@/lib/utils'
+import { InstallApp } from '@/pwa/InstallApp'
 import { PasswordForm } from '@/settings/PasswordForm'
 import { useTheme } from '@/theme/useTheme'
 
@@ -84,6 +85,13 @@ export function StudentSettingsPage() {
         <SettingsRow icon={Moon} title={t('account.settings.darkMode')} description={t('account.settings.darkModeHint')}
           control={<Switch checked={theme === 'dark'} onCheckedChange={toggle} aria-label={t('account.settings.darkMode')} />} />
       </SettingsGroup>
+      <InstallApp>
+        {(install) => (
+          <SettingsGroup title={t('account.settings.app')}>
+            <SettingsRow icon={Download} title={t('install.menu')} description={t('install.ctaHint')} onClick={install} />
+          </SettingsGroup>
+        )}
+      </InstallApp>
       <SettingsGroup title={t('account.settings.session')}>
         <SettingsRow icon={LogOut} title={t('topbar.logout')} danger onClick={() => void logout()} />
       </SettingsGroup>

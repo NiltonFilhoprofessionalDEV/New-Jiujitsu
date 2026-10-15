@@ -110,6 +110,34 @@
     "themeDark": "Ativar modo escuro",
     "logout": "Sair"
   },
+  "install": {
+    "cta": "Instalar o app",
+    "ctaHint": "Abra o BJJ Pulse direto da tela de início, como um aplicativo.",
+    "menu": "Instalar o app",
+    "guide": {
+      "title": "Instalar o app",
+      "intro": "Leva poucos segundos. Depois é só abrir pelo ícone na tela de início.",
+      "ios": {
+        "step1": "Toque em Compartilhar",
+        "hint1": "O quadrado com uma seta para cima, na barra do Safari (embaixo ou no topo da tela).",
+        "step2": "Toque em Adicionar à Tela de Início",
+        "hint2": "Se não aparecer, role a lista de opções para baixo.",
+        "step3": "Toque em Adicionar",
+        "hint3": "O ícone do BJJ Pulse aparece na tela de início.",
+        "inApp": "Abriu o link pelo WhatsApp ou Instagram? Abra primeiro no Safari para conseguir instalar.",
+        "login": "No iPhone, o app instalado pede para entrar com e-mail e senha uma vez."
+      },
+      "android": {
+        "step1": "Toque no menu do navegador",
+        "hint1": "Os três pontinhos, no canto superior direito do Chrome.",
+        "step2": "Toque em Instalar app ou Adicionar à tela inicial",
+        "hint2": "O nome muda conforme o navegador e a versão.",
+        "step3": "Confirme a instalação",
+        "hint3": "O ícone do BJJ Pulse aparece na tela de início.",
+        "inApp": "Abriu o link pelo WhatsApp ou Instagram? Use a opção Abrir no Chrome do menu antes de instalar."
+      }
+    }
+  },
   "roles": {
     "OWNER": "Gestor",
     "CO_MANAGER": "Co-gestor",
@@ -745,6 +773,7 @@
       "appearance": "Aparência",
       "darkMode": "Modo escuro",
       "darkModeHint": "Cores escuras, mais confortáveis à noite",
+      "app": "Aplicativo",
       "session": "Sessão"
     },
     "hello": "Olá, {{name}}!",

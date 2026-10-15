@@ -10,6 +10,9 @@ import { RouterProvider } from 'react-router'
 
 import { router } from '@/app/router'
 import { AuthProvider } from '@/auth/AuthProvider'
+import { listenForInstallPrompt } from '@/pwa/installPrompt'
+
+listenForInstallPrompt()
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 30_000, retry: 1, refetchOnWindowFocus: false } },

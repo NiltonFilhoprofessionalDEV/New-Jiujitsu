@@ -1,10 +1,11 @@
-import { LogOut } from 'lucide-react'
+import { Download, LogOut, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
 
 import { useAuth, useIsManager } from '@/auth/useAuth'
 import { usePendingRequestCount } from '@/invites/invitesApi'
 import { initials } from '@/lib/text'
+import { InstallApp } from '@/pwa/InstallApp'
 import { ThemeToggle } from '@/theme/ThemeToggle'
 
 import { BrandLogo } from './BrandLogo'
@@ -12,7 +13,8 @@ import type { NavGroup, NavItem } from './navItems'
 
 const MAX_BADGE = 99
 
-export function Sidebar({ groups, onNavigate }: { groups: NavGroup[]; onNavigate: () => void }) {
+/** {@code onClose}: fecha o menu do celular (ao navegar ou pelo X, que só aparece em tela cheia). */
+export function Sidebar({ groups, onClose }: { groups: NavGroup[]; onClose: () => void }) {
   const { t } = useTranslation()
   const { activeMembership } = useAuth()
   const isManager = useIsManager()
@@ -26,13 +28,16 @@ export function Sidebar({ groups, onNavigate }: { groups: NavGroup[]; onNavigate
         <span className="sidebar-caption" title={activeMembership?.academy.name}>
           {activeMembership?.academy.name}
         </span>
+        <button type="button" className="icon-btn sidebar-close" onClick={onClose} aria-label={t('topbar.closeMenu')}>
+          <X size={22} aria-hidden />
+        </button>
       </div>
       <nav className="sidebar-nav" aria-label={t('nav.aria')}>
         {groups.map((group) => (
           <div className="nav-group" key={group.titleKey}>
             <div className="nav-group-title">{t(group.titleKey)}</div>
             {group.items.map((item) => (
-              <SidebarLink key={item.to} item={item} badge={badgeFor(item)} onNavigate={onNavigate} />
+              <SidebarLink key={item.to} item={item} badge={badgeFor(item)} onNavigate={onClose} />
             ))}
           </div>
         ))}
@@ -70,6 +75,14 @@ function SidebarFooter() {
           {activeMembership && <span className="account-role">{t(`roles.${activeMembership.role}`)}</span>}
         </span>
       </div>
+      <InstallApp>
+        {(install) => (
+          <button type="button" className="side-btn" onClick={install}>
+            <Download size={16} aria-hidden />
+            {t('install.menu')}
+          </button>
+        )}
+      </InstallApp>
       <div className="side-actions">
         <ThemeToggle className="side-btn icon-only" />
         <button type="button" className="side-btn" onClick={() => void logout()}>

@@ -1,0 +1,74 @@
+/* Instalar o app (PWA): link discreto abaixo do login e passo a passo */
+.install-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-self: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.install-cta:hover,
+.install-cta:focus-visible {
+  color: var(--text);
+}
+
+.install-step-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--primary-soft);
+  color: var(--accent-text);
+}
+
+.install-guide {
+  display: grid;
+  gap: 18px;
+}
+
+.install-steps {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.install-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.install-steps strong {
+  display: block;
+  font-size: 15px;
+}
+
+.install-step-hint {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.install-note {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  font-size: 13px;
+  color: var(--text-muted);
+}
