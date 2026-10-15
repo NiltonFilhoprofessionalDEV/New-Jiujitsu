@@ -3,10 +3,11 @@ import { useTranslation } from 'react-i18next'
 
 import { CopyButton } from '@/components/CopyButton'
 import { apiErrorMessage } from '@/lib/apiErrors'
+import { whatsappUrl } from '@/lib/phone'
 
 import { useEnrollmentLink, useLinkAction } from './invitesApi'
 import { LinkOptions } from './LinkOptions'
-import { enrollUrl, whatsappUrl } from './shareLinks'
+import { enrollUrl } from './shareLinks'
 
 export function EnrollmentLinkCard() {
   const { t } = useTranslation()

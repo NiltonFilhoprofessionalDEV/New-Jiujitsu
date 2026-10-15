@@ -26,6 +26,7 @@ function toRequest(form: FormData, kind: StudentKind): StudentRequest {
     email: formText(form, 'email'),
     cpf: formText(form, 'cpf'),
     phone: formText(form, 'phone'),
+    emergencyPhone: formText(form, 'emergencyPhone'),
     birthDate: formText(form, 'birthDate'),
     gender: formText(form, 'gender') as Gender | null,
     belt: training ? formText(form, 'belt') : null,
@@ -89,8 +90,9 @@ export function StudentForm({ student, householdId, onSaved, onCancel }: Student
 
       <div className="field span-2">
         <label htmlFor="sf-name">{t('students.form.name')}</label>
-        <input id="sf-name" name="name" className="input" required maxLength={120} defaultValue={student?.name} />
-        {fieldError('name')}
+        <input id="sf-name" name="name" className="input" required maxLength={120} autoCapitalize="words"
+          defaultValue={student?.name} aria-invalid={Boolean(fieldErrors.name)} />
+        {fieldError('name') || <span className="hint">{t('students.form.nameHint')}</span>}
       </div>
       <div className="field">
         <label htmlFor="sf-nickname">{t('students.form.nickname')}</label>
@@ -107,7 +109,15 @@ export function StudentForm({ student, householdId, onSaved, onCancel }: Student
       </div>
       <div className="field">
         <label htmlFor="sf-phone">{t('students.form.phone')}</label>
-        <input id="sf-phone" name="phone" type="tel" className="input" maxLength={30} defaultValue={student?.phone ?? ''} />
+        <input id="sf-phone" name="phone" type="tel" className="input" maxLength={30} defaultValue={student?.phone ?? ''}
+          aria-invalid={Boolean(fieldErrors.phone)} />
+        {fieldError('phone')}
+      </div>
+      <div className="field">
+        <label htmlFor="sf-emergency">{t('students.form.emergencyPhone', { context: kind })}</label>
+        <input id="sf-emergency" name="emergencyPhone" type="tel" className="input" maxLength={30} required={training}
+          defaultValue={student?.emergencyPhone ?? ''} aria-invalid={Boolean(fieldErrors.emergencyPhone)} />
+        {fieldError('emergencyPhone') || <span className="hint">{t('students.form.emergencyPhoneHint')}</span>}
       </div>
       <div className="field">
         <label htmlFor="sf-birth">{t('students.form.birthDate')}</label>

@@ -28,6 +28,7 @@ function toInput(form: FormData, training: boolean): SignupInput {
     password: String(form.get('password') ?? ''),
     cpf: formText(form, 'cpf'),
     phone: formText(form, 'phone'),
+    emergencyPhone: formText(form, 'emergencyPhone'),
     birthDate: formText(form, 'birthDate'),
     belt: training ? formText(form, 'belt') : null,
     degrees: training ? Number(form.get('degrees') ?? 0) : null,
@@ -53,8 +54,8 @@ export function SignupForm({ kind, fixedEmail, initialName, submitLabel, pending
       <div className="field span-2">
         <label htmlFor="su-name">{t('signup.name')}</label>
         <input id="su-name" name="name" className="input" required maxLength={120} autoComplete="name"
-          defaultValue={initialName ?? ''} aria-invalid={Boolean(fieldErrors.name)} />
-        {fieldError('name')}
+          autoCapitalize="words" defaultValue={initialName ?? ''} aria-invalid={Boolean(fieldErrors.name)} />
+        {fieldError('name') ?? <span className="hint">{t('students.form.nameHint')}</span>}
       </div>
       {training && (
         <div className="field span-2">
@@ -76,7 +77,9 @@ export function SignupForm({ kind, fixedEmail, initialName, submitLabel, pending
       </div>
       <div className="field">
         <label htmlFor="su-phone">{t('students.form.phone')}</label>
-        <input id="su-phone" name="phone" type="tel" className="input" maxLength={30} autoComplete="tel" />
+        <input id="su-phone" name="phone" type="tel" className="input" maxLength={30} autoComplete="tel"
+          aria-invalid={Boolean(fieldErrors.phone)} />
+        {fieldError('phone')}
       </div>
       <div className="field">
         <label htmlFor="su-cpf">{t('students.form.cpf')}</label>
@@ -84,6 +87,14 @@ export function SignupForm({ kind, fixedEmail, initialName, submitLabel, pending
           aria-invalid={Boolean(fieldErrors.cpf)} />
         {fieldError('cpf')}
       </div>
+      {training && (
+        <div className="field span-2">
+          <label htmlFor="su-emergency">{t('students.form.emergencyPhone', { context: kind })}</label>
+          <input id="su-emergency" name="emergencyPhone" type="tel" className="input" required maxLength={30}
+            aria-invalid={Boolean(fieldErrors.emergencyPhone)} />
+          {fieldError('emergencyPhone') ?? <span className="hint">{t('students.form.emergencyPhoneHint')}</span>}
+        </div>
+      )}
       <div className="field span-2">
         <label htmlFor="su-birth">{t('students.form.birthDate')}</label>
         <input id="su-birth" name="birthDate" type="date" className="input" autoComplete="bday" />

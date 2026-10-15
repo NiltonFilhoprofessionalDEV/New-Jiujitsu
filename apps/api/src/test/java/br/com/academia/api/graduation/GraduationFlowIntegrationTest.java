@@ -1,6 +1,7 @@
 package br.com.academia.api.graduation;
 
 import static br.com.academia.api.ApiTestSupport.CTX;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_PHONE;
 import static br.com.academia.api.ApiTestSupport.auth;
 import static br.com.academia.api.ApiTestSupport.authJson;
 import static br.com.academia.api.ApiTestSupport.read;
@@ -52,7 +53,7 @@ class GraduationFlowIntegrationTest {
 
 	@Test
 	void registersAndUndoesGraduationsInOrder() throws Exception {
-		String id = createStudent("TRAINING", "Ana", today.minusYears(2));
+		String id = createStudent("TRAINING", "Ana Lima", today.minusYears(2));
 		mvc.perform(auth(get(CTX + "/graduations/ready"), owner))
 				.andExpect(jsonPath("$[0].studentId").value(id))
 				.andExpect(jsonPath("$[0].kind").value("BELT"));
@@ -95,7 +96,7 @@ class GraduationFlowIntegrationTest {
 				"""))
 				.andExpect(jsonPath("$.code").value("INVALID_BELT_RULE"));
 
-		String id = createStudent("TRAINING", "Bia", today);
+		String id = createStudent("TRAINING", "Bia Costa", today);
 		markPresentToday(id);
 
 		mvc.perform(auth(get(CTX + "/students/" + id + "/graduations"), owner))
@@ -109,10 +110,10 @@ class GraduationFlowIntegrationTest {
 
 	@Test
 	void onlyManagersRegisterAndResponsiblesNeverGraduate() throws Exception {
-		String responsible = createStudent("RESPONSIBLE", "Carla", today);
+		String responsible = createStudent("RESPONSIBLE", "Carla Dias", today);
 		graduate(responsible, "BELT", "azul", 0, today).andExpect(jsonPath("$.code").value("STUDENT_NOT_TRAINING"));
 
-		String id = createStudent("TRAINING", "Dani", today);
+		String id = createStudent("TRAINING", "Dani Melo", today);
 		String instructor = staff.instructorTokenFor(mvc, owner);
 		mvc.perform(auth(get(CTX + "/graduations/ready"), instructor)).andExpect(status().isOk());
 		mvc.perform(auth(get(CTX + "/students/" + id + "/graduations"), instructor)).andExpect(status().isOk());
@@ -136,8 +137,8 @@ class GraduationFlowIntegrationTest {
 
 	private String createStudent(String kind, String name, LocalDate enrollmentDate) throws Exception {
 		return read(mvc.perform(authJson(post(CTX + "/students"), owner, """
-				{"kind":"%s","name":"%s","enrollmentDate":"%s"}
-				""".formatted(kind, name, enrollmentDate)))
+				{"kind":"%s","name":"%s","enrollmentDate":"%s","emergencyPhone":"%s"}
+				""".formatted(kind, name, enrollmentDate, EMERGENCY_PHONE)))
 				.andExpect(status().isCreated())
 				.andReturn(), "$.id");
 	}

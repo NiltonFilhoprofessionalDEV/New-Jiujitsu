@@ -1,6 +1,7 @@
 package br.com.academia.api.report;
 
 import static br.com.academia.api.ApiTestSupport.CTX;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_PHONE;
 import static br.com.academia.api.ApiTestSupport.auth;
 import static br.com.academia.api.ApiTestSupport.authJson;
 import static br.com.academia.api.ApiTestSupport.read;
@@ -64,9 +65,9 @@ class ReportIntegrationTest {
 
 	@Test
 	void summarizesAttendanceAndFlagsAbsentStudents() throws Exception {
-		String regular = createStudent("Assiduo", "2026-09-01");
-		String missing = createStudent("Sumido", "2026-09-01");
-		createStudent("Novato", null);
+		String regular = createStudent("Aluno Assiduo", "2026-09-01");
+		String missing = createStudent("Aluno Sumido", "2026-09-01");
+		createStudent("Aluno Novato", null);
 		String classId = read(mvc.perform(authJson(post(CTX + "/classes"), owner,
 				"{\"title\":\"Noite\",\"weekdays\":[3],\"startTime\":\"19:00\",\"endTime\":null}"))
 				.andExpect(status().isCreated()).andReturn(), "$.id");
@@ -85,10 +86,10 @@ class ReportIntegrationTest {
 				.andExpect(jsonPath("$.attendance.studentsTrained").value(2))
 				.andExpect(jsonPath("$.classes[0].title").value("Noite"))
 				.andExpect(jsonPath("$.classes[0].checkIns").value(3))
-				.andExpect(jsonPath("$.topStudents[0].name").value("Assiduo"))
+				.andExpect(jsonPath("$.topStudents[0].name").value("Aluno Assiduo"))
 				.andExpect(jsonPath("$.topStudents[0].checkIns").value(2))
 				.andExpect(jsonPath("$.absent.total").value(1))
-				.andExpect(jsonPath("$.absent.students[0].name").value("Sumido"))
+				.andExpect(jsonPath("$.absent.students[0].name").value("Aluno Sumido"))
 				.andExpect(jsonPath("$.absent.students[0].lastCheckIn").value("2026-09-16"))
 				.andExpect(jsonPath("$.instructors", hasSize(1)))
 				.andExpect(jsonPath("$.finance.overdue.students").value(0));
@@ -118,7 +119,8 @@ class ReportIntegrationTest {
 	private String createStudent(String name, String enrollmentDate) throws Exception {
 		String date = enrollmentDate == null ? "" : ",\"enrollmentDate\":\"" + enrollmentDate + "\"";
 		return read(mvc.perform(authJson(post(CTX + "/students"), owner,
-				"{\"kind\":\"TRAINING\",\"name\":\"" + name + "\"" + date + "}"))
+				"{\"kind\":\"TRAINING\",\"name\":\"" + name + "\",\"emergencyPhone\":\"" + EMERGENCY_PHONE + "\""
+						+ date + "}"))
 				.andExpect(status().isCreated()).andReturn(), "$.id");
 	}
 

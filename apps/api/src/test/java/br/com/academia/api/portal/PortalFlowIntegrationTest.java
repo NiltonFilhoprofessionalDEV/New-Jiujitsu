@@ -1,6 +1,7 @@
 package br.com.academia.api.portal;
 
 import static br.com.academia.api.ApiTestSupport.CTX;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_PHONE;
 import static br.com.academia.api.ApiTestSupport.PASSWORD;
 import static br.com.academia.api.ApiTestSupport.auth;
 import static br.com.academia.api.ApiTestSupport.authJson;
@@ -115,8 +116,8 @@ class PortalFlowIntegrationTest {
 		String responsible = acceptInvite("RESPONSIBLE");
 		String responsibleId = read(mvc.perform(auth(get(CTX + "/portal/profiles"), responsible)).andReturn(),
 				"$[0].id");
-		String childId = createStudent("Filho");
-		String strangerId = createStudent("Outro aluno");
+		String childId = createStudent("Filho Teste");
+		String strangerId = createStudent("Outro Aluno");
 		mvc.perform(authJson(post(CTX + "/households"), owner, """
 				{"name":"Família","responsibleStudentId":"%s","memberIds":["%s","%s"]}
 				""".formatted(responsibleId, responsibleId, childId))).andExpect(status().isCreated());
@@ -124,7 +125,7 @@ class PortalFlowIntegrationTest {
 		mvc.perform(auth(get(CTX + "/portal/profiles"), responsible))
 				.andExpect(jsonPath("$", hasSize(2)))
 				.andExpect(jsonPath("$[0].self").value(true))
-				.andExpect(jsonPath("$[1].name").value("Filho"));
+				.andExpect(jsonPath("$[1].name").value("Filho Teste"));
 		mvc.perform(auth(get(CTX + "/portal/students/" + childId), responsible)).andExpect(status().isOk());
 		mvc.perform(auth(get(CTX + "/portal/students/" + childId + "/invoices"), responsible))
 				.andExpect(status().isOk())
@@ -137,7 +138,9 @@ class PortalFlowIntegrationTest {
 	private String acceptInvite(String kind) throws Exception {
 		String token = read(mvc.perform(authJson(post(CTX + "/invites"), owner, "{\"kind\":\"" + kind + "\"}"))
 				.andExpect(status().isCreated()).andReturn(), "$.token");
-		String belt = "TRAINING".equals(kind) ? ",\"belt\":\"azul\",\"degrees\":1" : "";
+		String belt = "TRAINING".equals(kind)
+				? ",\"belt\":\"azul\",\"degrees\":1,\"emergencyPhone\":\"" + EMERGENCY_PHONE + "\""
+				: "";
 		return read(mvc.perform(json(post(CTX + "/public/invites/" + token + "/accept"), """
 				{"name":"Aluno Portal","email":"aluno-%s@teste.dev","password":"%s"%s}
 				""".formatted(UUID.randomUUID(), PASSWORD, belt)))
@@ -154,7 +157,7 @@ class PortalFlowIntegrationTest {
 
 	private String createStudent(String name) throws Exception {
 		return read(mvc.perform(authJson(post(CTX + "/students"), owner,
-				"{\"kind\":\"TRAINING\",\"name\":\"" + name + "\"}"))
+				"{\"kind\":\"TRAINING\",\"name\":\"" + name + "\",\"emergencyPhone\":\"" + EMERGENCY_PHONE + "\"}"))
 				.andExpect(status().isCreated()).andReturn(), "$.id");
 	}
 }

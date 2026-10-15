@@ -318,3 +318,83 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Atalhos de contato na lista de alunos: o fundo fica no item para cobrir a linha e os ícones */
+.person-item {
+  display: flex;
+  align-items: center;
+  transition: background 0.15s;
+}
+
+.person-item .person-row {
+  flex: 1;
+  min-width: 0;
+}
+
+.person-item .person-row,
+.person-item .person-row:hover,
+.person-item .person-row[aria-current='true'] {
+  background: none;
+}
+
+.person-item:hover {
+  background: var(--surface-2);
+}
+
+.person-item:has(> .person-row[aria-current='true']) {
+  background: var(--primary-soft);
+}
+
+.contact-links {
+  display: flex;
+  flex: none;
+  gap: 2px;
+  padding-right: 12px;
+}
+
+.contact-link {
+  color: var(--text-muted);
+}
+
+.contact-slot {
+  width: 36px;
+  flex: none;
+}
+
+.contact-link:hover {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.contact-link.whatsapp:hover {
+  color: var(--success);
+}
+
+.contact-link.emergency {
+  color: var(--danger);
+}
+
+/* No celular os ícones descem para uma linha própria, alinhada ao nome, para não espremer nome e e-mail */
+@media (max-width: 640px) {
+  .person-item {
+    flex-wrap: wrap;
+  }
+
+  .person-item .person-row {
+    flex-basis: 100%;
+  }
+
+  .contact-links {
+    gap: 4px;
+    margin-top: -8px;
+    padding: 0 14px 8px 54px;
+  }
+
+  .contact-slot {
+    display: none;
+  }
+
+  .contact-links:not(:has(a)) {
+    display: none;
+  }
+}

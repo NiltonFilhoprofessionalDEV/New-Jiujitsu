@@ -1,6 +1,7 @@
 package br.com.academia.api.student;
 
 import static br.com.academia.api.ApiTestSupport.CTX;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_PHONE;
 import static br.com.academia.api.ApiTestSupport.auth;
 import static br.com.academia.api.ApiTestSupport.authJson;
 import static br.com.academia.api.ApiTestSupport.read;
@@ -48,10 +49,12 @@ class StudentFlowIntegrationTest {
 
 	@Test
 	void createsStudentAndFindsItBySearchIgnoringAccents() throws Exception {
-		String id = createStudent(owner, studentBody("João Gonçalves", "Joao@Exemplo.dev", VALID_CPF, "azul", 2));
+		String id = createStudent(owner, studentBody(" joão  GONÇALVES ", "Joao@Exemplo.dev", VALID_CPF, "azul", 2));
 
 		mvc.perform(auth(get(CTX + "/students/" + id), owner))
 				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.name").value("João Gonçalves"))
+				.andExpect(jsonPath("$.emergencyPhone").value(EMERGENCY_PHONE))
 				.andExpect(jsonPath("$.email").value("joao@exemplo.dev"))
 				.andExpect(jsonPath("$.cpf").value("52998224725"))
 				.andExpect(jsonPath("$.belt").value("azul"))
@@ -81,24 +84,47 @@ class StudentFlowIntegrationTest {
 
 	@Test
 	void rejectsDuplicatesAndInvalidData() throws Exception {
-		createStudent(owner, studentBody("Primeiro", "dup@exemplo.dev", VALID_CPF, "branca", 0));
+		createStudent(owner, studentBody("Primeiro Aluno", "dup@exemplo.dev", VALID_CPF, "branca", 0));
 
 		mvc.perform(authJson(post(CTX + "/students"), owner,
-				studentBody("Segundo", "DUP@exemplo.dev", null, "branca", 0)))
+				studentBody("Segundo Aluno", "DUP@exemplo.dev", null, "branca", 0)))
 				.andExpect(status().isConflict())
 				.andExpect(jsonPath("$.code").value("STUDENT_EMAIL_IN_USE"));
-		mvc.perform(authJson(post(CTX + "/students"), owner, studentBody("Terceiro", null, VALID_CPF, "branca", 0)))
+		mvc.perform(authJson(post(CTX + "/students"), owner,
+				studentBody("Terceiro Aluno", null, VALID_CPF, "branca", 0)))
 				.andExpect(status().isConflict())
 				.andExpect(jsonPath("$.code").value("STUDENT_CPF_IN_USE"));
-		mvc.perform(authJson(post(CTX + "/students"), owner, studentBody("Quarto", null, "111.111.111-11", null, 0)))
+		mvc.perform(authJson(post(CTX + "/students"), owner,
+				studentBody("Quarto Aluno", null, "111.111.111-11", null, 0)))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.code").value("INVALID_CPF"));
-		mvc.perform(authJson(post(CTX + "/students"), owner, studentBody("Quinto", null, null, "azul", 5)))
+		mvc.perform(authJson(post(CTX + "/students"), owner, studentBody("Quinto Aluno", null, null, "azul", 5)))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.code").value("INVALID_DEGREES"));
 		mvc.perform(authJson(post(CTX + "/students"), owner, studentBody("", null, null, "azul", 0)))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.code").value("VALIDATION_ERROR"));
+	}
+
+	@Test
+	void requiresFullNameAndEmergencyPhoneOnlyForWhoTrains() throws Exception {
+		mvc.perform(authJson(post(CTX + "/students"), owner, studentBody("Sexto", null, null, "branca", 0)))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.code").value("FULL_NAME_REQUIRED"))
+				.andExpect(jsonPath("$.fields.name").isNotEmpty());
+		mvc.perform(authJson(post(CTX + "/students"), owner, """
+				{"kind":"TRAINING","name":"Sétimo Aluno","belt":"branca","degrees":0}
+				"""))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.code").value("EMERGENCY_PHONE_REQUIRED"))
+				.andExpect(jsonPath("$.fields.emergencyPhone").isNotEmpty());
+		mvc.perform(authJson(post(CTX + "/students"), owner, """
+				{"kind":"RESPONSIBLE","name":"Oitavo Aluno","phone":"99"}
+				"""))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.code").value("INVALID_PHONE"))
+				.andExpect(jsonPath("$.fields.phone").isNotEmpty());
+		createStudent(owner, responsibleBody("Responsável sem Emergência"));
 	}
 
 	@Test
@@ -163,7 +189,7 @@ class StudentFlowIntegrationTest {
 		String instructor = staff.instructorTokenFor(mvc, owner);
 
 		mvc.perform(auth(get(CTX + "/students/page"), instructor)).andExpect(status().isOk());
-		mvc.perform(authJson(post(CTX + "/students"), instructor, studentBody("X", null, null, "branca", 0)))
+		mvc.perform(authJson(post(CTX + "/students"), instructor, studentBody("Xis Teste", null, null, "branca", 0)))
 				.andExpect(status().isForbidden());
 		mvc.perform(authJson(put(CTX + "/households/" + UUID.randomUUID()), instructor, "{\"name\":\"X\"}"))
 				.andExpect(status().isForbidden());
@@ -177,8 +203,8 @@ class StudentFlowIntegrationTest {
 
 	private static String studentBody(String name, String email, String cpf, String belt, int degrees) {
 		return """
-				{"kind":"TRAINING","name":"%s","email":%s,"cpf":%s,"belt":%s,"degrees":%d}
-				""".formatted(name, quoted(email), quoted(cpf), quoted(belt), degrees);
+				{"kind":"TRAINING","name":"%s","email":%s,"cpf":%s,"belt":%s,"degrees":%d,"emergencyPhone":"%s"}
+				""".formatted(name, quoted(email), quoted(cpf), quoted(belt), degrees, EMERGENCY_PHONE);
 	}
 
 	private static String responsibleBody(String name) {

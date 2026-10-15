@@ -2,7 +2,7 @@ import { MessageCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { CopyButton } from '@/components/CopyButton'
-import { whatsappUrl } from '@/invites/shareLinks'
+import { whatsappUrl } from '@/lib/phone'
 
 import { staffInviteUrl } from './teamApi'
 import type { StaffInvite } from './types'

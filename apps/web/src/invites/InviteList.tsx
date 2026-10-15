@@ -4,10 +4,11 @@ import { useTranslation } from 'react-i18next'
 
 import { CopyButton } from '@/components/CopyButton'
 import { apiErrorMessage } from '@/lib/apiErrors'
+import { whatsappUrl } from '@/lib/phone'
 import { formatDate } from '@/students/format'
 
 import { useInviteAction, useInvites } from './invitesApi'
-import { inviteUrl, whatsappUrl } from './shareLinks'
+import { inviteUrl } from './shareLinks'
 import type { Invite, InviteTab } from './types'
 
 const TABS: readonly InviteTab[] = ['PENDING', 'ACCEPTED', 'EXPIRED', 'ALL']

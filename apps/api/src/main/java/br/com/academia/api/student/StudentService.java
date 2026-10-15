@@ -114,6 +114,7 @@ public class StudentService {
 	}
 
 	private StudentData normalize(UUID academyId, StudentRequest r, UUID exceptId) {
+		StudentRules.Person person = StudentRules.person(r.kind(), r.name(), r.phone(), r.emergencyPhone());
 		String email = r.email() == null || r.email().isBlank() ? null : r.email().trim().toLowerCase(Locale.ROOT);
 		String cpf = Cpf.normalize(r.cpf());
 		ensureUnique(academyId, email, cpf, exceptId);
@@ -127,11 +128,12 @@ public class StudentService {
 		}
 		return new StudentData(
 				r.kind(),
-				r.name().trim(),
+				person.name(),
 				TextNormalizer.blankToNull(r.nickname()),
 				email,
 				cpf,
-				TextNormalizer.blankToNull(r.phone()),
+				person.phone(),
+				person.emergencyPhone(),
 				r.birthDate(),
 				r.gender(),
 				belt,

@@ -1,6 +1,7 @@
 package br.com.academia.api.training;
 
 import static br.com.academia.api.ApiTestSupport.CTX;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_PHONE;
 import static br.com.academia.api.ApiTestSupport.auth;
 import static br.com.academia.api.ApiTestSupport.authJson;
 import static br.com.academia.api.ApiTestSupport.read;
@@ -93,11 +94,11 @@ class ClassFlowIntegrationTest {
 	@Test
 	void enrollmentRespectsCapacityAndStudentKind() throws Exception {
 		String classId = createClass(EVERY_DAY, 1);
-		String ana = createStudent("TRAINING", "Ana");
-		String bruno = createStudent("TRAINING", "Bruno");
-		String responsible = createStudent("RESPONSIBLE", "Carla");
+		String ana = createStudent("TRAINING", "Ana Lima");
+		String bruno = createStudent("TRAINING", "Bruno Reis");
+		String responsible = createStudent("RESPONSIBLE", "Carla Dias");
 
-		enroll(classId, ana).andExpect(status().isOk()).andExpect(jsonPath("$[0].name").value("Ana"));
+		enroll(classId, ana).andExpect(status().isOk()).andExpect(jsonPath("$[0].name").value("Ana Lima"));
 		enroll(classId, ana).andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("ALREADY_ENROLLED"));
 		enroll(classId, bruno).andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("CLASS_FULL"));
 		enroll(classId, responsible)
@@ -113,8 +114,8 @@ class ClassFlowIntegrationTest {
 	@Test
 	void instructorTakesAttendanceWithWalkInsAndNotes() throws Exception {
 		String classId = createClass(EVERY_DAY, null);
-		String ana = createStudent("TRAINING", "Ana");
-		String bruno = createStudent("TRAINING", "Bruno");
+		String ana = createStudent("TRAINING", "Ana Lima");
+		String bruno = createStudent("TRAINING", "Bruno Reis");
 		enroll(classId, ana).andExpect(status().isOk());
 		String instructor = staff.instructorTokenFor(mvc, owner);
 		String session = CTX + "/attendance/classes/" + classId + "/sessions/" + today;
@@ -129,7 +130,7 @@ class ClassFlowIntegrationTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.notes").value("Treino de passagem"))
 				.andExpect(jsonPath("$.roster[?(@.present == true)]", hasSize(2)))
-				.andExpect(jsonPath("$.roster[1].student.name").value("Bruno"))
+				.andExpect(jsonPath("$.roster[1].student.name").value("Bruno Reis"))
 				.andExpect(jsonPath("$.roster[1].enrolled").value(false));
 		mvc.perform(auth(get(CTX + "/attendance/day?date=" + today), instructor))
 				.andExpect(jsonPath("$[0].enrolled").value(1))
@@ -145,7 +146,7 @@ class ClassFlowIntegrationTest {
 	@Test
 	void rejectsFutureAttendanceAndDatesWithoutClass() throws Exception {
 		String classId = createClass("[" + today.getDayOfWeek().getValue() + "]", null);
-		String ana = createStudent("TRAINING", "Ana");
+		String ana = createStudent("TRAINING", "Ana Lima");
 		String sessions = CTX + "/attendance/classes/" + classId + "/sessions/";
 
 		mvc.perform(authJson(put(sessions + today.plusWeeks(1)), owner, saveBody(null, ana)))
@@ -170,8 +171,8 @@ class ClassFlowIntegrationTest {
 
 	private String createStudent(String kind, String name) throws Exception {
 		return read(mvc.perform(authJson(post(CTX + "/students"), owner, """
-				{"kind":"%s","name":"%s"}
-				""".formatted(kind, name)))
+				{"kind":"%s","name":"%s","emergencyPhone":"%s"}
+				""".formatted(kind, name, EMERGENCY_PHONE)))
 				.andExpect(status().isCreated())
 				.andReturn(), "$.id");
 	}

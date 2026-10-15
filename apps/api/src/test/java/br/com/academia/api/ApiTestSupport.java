@@ -16,6 +16,8 @@ public final class ApiTestSupport {
 
 	public static final String CTX = "/api/v2";
 	public static final String PASSWORD = "senha-forte-123";
+	/** Telefone de emergência válido, obrigatório para quem treina. */
+	public static final String EMERGENCY_PHONE = "(11) 98888-7777";
 
 	private ApiTestSupport() {
 	}

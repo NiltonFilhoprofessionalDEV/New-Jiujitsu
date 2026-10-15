@@ -14,6 +14,8 @@ export type StudentListItem = {
   name: string
   nickname: string | null
   email: string | null
+  phone: string | null
+  emergencyPhone: string | null
   kind: StudentKind
   status: StudentStatus
   belt: string | null
@@ -27,7 +29,6 @@ export type StudentListItem = {
 
 export type StudentDetail = StudentListItem & {
   cpf: string | null
-  phone: string | null
   gender: Gender | null
   degreeAwardedAt: string | null
   beltRuler: BeltRuler
@@ -43,6 +44,7 @@ export type StudentRequest = {
   email: string | null
   cpf: string | null
   phone: string | null
+  emergencyPhone: string | null
   birthDate: string | null
   gender: Gender | null
   belt: string | null

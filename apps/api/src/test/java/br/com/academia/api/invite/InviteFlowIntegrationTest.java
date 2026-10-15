@@ -1,6 +1,7 @@
 package br.com.academia.api.invite;
 
 import static br.com.academia.api.ApiTestSupport.CTX;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_PHONE;
 import static br.com.academia.api.ApiTestSupport.PASSWORD;
 import static br.com.academia.api.ApiTestSupport.auth;
 import static br.com.academia.api.ApiTestSupport.authJson;
@@ -51,7 +52,7 @@ class InviteFlowIntegrationTest {
 				.andExpect(jsonPath("$.state").value("OPEN"));
 
 		String email = studentEmail();
-		mvc.perform(json(post(CTX + "/public/enroll/" + token), signupBody("Ana Souza", email)))
+		mvc.perform(json(post(CTX + "/public/enroll/" + token), signupBody("  ana   DA souza ", email)))
 				.andExpect(status().isAccepted());
 		mvc.perform(login(email))
 				.andExpect(status().isForbidden())
@@ -61,6 +62,7 @@ class InviteFlowIntegrationTest {
 		String requestId = read(mvc.perform(auth(get(CTX + "/requests/enrollments"), owner))
 				.andExpect(jsonPath("$", hasSize(1)))
 				.andExpect(jsonPath("$[0].belt").value("azul"))
+				.andExpect(jsonPath("$[0].emergencyPhone").value(EMERGENCY_PHONE))
 				.andReturn(), "$[0].id");
 
 		String other = registerOwner(mvc);
@@ -69,7 +71,8 @@ class InviteFlowIntegrationTest {
 
 		mvc.perform(auth(post(CTX + "/requests/enrollments/" + requestId + "/approve"), owner))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.name").value("Ana Souza"))
+				.andExpect(jsonPath("$.name").value("Ana da Souza"))
+				.andExpect(jsonPath("$.emergencyPhone").value(EMERGENCY_PHONE))
 				.andExpect(jsonPath("$.belt").value("azul"));
 		mvc.perform(auth(post(CTX + "/requests/enrollments/" + requestId + "/approve"), owner))
 				.andExpect(status().isConflict())
@@ -81,11 +84,33 @@ class InviteFlowIntegrationTest {
 	}
 
 	@Test
+	void linkSignupRejectsSingleNameAndMissingEmergencyPhoneBeforeCreatingRequest() throws Exception {
+		String token = linkToken(owner);
+		mvc.perform(json(post(CTX + "/public/enroll/" + token), signupBody("Ana da", studentEmail())))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.code").value("FULL_NAME_REQUIRED"))
+				.andExpect(jsonPath("$.fields.name").isNotEmpty());
+		mvc.perform(json(post(CTX + "/public/enroll/" + token), """
+				{"name":"Ana Souza","email":"%s","password":"%s","belt":"azul","degrees":1}
+				""".formatted(studentEmail(), PASSWORD)))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.code").value("EMERGENCY_PHONE_REQUIRED"))
+				.andExpect(jsonPath("$.fields.emergencyPhone").isNotEmpty());
+		mvc.perform(json(post(CTX + "/public/enroll/" + token), signupBody("Ana Souza", studentEmail())
+				.replace(EMERGENCY_PHONE, "123")))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.code").value("INVALID_PHONE"))
+				.andExpect(jsonPath("$.fields.emergencyPhone").isNotEmpty());
+
+		mvc.perform(auth(get(CTX + "/requests/count"), owner)).andExpect(jsonPath("$.pending").value(0));
+	}
+
+	@Test
 	void pausedLinkRefusesSignupAndRotationKillsOldToken() throws Exception {
 		String token = linkToken(owner);
 		mvc.perform(authJson(put(CTX + "/invites/link"), owner, "{\"enabled\":false}"))
 				.andExpect(jsonPath("$.state").value("PAUSED"));
-		mvc.perform(json(post(CTX + "/public/enroll/" + token), signupBody("Bia", studentEmail())))
+		mvc.perform(json(post(CTX + "/public/enroll/" + token), signupBody("Bia Lima", studentEmail())))
 				.andExpect(status().isConflict())
 				.andExpect(jsonPath("$.code").value("ENROLLMENT_CLOSED"));
 
@@ -112,7 +137,7 @@ class InviteFlowIntegrationTest {
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.accessToken").isNotEmpty())
 				.andExpect(jsonPath("$.user.email").value(invitedEmail));
-		mvc.perform(json(post(CTX + "/public/invites/" + token + "/accept"), signupBody("Outro", studentEmail())))
+		mvc.perform(json(post(CTX + "/public/invites/" + token + "/accept"), signupBody("Outro Aluno", studentEmail())))
 				.andExpect(status().isConflict())
 				.andExpect(jsonPath("$.code").value("INVITE_NOT_AVAILABLE"));
 
@@ -128,13 +153,13 @@ class InviteFlowIntegrationTest {
 		String token = read(mvc.perform(auth(post(CTX + "/invites/" + id + "/revoke"), owner))
 				.andExpect(jsonPath("$.status").value("REVOKED"))
 				.andReturn(), "$.token");
-		mvc.perform(json(post(CTX + "/public/invites/" + token + "/accept"), signupBody("Rui", studentEmail())))
+		mvc.perform(json(post(CTX + "/public/invites/" + token + "/accept"), signupBody("Rui Costa", studentEmail())))
 				.andExpect(status().isConflict());
 
 		String inviteToken = read(mvc.perform(authJson(post(CTX + "/invites"), owner, "{\"kind\":\"TRAINING\"}"))
 				.andReturn(), "$.token");
 		String studentAccess = read(mvc.perform(json(post(CTX + "/public/invites/" + inviteToken + "/accept"),
-				signupBody("Lia", studentEmail()))).andReturn(), "$.accessToken");
+				signupBody("Lia Ramos", studentEmail()))).andReturn(), "$.accessToken");
 		mvc.perform(auth(get(CTX + "/invites"), studentAccess)).andExpect(status().isForbidden());
 		mvc.perform(auth(get(CTX + "/students/page"), studentAccess)).andExpect(status().isForbidden());
 	}
@@ -153,8 +178,8 @@ class InviteFlowIntegrationTest {
 
 	private static String signupBody(String name, String email) {
 		return """
-				{"name":"%s","email":"%s","password":"%s","belt":"azul","degrees":1}
-				""".formatted(name, email, PASSWORD);
+				{"name":"%s","email":"%s","password":"%s","belt":"azul","degrees":1,"emergencyPhone":"%s"}
+				""".formatted(name, email, PASSWORD, EMERGENCY_PHONE);
 	}
 
 	private static String studentEmail() {

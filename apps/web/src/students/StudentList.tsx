@@ -5,6 +5,7 @@ import { initials } from '@/lib/text'
 
 import { BeltBadge } from './BeltBadge'
 import { StudentBadges } from './StudentBadges'
+import { StudentContactLinks } from './StudentContactLinks'
 import type { Page, StudentListItem } from './types'
 
 type Props = {
@@ -33,7 +34,7 @@ export function StudentList({ page, selectedId, onSelect, onPage }: Props) {
     <div className="card list-card">
       <ul className="people-list">
         {page.content.map((s) => (
-          <li key={s.id}>
+          <li key={s.id} className="person-item">
             <button type="button" className="person-row" aria-current={s.id === selectedId || undefined}
               onClick={() => onSelect(s.id)}>
               <span className="avatar" aria-hidden>{initials(s.name)}</span>
@@ -49,6 +50,7 @@ export function StudentList({ page, selectedId, onSelect, onPage }: Props) {
                 {s.kind === 'TRAINING' && <BeltBadge belt={s.belt} degrees={s.degrees} />}
               </span>
             </button>
+            <StudentContactLinks student={s} />
           </li>
         ))}
       </ul>

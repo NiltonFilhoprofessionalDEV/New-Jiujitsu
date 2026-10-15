@@ -21,7 +21,10 @@ public final class StudentDtos {
 	private StudentDtos() {
 	}
 
-	/** Cadastro e edição. Campos de faixa são ignorados para {@link Kind#RESPONSIBLE}. */
+	/**
+	 * Cadastro e edição. Campos de faixa são ignorados para {@link Kind#RESPONSIBLE}. Nome completo e telefone
+	 * de emergência (de quem treina) são exigidos por {@link StudentRules}.
+	 */
 	public record StudentRequest(
 			@NotNull Kind kind,
 			@NotBlank @Size(max = 120) String name,
@@ -29,6 +32,7 @@ public final class StudentDtos {
 			@Email @Size(max = 254) String email,
 			@Size(max = 14) String cpf,
 			@Size(max = 30) String phone,
+			@Size(max = 30) String emergencyPhone,
 			@PastOrPresent LocalDate birthDate,
 			Gender gender,
 			@Size(max = 30) String belt,
@@ -52,6 +56,8 @@ public final class StudentDtos {
 			String name,
 			String nickname,
 			String email,
+			String phone,
+			String emergencyPhone,
 			Kind kind,
 			Status status,
 			String belt,
@@ -63,9 +69,9 @@ public final class StudentDtos {
 			boolean hasLogin) {
 
 		public static StudentListItem of(Student s) {
-			return new StudentListItem(s.getId(), s.getName(), s.getNickname(), s.getEmail(), s.getKind(),
-					s.getStatus(), beltSlug(s), s.getDegrees(), s.getBirthDate(), s.getEnrollmentDate(),
-					HouseholdRef.of(s.getHousehold()), isResponsible(s), s.getUserId() != null);
+			return new StudentListItem(s.getId(), s.getName(), s.getNickname(), s.getEmail(), s.getPhone(),
+					s.getEmergencyPhone(), s.getKind(), s.getStatus(), beltSlug(s), s.getDegrees(), s.getBirthDate(),
+					s.getEnrollmentDate(), HouseholdRef.of(s.getHousehold()), isResponsible(s), s.getUserId() != null);
 		}
 	}
 
@@ -78,6 +84,7 @@ public final class StudentDtos {
 			String email,
 			String cpf,
 			String phone,
+			String emergencyPhone,
 			LocalDate birthDate,
 			Gender gender,
 			String belt,
@@ -94,10 +101,10 @@ public final class StudentDtos {
 
 		static StudentDetail of(Student s) {
 			return new StudentDetail(s.getId(), s.getKind(), s.getStatus(), s.getName(), s.getNickname(),
-					s.getEmail(), s.getCpf(), s.getPhone(), s.getBirthDate(), s.getGender(), beltSlug(s),
-					s.getDegrees(), s.getDegreeAwardedAt(), s.getBeltRuler(), s.getEnrollmentDate(), s.getGiSize(),
-					s.getBeltSize(), HouseholdRef.of(s.getHousehold()), isResponsible(s), s.getUserId() != null,
-					s.getCreatedAt());
+					s.getEmail(), s.getCpf(), s.getPhone(), s.getEmergencyPhone(), s.getBirthDate(), s.getGender(),
+					beltSlug(s), s.getDegrees(), s.getDegreeAwardedAt(), s.getBeltRuler(), s.getEnrollmentDate(),
+					s.getGiSize(), s.getBeltSize(), HouseholdRef.of(s.getHousehold()), isResponsible(s),
+					s.getUserId() != null, s.getCreatedAt());
 		}
 	}
 

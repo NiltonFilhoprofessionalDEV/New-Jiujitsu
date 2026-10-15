@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next'
 import { CopyButton } from '@/components/CopyButton'
 import { apiErrorMessage } from '@/lib/apiErrors'
 import { formText } from '@/lib/formText'
+import { whatsappUrl } from '@/lib/phone'
 
 import { useCreateInvite } from './invitesApi'
-import { inviteUrl, whatsappUrl } from './shareLinks'
+import { inviteUrl } from './shareLinks'
 import type { Invite } from './types'
 
 export function NewInviteForm() {
