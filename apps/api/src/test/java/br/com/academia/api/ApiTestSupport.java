@@ -16,8 +16,12 @@ public final class ApiTestSupport {
 
 	public static final String CTX = "/api/v2";
 	public static final String PASSWORD = "senha-forte-123";
-	/** Telefone de emergência válido, obrigatório para quem treina. */
+	/** Contato de emergência válido, obrigatório para quem treina. */
+	public static final String EMERGENCY_CONTACT = "Maria Souza";
 	public static final String EMERGENCY_PHONE = "(11) 98888-7777";
+	/** Os dois campos de emergência prontos para entrar num corpo JSON. */
+	public static final String EMERGENCY_FIELDS =
+			"\"emergencyContact\":\"" + EMERGENCY_CONTACT + "\",\"emergencyPhone\":\"" + EMERGENCY_PHONE + "\"";
 
 	private ApiTestSupport() {
 	}

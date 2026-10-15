@@ -24,7 +24,10 @@ export function StudentContactLinks({ student }: { student: StudentListItem }) {
       icon: <WhatsappIcon size={ICON_SIZE} />, className: 'whatsapp', external: true },
     { key: 'call', href: call, label: t('students.contact.call', { name }),
       icon: <Phone size={ICON_SIZE} aria-hidden /> },
-    { key: 'emergency', href: telUrl(student.emergencyPhone), label: t('students.contact.emergency', { name }),
+    { key: 'emergency', href: telUrl(student.emergencyPhone),
+      label: student.emergencyContact
+        ? t('students.contact.emergencyNamed', { name, contact: student.emergencyContact })
+        : t('students.contact.emergency', { name }),
       icon: <Siren size={ICON_SIZE} aria-hidden />, className: 'emergency' },
   ]
 

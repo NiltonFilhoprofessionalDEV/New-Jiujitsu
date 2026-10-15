@@ -16,18 +16,24 @@ public final class StudentRules {
 	private StudentRules() {
 	}
 
-	/** Nome formatado e telefones como digitados ({@code null} quando em branco). */
-	public record Person(String name, String phone, String emergencyPhone) {
+	/** Dados de cadastro e telefones como digitados; {@code null} quando em branco. */
+	public record PersonInput(String name, String phone, String emergencyContact, String emergencyPhone) {
+	}
+
+	/** Nomes formatados e telefones como digitados ({@code null} quando em branco). */
+	public record Person(String name, String phone, String emergencyContact, String emergencyPhone) {
 	}
 
 	/**
-	 * Exige nome e sobrenome e telefones com DDD; o de emergência é obrigatório para quem treina (o responsável
-	 * que não treina pode deixar em branco). Junta todos os erros, para o formulário mostrar tudo de uma vez.
+	 * Exige nome e sobrenome e telefones com DDD. O contato de emergência (nome e telefone) é obrigatório para
+	 * quem treina; o responsável que não treina pode deixar em branco, mas se preencher um, precisa do outro.
+	 * Junta todos os erros, para o formulário mostrar tudo de uma vez.
 	 */
-	public static Person person(Kind kind, String rawName, String rawPhone, String rawEmergencyPhone) {
-		String name = PersonName.format(rawName);
-		String phone = TextNormalizer.blankToNull(rawPhone);
-		String emergencyPhone = TextNormalizer.blankToNull(rawEmergencyPhone);
+	public static Person person(Kind kind, PersonInput in) {
+		String name = PersonName.format(in.name());
+		String phone = TextNormalizer.blankToNull(in.phone());
+		String contact = TextNormalizer.blankToNull(PersonName.format(in.emergencyContact()));
+		String emergencyPhone = TextNormalizer.blankToNull(in.emergencyPhone());
 
 		List<FieldError> errors = new ArrayList<>();
 		if (!PersonName.isFull(name)) {
@@ -36,7 +42,12 @@ public final class StudentRules {
 		if (phone != null && !Phone.isValid(phone)) {
 			errors.add(invalidPhone("phone"));
 		}
-		if (emergencyPhone == null && kind == Kind.TRAINING) {
+		boolean emergencyRequired = kind == Kind.TRAINING || contact != null || emergencyPhone != null;
+		if (emergencyRequired && contact == null) {
+			errors.add(new FieldError("emergencyContact", "EMERGENCY_CONTACT_REQUIRED",
+					"Informe o nome do contato de emergência"));
+		}
+		if (emergencyRequired && emergencyPhone == null) {
 			errors.add(new FieldError("emergencyPhone", "EMERGENCY_PHONE_REQUIRED", "Informe um telefone de emergência"));
 		} else if (emergencyPhone != null && !Phone.isValid(emergencyPhone)) {
 			errors.add(invalidPhone("emergencyPhone"));
@@ -44,7 +55,7 @@ public final class StudentRules {
 		if (!errors.isEmpty()) {
 			throw ApiException.invalidFields(errors);
 		}
-		return new Person(name, phone, emergencyPhone);
+		return new Person(name, phone, contact, emergencyPhone);
 	}
 
 	private static FieldError invalidPhone(String field) {

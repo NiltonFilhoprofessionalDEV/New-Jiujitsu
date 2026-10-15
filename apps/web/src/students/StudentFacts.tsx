@@ -22,6 +22,7 @@ function useFactGroups(student: StudentDetail): Group[] {
       facts: [
         { label: t('students.form.email'), value: student.email },
         { label: t('students.form.phone'), value: student.phone },
+        { label: t('students.form.emergencyContact'), value: student.emergencyContact },
         { label: t('students.form.emergencyPhone'), value: student.emergencyPhone },
       ],
     },

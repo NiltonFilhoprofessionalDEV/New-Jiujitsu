@@ -50,6 +50,9 @@ public class EnrollmentRequest {
 	@Column(updatable = false)
 	private String phone;
 
+	@Column(name = "emergency_contact", updatable = false)
+	private String emergencyContact;
+
 	@Column(name = "emergency_phone", updatable = false)
 	private String emergencyPhone;
 
@@ -90,6 +93,7 @@ public class EnrollmentRequest {
 		this.email = data.email();
 		this.cpf = data.cpf();
 		this.phone = data.phone();
+		this.emergencyContact = data.emergencyContact();
 		this.emergencyPhone = data.emergencyPhone();
 		this.birthDate = data.birthDate();
 		this.belt = data.belt();
@@ -110,7 +114,8 @@ public class EnrollmentRequest {
 	}
 
 	SignupData toSignupData() {
-		return new SignupData(name, nickname, email, cpf, phone, emergencyPhone, birthDate, belt, degrees);
+		return new SignupData(name, nickname, email, cpf, phone, emergencyContact, emergencyPhone, birthDate, belt,
+				degrees);
 	}
 
 	public UUID getId() {

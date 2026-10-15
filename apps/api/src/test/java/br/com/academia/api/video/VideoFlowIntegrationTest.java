@@ -1,7 +1,7 @@
 package br.com.academia.api.video;
 
 import static br.com.academia.api.ApiTestSupport.CTX;
-import static br.com.academia.api.ApiTestSupport.EMERGENCY_PHONE;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_FIELDS;
 import static br.com.academia.api.ApiTestSupport.PASSWORD;
 import static br.com.academia.api.ApiTestSupport.auth;
 import static br.com.academia.api.ApiTestSupport.authJson;
@@ -178,8 +178,8 @@ class VideoFlowIntegrationTest {
 				.andExpect(status().isCreated()).andReturn(), "$.token");
 		return read(mvc.perform(json(post(CTX + "/public/invites/" + token + "/accept"), """
 				{"name":"Aluno Vídeo","email":"aluno-%s@teste.dev","password":"%s","belt":"%s","degrees":0,
-				"emergencyPhone":"%s"}
-				""".formatted(UUID.randomUUID(), PASSWORD, belt, EMERGENCY_PHONE)))
+				%s}
+				""".formatted(UUID.randomUUID(), PASSWORD, belt, EMERGENCY_FIELDS)))
 				.andExpect(status().isCreated()).andReturn(), "$.accessToken");
 	}
 }

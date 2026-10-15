@@ -93,6 +93,7 @@ function RequestCard({ request, busy, onApprove, onReject }: CardProps) {
         <DataItem label={t('students.form.email')} value={request.email} />
         <DataItem label={t('students.form.cpf')} value={formatCpf(request.cpf)} />
         <DataItem label={t('students.form.phone')} value={request.phone} />
+        <DataItem label={t('students.form.emergencyContact')} value={request.emergencyContact} />
         <DataItem label={t('students.form.emergencyPhone')} value={request.emergencyPhone} />
         <DataItem label={t('students.form.birthDate')} value={formatDate(request.birthDate)} />
       </dl>

@@ -1,6 +1,8 @@
 package br.com.academia.api.invite;
 
 import static br.com.academia.api.ApiTestSupport.CTX;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_CONTACT;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_FIELDS;
 import static br.com.academia.api.ApiTestSupport.EMERGENCY_PHONE;
 import static br.com.academia.api.ApiTestSupport.PASSWORD;
 import static br.com.academia.api.ApiTestSupport.auth;
@@ -62,6 +64,7 @@ class InviteFlowIntegrationTest {
 		String requestId = read(mvc.perform(auth(get(CTX + "/requests/enrollments"), owner))
 				.andExpect(jsonPath("$", hasSize(1)))
 				.andExpect(jsonPath("$[0].belt").value("azul"))
+				.andExpect(jsonPath("$[0].emergencyContact").value(EMERGENCY_CONTACT))
 				.andExpect(jsonPath("$[0].emergencyPhone").value(EMERGENCY_PHONE))
 				.andReturn(), "$[0].id");
 
@@ -72,6 +75,7 @@ class InviteFlowIntegrationTest {
 		mvc.perform(auth(post(CTX + "/requests/enrollments/" + requestId + "/approve"), owner))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.name").value("Ana da Souza"))
+				.andExpect(jsonPath("$.emergencyContact").value(EMERGENCY_CONTACT))
 				.andExpect(jsonPath("$.emergencyPhone").value(EMERGENCY_PHONE))
 				.andExpect(jsonPath("$.belt").value("azul"));
 		mvc.perform(auth(post(CTX + "/requests/enrollments/" + requestId + "/approve"), owner))
@@ -94,7 +98,8 @@ class InviteFlowIntegrationTest {
 				{"name":"Ana Souza","email":"%s","password":"%s","belt":"azul","degrees":1}
 				""".formatted(studentEmail(), PASSWORD)))
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.code").value("EMERGENCY_PHONE_REQUIRED"))
+				.andExpect(jsonPath("$.code").value("EMERGENCY_CONTACT_REQUIRED"))
+				.andExpect(jsonPath("$.fields.emergencyContact").isNotEmpty())
 				.andExpect(jsonPath("$.fields.emergencyPhone").isNotEmpty());
 		mvc.perform(json(post(CTX + "/public/enroll/" + token), signupBody("Ana Souza", studentEmail())
 				.replace(EMERGENCY_PHONE, "123")))
@@ -178,8 +183,8 @@ class InviteFlowIntegrationTest {
 
 	private static String signupBody(String name, String email) {
 		return """
-				{"name":"%s","email":"%s","password":"%s","belt":"azul","degrees":1,"emergencyPhone":"%s"}
-				""".formatted(name, email, PASSWORD, EMERGENCY_PHONE);
+				{"name":"%s","email":"%s","password":"%s","belt":"azul","degrees":1,%s}
+				""".formatted(name, email, PASSWORD, EMERGENCY_FIELDS);
 	}
 
 	private static String studentEmail() {

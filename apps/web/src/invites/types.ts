@@ -40,6 +40,7 @@ export type EnrollmentRequestItem = {
   email: string
   cpf: string | null
   phone: string | null
+  emergencyContact: string | null
   emergencyPhone: string | null
   birthDate: string | null
   belt: string | null

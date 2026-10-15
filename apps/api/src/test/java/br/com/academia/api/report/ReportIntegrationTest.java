@@ -1,7 +1,7 @@
 package br.com.academia.api.report;
 
 import static br.com.academia.api.ApiTestSupport.CTX;
-import static br.com.academia.api.ApiTestSupport.EMERGENCY_PHONE;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_FIELDS;
 import static br.com.academia.api.ApiTestSupport.auth;
 import static br.com.academia.api.ApiTestSupport.authJson;
 import static br.com.academia.api.ApiTestSupport.read;
@@ -119,8 +119,7 @@ class ReportIntegrationTest {
 	private String createStudent(String name, String enrollmentDate) throws Exception {
 		String date = enrollmentDate == null ? "" : ",\"enrollmentDate\":\"" + enrollmentDate + "\"";
 		return read(mvc.perform(authJson(post(CTX + "/students"), owner,
-				"{\"kind\":\"TRAINING\",\"name\":\"" + name + "\",\"emergencyPhone\":\"" + EMERGENCY_PHONE + "\""
-						+ date + "}"))
+				"{\"kind\":\"TRAINING\",\"name\":\"" + name + "\"," + EMERGENCY_FIELDS + date + "}"))
 				.andExpect(status().isCreated()).andReturn(), "$.id");
 	}
 

@@ -15,6 +15,7 @@ export type StudentListItem = {
   nickname: string | null
   email: string | null
   phone: string | null
+  emergencyContact: string | null
   emergencyPhone: string | null
   kind: StudentKind
   status: StudentStatus
@@ -44,6 +45,7 @@ export type StudentRequest = {
   email: string | null
   cpf: string | null
   phone: string | null
+  emergencyContact: string | null
   emergencyPhone: string | null
   birthDate: string | null
   gender: Gender | null

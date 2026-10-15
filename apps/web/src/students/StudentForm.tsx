@@ -26,6 +26,7 @@ function toRequest(form: FormData, kind: StudentKind): StudentRequest {
     email: formText(form, 'email'),
     cpf: formText(form, 'cpf'),
     phone: formText(form, 'phone'),
+    emergencyContact: formText(form, 'emergencyContact'),
     emergencyPhone: formText(form, 'emergencyPhone'),
     birthDate: formText(form, 'birthDate'),
     gender: formText(form, 'gender') as Gender | null,
@@ -114,10 +115,17 @@ export function StudentForm({ student, householdId, onSaved, onCancel }: Student
         {fieldError('phone')}
       </div>
       <div className="field">
+        <label htmlFor="sf-emergency-contact">{t('students.form.emergencyContact', { context: kind })}</label>
+        <input id="sf-emergency-contact" name="emergencyContact" className="input" maxLength={120} required={training}
+          autoCapitalize="words" defaultValue={student?.emergencyContact ?? ''}
+          aria-invalid={Boolean(fieldErrors.emergencyContact)} />
+        {fieldError('emergencyContact') || <span className="hint">{t('students.form.emergencyContactHint')}</span>}
+      </div>
+      <div className="field">
         <label htmlFor="sf-emergency">{t('students.form.emergencyPhone', { context: kind })}</label>
         <input id="sf-emergency" name="emergencyPhone" type="tel" className="input" maxLength={30} required={training}
           defaultValue={student?.emergencyPhone ?? ''} aria-invalid={Boolean(fieldErrors.emergencyPhone)} />
-        {fieldError('emergencyPhone') || <span className="hint">{t('students.form.emergencyPhoneHint')}</span>}
+        {fieldError('emergencyPhone')}
       </div>
       <div className="field">
         <label htmlFor="sf-birth">{t('students.form.birthDate')}</label>

@@ -1,7 +1,7 @@
 package br.com.academia.api.graduation;
 
 import static br.com.academia.api.ApiTestSupport.CTX;
-import static br.com.academia.api.ApiTestSupport.EMERGENCY_PHONE;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_FIELDS;
 import static br.com.academia.api.ApiTestSupport.auth;
 import static br.com.academia.api.ApiTestSupport.authJson;
 import static br.com.academia.api.ApiTestSupport.read;
@@ -137,8 +137,8 @@ class GraduationFlowIntegrationTest {
 
 	private String createStudent(String kind, String name, LocalDate enrollmentDate) throws Exception {
 		return read(mvc.perform(authJson(post(CTX + "/students"), owner, """
-				{"kind":"%s","name":"%s","enrollmentDate":"%s","emergencyPhone":"%s"}
-				""".formatted(kind, name, enrollmentDate, EMERGENCY_PHONE)))
+				{"kind":"%s","name":"%s","enrollmentDate":"%s",%s}
+				""".formatted(kind, name, enrollmentDate, EMERGENCY_FIELDS)))
 				.andExpect(status().isCreated())
 				.andReturn(), "$.id");
 	}

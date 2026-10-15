@@ -1,7 +1,7 @@
 package br.com.academia.api.billing;
 
 import static br.com.academia.api.ApiTestSupport.CTX;
-import static br.com.academia.api.ApiTestSupport.EMERGENCY_PHONE;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_FIELDS;
 import static br.com.academia.api.ApiTestSupport.auth;
 import static br.com.academia.api.ApiTestSupport.authJson;
 import static br.com.academia.api.ApiTestSupport.read;
@@ -177,8 +177,8 @@ class BillingFlowIntegrationTest {
 	private String createStudent(String kind, String name, LocalDate birthDate) throws Exception {
 		String birth = birthDate == null ? "null" : "\"" + birthDate + "\"";
 		return read(mvc.perform(authJson(post(CTX + "/students"), owner, """
-				{"kind":"%s","name":"%s","birthDate":%s,"emergencyPhone":"%s"}
-				""".formatted(kind, name, birth, EMERGENCY_PHONE)))
+				{"kind":"%s","name":"%s","birthDate":%s,%s}
+				""".formatted(kind, name, birth, EMERGENCY_FIELDS)))
 				.andExpect(status().isCreated())
 				.andReturn(), "$.id");
 	}

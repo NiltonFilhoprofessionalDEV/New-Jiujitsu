@@ -1,7 +1,7 @@
 package br.com.academia.api.training;
 
 import static br.com.academia.api.ApiTestSupport.CTX;
-import static br.com.academia.api.ApiTestSupport.EMERGENCY_PHONE;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_FIELDS;
 import static br.com.academia.api.ApiTestSupport.auth;
 import static br.com.academia.api.ApiTestSupport.authJson;
 import static br.com.academia.api.ApiTestSupport.read;
@@ -171,8 +171,8 @@ class ClassFlowIntegrationTest {
 
 	private String createStudent(String kind, String name) throws Exception {
 		return read(mvc.perform(authJson(post(CTX + "/students"), owner, """
-				{"kind":"%s","name":"%s","emergencyPhone":"%s"}
-				""".formatted(kind, name, EMERGENCY_PHONE)))
+				{"kind":"%s","name":"%s",%s}
+				""".formatted(kind, name, EMERGENCY_FIELDS)))
 				.andExpect(status().isCreated())
 				.andReturn(), "$.id");
 	}

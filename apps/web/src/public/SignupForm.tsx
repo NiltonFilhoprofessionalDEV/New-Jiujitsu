@@ -28,6 +28,7 @@ function toInput(form: FormData, training: boolean): SignupInput {
     password: String(form.get('password') ?? ''),
     cpf: formText(form, 'cpf'),
     phone: formText(form, 'phone'),
+    emergencyContact: formText(form, 'emergencyContact'),
     emergencyPhone: formText(form, 'emergencyPhone'),
     birthDate: formText(form, 'birthDate'),
     belt: training ? formText(form, 'belt') : null,
@@ -88,12 +89,20 @@ export function SignupForm({ kind, fixedEmail, initialName, submitLabel, pending
         {fieldError('cpf')}
       </div>
       {training && (
-        <div className="field span-2">
-          <label htmlFor="su-emergency">{t('students.form.emergencyPhone', { context: kind })}</label>
-          <input id="su-emergency" name="emergencyPhone" type="tel" className="input" required maxLength={30}
-            aria-invalid={Boolean(fieldErrors.emergencyPhone)} />
-          {fieldError('emergencyPhone') ?? <span className="hint">{t('students.form.emergencyPhoneHint')}</span>}
-        </div>
+        <>
+          <div className="field">
+            <label htmlFor="su-emergency-contact">{t('students.form.emergencyContact', { context: kind })}</label>
+            <input id="su-emergency-contact" name="emergencyContact" className="input" required maxLength={120}
+              autoCapitalize="words" aria-invalid={Boolean(fieldErrors.emergencyContact)} />
+            {fieldError('emergencyContact') ?? <span className="hint">{t('students.form.emergencyContactHint')}</span>}
+          </div>
+          <div className="field">
+            <label htmlFor="su-emergency">{t('students.form.emergencyPhone', { context: kind })}</label>
+            <input id="su-emergency" name="emergencyPhone" type="tel" className="input" required maxLength={30}
+              aria-invalid={Boolean(fieldErrors.emergencyPhone)} />
+            {fieldError('emergencyPhone')}
+          </div>
+        </>
       )}
       <div className="field span-2">
         <label htmlFor="su-birth">{t('students.form.birthDate')}</label>

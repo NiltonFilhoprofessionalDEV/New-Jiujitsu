@@ -21,6 +21,7 @@ record SignupData(
 		String email,
 		String cpf,
 		String phone,
+		String emergencyContact,
 		String emergencyPhone,
 		LocalDate birthDate,
 		String belt,
@@ -30,7 +31,8 @@ record SignupData(
 
 	/** {@code fixedEmail} preenchido (convite nominal) prevalece sobre o e-mail digitado. */
 	static SignupData of(SignupRequest r, Kind kind, String fixedEmail) {
-		StudentRules.Person person = StudentRules.person(kind, r.name(), r.phone(), r.emergencyPhone());
+		StudentRules.Person person = StudentRules.person(kind,
+				new StudentRules.PersonInput(r.name(), r.phone(), r.emergencyContact(), r.emergencyPhone()));
 		String email = (fixedEmail != null ? fixedEmail : r.email()).trim().toLowerCase(Locale.ROOT);
 		Belt belt = kind == Kind.TRAINING ? Belt.fromSlug(blankToDefault(r.belt())) : null;
 		int degrees = 0;
@@ -44,6 +46,7 @@ record SignupData(
 				email,
 				Cpf.normalize(r.cpf()),
 				person.phone(),
+				person.emergencyContact(),
 				person.emergencyPhone(),
 				r.birthDate(),
 				belt == null ? null : belt.slug(),
@@ -51,8 +54,8 @@ record SignupData(
 	}
 
 	StudentRequest toStudentRequest(Kind kind) {
-		return new StudentRequest(kind, name, nickname, email, cpf, phone, emergencyPhone, birthDate, null, belt,
-				degrees, null, null, null, null, null);
+		return new StudentRequest(kind, name, nickname, email, cpf, phone, emergencyContact, emergencyPhone, birthDate,
+				null, belt, degrees, null, null, null, null, null);
 	}
 
 	private static String blankToDefault(String belt) {

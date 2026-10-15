@@ -1,7 +1,7 @@
 package br.com.academia.api.portal;
 
 import static br.com.academia.api.ApiTestSupport.CTX;
-import static br.com.academia.api.ApiTestSupport.EMERGENCY_PHONE;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_FIELDS;
 import static br.com.academia.api.ApiTestSupport.PASSWORD;
 import static br.com.academia.api.ApiTestSupport.auth;
 import static br.com.academia.api.ApiTestSupport.authJson;
@@ -139,7 +139,7 @@ class PortalFlowIntegrationTest {
 		String token = read(mvc.perform(authJson(post(CTX + "/invites"), owner, "{\"kind\":\"" + kind + "\"}"))
 				.andExpect(status().isCreated()).andReturn(), "$.token");
 		String belt = "TRAINING".equals(kind)
-				? ",\"belt\":\"azul\",\"degrees\":1,\"emergencyPhone\":\"" + EMERGENCY_PHONE + "\""
+				? ",\"belt\":\"azul\",\"degrees\":1," + EMERGENCY_FIELDS
 				: "";
 		return read(mvc.perform(json(post(CTX + "/public/invites/" + token + "/accept"), """
 				{"name":"Aluno Portal","email":"aluno-%s@teste.dev","password":"%s"%s}
@@ -157,7 +157,7 @@ class PortalFlowIntegrationTest {
 
 	private String createStudent(String name) throws Exception {
 		return read(mvc.perform(authJson(post(CTX + "/students"), owner,
-				"{\"kind\":\"TRAINING\",\"name\":\"" + name + "\",\"emergencyPhone\":\"" + EMERGENCY_PHONE + "\"}"))
+				"{\"kind\":\"TRAINING\",\"name\":\"" + name + "\"," + EMERGENCY_FIELDS + "}"))
 				.andExpect(status().isCreated()).andReturn(), "$.id");
 	}
 }

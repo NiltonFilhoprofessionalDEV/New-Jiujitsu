@@ -14,6 +14,7 @@ record StudentData(
 		String email,
 		String cpf,
 		String phone,
+		String emergencyContact,
 		String emergencyPhone,
 		LocalDate birthDate,
 		Gender gender,

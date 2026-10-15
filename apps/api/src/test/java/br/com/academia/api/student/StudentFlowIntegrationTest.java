@@ -1,6 +1,8 @@
 package br.com.academia.api.student;
 
 import static br.com.academia.api.ApiTestSupport.CTX;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_CONTACT;
+import static br.com.academia.api.ApiTestSupport.EMERGENCY_FIELDS;
 import static br.com.academia.api.ApiTestSupport.EMERGENCY_PHONE;
 import static br.com.academia.api.ApiTestSupport.auth;
 import static br.com.academia.api.ApiTestSupport.authJson;
@@ -54,6 +56,7 @@ class StudentFlowIntegrationTest {
 		mvc.perform(auth(get(CTX + "/students/" + id), owner))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.name").value("João Gonçalves"))
+				.andExpect(jsonPath("$.emergencyContact").value(EMERGENCY_CONTACT))
 				.andExpect(jsonPath("$.emergencyPhone").value(EMERGENCY_PHONE))
 				.andExpect(jsonPath("$.email").value("joao@exemplo.dev"))
 				.andExpect(jsonPath("$.cpf").value("52998224725"))
@@ -107,7 +110,7 @@ class StudentFlowIntegrationTest {
 	}
 
 	@Test
-	void requiresFullNameAndEmergencyPhoneOnlyForWhoTrains() throws Exception {
+	void requiresFullNameAndEmergencyContactOnlyForWhoTrains() throws Exception {
 		mvc.perform(authJson(post(CTX + "/students"), owner, studentBody("Sexto", null, null, "branca", 0)))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.code").value("FULL_NAME_REQUIRED"))
@@ -116,14 +119,16 @@ class StudentFlowIntegrationTest {
 				{"kind":"TRAINING","name":"Sétimo Aluno","belt":"branca","degrees":0}
 				"""))
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.code").value("EMERGENCY_PHONE_REQUIRED"))
+				.andExpect(jsonPath("$.code").value("EMERGENCY_CONTACT_REQUIRED"))
+				.andExpect(jsonPath("$.fields.emergencyContact").isNotEmpty())
 				.andExpect(jsonPath("$.fields.emergencyPhone").isNotEmpty());
 		mvc.perform(authJson(post(CTX + "/students"), owner, """
-				{"kind":"RESPONSIBLE","name":"Oitavo Aluno","phone":"99"}
+				{"kind":"RESPONSIBLE","name":"Oitavo Aluno","phone":"99","emergencyContact":"Rita Lima"}
 				"""))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.code").value("INVALID_PHONE"))
-				.andExpect(jsonPath("$.fields.phone").isNotEmpty());
+				.andExpect(jsonPath("$.fields.phone").isNotEmpty())
+				.andExpect(jsonPath("$.fields.emergencyPhone").isNotEmpty());
 		createStudent(owner, responsibleBody("Responsável sem Emergência"));
 	}
 
@@ -203,8 +208,8 @@ class StudentFlowIntegrationTest {
 
 	private static String studentBody(String name, String email, String cpf, String belt, int degrees) {
 		return """
-				{"kind":"TRAINING","name":"%s","email":%s,"cpf":%s,"belt":%s,"degrees":%d,"emergencyPhone":"%s"}
-				""".formatted(name, quoted(email), quoted(cpf), quoted(belt), degrees, EMERGENCY_PHONE);
+				{"kind":"TRAINING","name":"%s","email":%s,"cpf":%s,"belt":%s,"degrees":%d,%s}
+				""".formatted(name, quoted(email), quoted(cpf), quoted(belt), degrees, EMERGENCY_FIELDS);
 	}
 
 	private static String responsibleBody(String name) {

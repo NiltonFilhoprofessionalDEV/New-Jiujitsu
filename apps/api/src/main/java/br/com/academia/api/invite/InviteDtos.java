@@ -28,6 +28,7 @@ public final class InviteDtos {
 			@NotBlank @Size(min = 8, max = 72, message = "A senha deve ter entre 8 e 72 caracteres") @BcryptSafe String password,
 			@Size(max = 14) String cpf,
 			@Size(max = 30) String phone,
+			@Size(max = 120) String emergencyContact,
 			@Size(max = 30) String emergencyPhone,
 			@PastOrPresent LocalDate birthDate,
 			@Size(max = 30) String belt,
@@ -78,6 +79,7 @@ public final class InviteDtos {
 			String email,
 			String cpf,
 			String phone,
+			String emergencyContact,
 			String emergencyPhone,
 			LocalDate birthDate,
 			String belt,
@@ -87,7 +89,7 @@ public final class InviteDtos {
 		static EnrollmentRequestView of(EnrollmentRequest r) {
 			SignupData d = r.toSignupData();
 			return new EnrollmentRequestView(r.getId(), d.name(), d.nickname(), d.email(), d.cpf(), d.phone(),
-					d.emergencyPhone(), d.birthDate(), d.belt(), d.degrees(), r.getCreatedAt());
+					d.emergencyContact(), d.emergencyPhone(), d.birthDate(), d.belt(), d.degrees(), r.getCreatedAt());
 		}
 	}
 

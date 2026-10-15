@@ -61,6 +61,9 @@ public class Student {
 	private String cpf;
 	private String phone;
 
+	@Column(name = "emergency_contact")
+	private String emergencyContact;
+
 	@Column(name = "emergency_phone")
 	private String emergencyPhone;
 
@@ -118,6 +121,7 @@ public class Student {
 		this.email = data.email();
 		this.cpf = data.cpf();
 		this.phone = data.phone();
+		this.emergencyContact = data.emergencyContact();
 		this.emergencyPhone = data.emergencyPhone();
 		this.birthDate = data.birthDate();
 		this.gender = data.gender();
@@ -198,6 +202,10 @@ public class Student {
 
 	public String getPhone() {
 		return phone;
+	}
+
+	public String getEmergencyContact() {
+		return emergencyContact;
 	}
 
 	public String getEmergencyPhone() {
