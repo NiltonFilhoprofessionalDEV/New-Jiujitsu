@@ -101,7 +101,14 @@
     "VIDEO_NOT_FOUND": "Vídeo não encontrado. Ele pode ter sido removido.",
     "PLAYLIST_NOT_FOUND": "Playlist não encontrada. Ela pode ter sido removida.",
     "COMMENT_NOT_FOUND": "Comentário não encontrado. Ele pode ter sido apagado.",
-    "COMMENT_NOT_YOURS": "Só o autor ou um gestor pode apagar este comentário."
+    "COMMENT_NOT_YOURS": "Só o autor ou um gestor pode apagar este comentário.",
+    "ACADEMY_SUSPENDED": "O acesso da academia está suspenso. O gestor precisa regularizar a assinatura.",
+    "PLATFORM_ADMIN_ONLY": "Área restrita à administração da plataforma.",
+    "TAX_ID_REQUIRED": "Informe o CPF ou CNPJ de quem vai pagar.",
+    "INVALID_TAX_ID": "CPF ou CNPJ inválido. Confira os números.",
+    "NOTHING_TO_PAY": "Nenhuma fatura em aberto agora. Se acabou de assinar, tente de novo em instantes.",
+    "PAYMENT_UNAVAILABLE": "O pagamento online está indisponível no momento. Tente novamente mais tarde.",
+    "PAYMENT_PROVIDER_ERROR": "Não foi possível abrir o pagamento agora. Tente novamente em instantes."
   },
   "topbar": {
     "closeMenu": "Fechar o menu",
@@ -154,7 +161,8 @@
       "principal": "Principal",
       "financeiro": "Financeiro",
       "relatorios": "Relatórios",
-      "mais": "Mais"
+      "mais": "Mais",
+      "plataforma": "Plataforma"
     },
     "inicio": "Início",
     "chamada": "Chamada",
@@ -169,7 +177,9 @@
     "professores": "Professores",
     "equipe": "Equipe",
     "configuracoes": "Configurações",
-    "videos": "Vídeos"
+    "videos": "Vídeos",
+    "assinatura": "Assinatura",
+    "admin": "Academias"
   },
   "routeError": {
     "title": "Algo deu errado",
@@ -209,7 +219,9 @@
     "reports": "Frequência, turmas e financeiro no período escolhido.",
     "instructors": "Aulas dadas e presenças de cada professor.",
     "team": "Professores e co-gestores que ajudam a tocar a academia.",
-    "settings": "Dados da academia, link de matrícula e sua senha."
+    "settings": "Dados da academia, link de matrícula e sua senha.",
+    "subscription": "O plano da sua academia no BJJ Pulse e o pagamento da mensalidade.",
+    "admin": "Todas as academias da plataforma, a situação de cada uma e liberações manuais."
   },
   "home": {
     "title": "Painel",
@@ -1137,6 +1149,98 @@
       "action": "Estornar",
       "title": "Estornar recebimento",
       "confirm": "Estornar o recebimento de {{value}} de {{name}}? A fatura volta a ficar em aberto."
+    }
+  },
+  "subscription": {
+    "title": "Assinatura",
+    "loadError": "Não foi possível carregar a assinatura. Recarregue a página.",
+    "status": {
+      "TRIAL": "Teste grátis",
+      "ACTIVE": "Ativa",
+      "GRACE": "Vencida",
+      "SUSPENDED": "Suspensa"
+    },
+    "headline": {
+      "TRIAL": "Você está no teste grátis",
+      "ACTIVE": "Assinatura em dia",
+      "GRACE": "O pagamento venceu",
+      "SUSPENDED": "Acesso da equipe suspenso"
+    },
+    "daysLabel": {
+      "TRIAL_one": "dia de teste restante",
+      "TRIAL_other": "dias de teste restantes",
+      "ACTIVE_one": "dia até a próxima cobrança",
+      "ACTIVE_other": "dias até a próxima cobrança",
+      "GRACE_one": "dia até o bloqueio da equipe",
+      "GRACE_other": "dias até o bloqueio da equipe"
+    },
+    "dates": {
+      "trialEndsAt": "Teste grátis até",
+      "paidUntil": "Pago até",
+      "suspendsAt": "Bloqueio da equipe em"
+    },
+    "studentsKeepAccess": "Seus alunos nunca perdem o acesso ao app por causa da assinatura.",
+    "plan": {
+      "name": "BJJ Pulse",
+      "perMonth": "/mês",
+      "includes": "Alunos, turmas, chamada, graduações, mensalidades e vídeos, sem limite de alunos."
+    },
+    "checkout": {
+      "taxId": "CPF ou CNPJ de quem paga",
+      "taxIdPlaceholder": "000.000.000-00",
+      "taxIdHint": "Pedimos só na primeira vez, para emitir a cobrança.",
+      "subscribe": "Assinar e pagar",
+      "payOpen": "Pagar fatura em aberto",
+      "opening": "Abrindo o pagamento...",
+      "methods": "Pix, boleto ou cartão na página segura do Asaas. A cobrança se repete todo mês.",
+      "unavailable": "O pagamento online está indisponível no momento. Tente novamente mais tarde."
+    },
+    "banner": {
+      "trial_one": "Seu teste grátis termina em 1 dia. Assine para a equipe continuar usando o app.",
+      "trial_other": "Seu teste grátis termina em {{count}} dias. Assine para a equipe continuar usando o app.",
+      "grace_one": "O pagamento da academia venceu. Falta {{count}} dia para o bloqueio da equipe.",
+      "grace_other": "O pagamento da academia venceu. Faltam {{count}} dias para o bloqueio da equipe.",
+      "subscribe": "Assinar",
+      "regularize": "Regularizar"
+    },
+    "suspended": {
+      "title": "Acesso da academia suspenso",
+      "body": "O teste grátis ou o último pagamento venceu. Os alunos continuam usando o app normalmente; a equipe volta a ter acesso assim que a assinatura for paga.",
+      "cta": "Ver assinatura",
+      "askManager": "Peça ao gestor da academia para regularizar a assinatura."
+    }
+  },
+  "admin": {
+    "eyebrow": "Plataforma",
+    "title": "Academias",
+    "loadError": "Não foi possível carregar as academias. Recarregue a página.",
+    "empty": "Nenhuma academia cadastrada ainda.",
+    "subscribed": "Assinante",
+    "noOwner": "Sem gestor",
+    "students_zero": "Nenhum aluno ativo",
+    "students_one": "{{count}} aluno ativo",
+    "students_other": "{{count}} alunos ativos",
+    "until": {
+      "TRIAL": "teste até {{date}}",
+      "ACTIVE": "pago até {{date}}",
+      "GRACE": "bloqueia em {{date}}",
+      "SUSPENDED": "suspensa desde {{date}}"
+    },
+    "grant": {
+      "open": "Liberar",
+      "title": "Liberar acesso",
+      "summary": "Academia: {{name}}",
+      "kind": "Tipo",
+      "kinds": {
+        "TRIAL_EXTENSION": "Mais dias de teste",
+        "MANUAL_PAYMENT": "Pagamento recebido fora do app"
+      },
+      "days": "Dias",
+      "note": "Observação (opcional)",
+      "notePlaceholder": "Ex.: Pix recebido em 15/10",
+      "hint": "Os dias contam a partir do fim do período atual ou de hoje, o que for depois.",
+      "invalidDays": "Informe de 1 a {{max}} dias.",
+      "submit": "Liberar"
     }
   }
 }

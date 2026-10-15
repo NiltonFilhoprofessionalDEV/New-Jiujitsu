@@ -19,6 +19,7 @@ const managerRoutes = [
   { path: 'mensalidades', lazy: page(() => import('@/billing/PlansPage'), (m) => m.PlansPage) },
   { path: 'financeiro/alunos', lazy: page(() => import('@/billing/SubscriptionsPage'), (m) => m.SubscriptionsPage) },
   { path: 'financeiro/faturas', lazy: page(() => import('@/billing/InvoicesPage'), (m) => m.InvoicesPage) },
+  { path: 'assinatura', lazy: page(() => import('@/subscription/SubscriptionPage'), (m) => m.SubscriptionPage) },
 ]
 
 /** Mesmas telas para equipe e aluno; os links internos são relativos à base de cada área. */
@@ -42,6 +43,7 @@ const staffRoutes = [
   { path: 'requests', lazy: page(() => import('@/requests/RequestsPage'), (m) => m.RequestsPage) },
   { path: 'configuracoes', lazy: page(() => import('@/settings/SettingsPage'), (m) => m.SettingsPage) },
   { path: 'relatorios', lazy: page(() => import('@/reports/ReportsPage'), (m) => m.ReportsPage) },
+  { path: 'admin', lazy: page(() => import('@/platform/AdminPage'), (m) => m.AdminPage) },
   ...videoRoutes,
   {
     path: 'relatorios/professores',

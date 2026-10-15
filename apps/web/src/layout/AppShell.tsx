@@ -1,13 +1,21 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Outlet } from 'react-router'
+import { Outlet, useLocation } from 'react-router'
 
 import { useIsManager } from '@/auth/useAuth'
+import { usePlatformAdmin } from '@/platform/platformApi'
+import { AccessBanner } from '@/subscription/AccessBanner'
+import { useAcademyAccess } from '@/subscription/accessApi'
+import { SuspendedScreen } from '@/subscription/SuspendedScreen'
+import { ADMIN_PATH, SUBSCRIPTION_PATH } from '@/subscription/types'
 
 import { BottomNav } from './BottomNav'
 import { navFor, STAFF_TABS } from './navItems'
 import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
+
+/** Telas que continuam abertas com a academia suspensa (a API também as libera). */
+const OPEN_WHEN_SUSPENDED = [SUBSCRIPTION_PATH, ADMIN_PATH]
 
 /**
  * Menu lateral fixo no computador; abaixo dele, barra de abas embaixo e o menu completo pelo "Mais":
@@ -16,8 +24,12 @@ import { Topbar } from './Topbar'
 export function AppShell() {
   const { t } = useTranslation()
   const isManager = useIsManager()
+  const { isAdmin } = usePlatformAdmin()
+  const { data: access } = useAcademyAccess()
+  const { pathname } = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
   const close = () => setMenuOpen(false)
+  const blocked = access?.status === 'SUSPENDED' && !OPEN_WHEN_SUSPENDED.includes(pathname)
 
   useEffect(() => {
     if (!menuOpen) return
@@ -31,10 +43,11 @@ export function AppShell() {
   return (
     <div className="shell" data-menu-open={menuOpen}>
       <Topbar />
-      <Sidebar groups={navFor(isManager)} onClose={close} />
+      <Sidebar groups={navFor(isManager, isAdmin)} onClose={close} />
       <button type="button" className="scrim" tabIndex={-1} aria-label={t('topbar.closeMenu')} onClick={close} />
       <main className="main">
-        <Outlet />
+        {isManager && access && <AccessBanner access={access} />}
+        {blocked ? <SuspendedScreen isManager={isManager} /> : <Outlet />}
       </main>
       <BottomNav items={STAFF_TABS} onMore={() => setMenuOpen((open) => !open)} moreOpen={menuOpen} onNavigate={close} />
     </div>

@@ -1,6 +1,8 @@
 import {
   Award,
+  BadgeCheck,
   BarChart3,
+  Building2,
   CalendarDays,
   ClipboardCheck,
   CreditCard,
@@ -18,6 +20,7 @@ import {
 } from 'lucide-react'
 
 import { STUDENT_HOME } from '@/auth/types'
+import { ADMIN_PATH, SUBSCRIPTION_PATH } from '@/subscription/types'
 
 /**
  * {@code managersOnly}: some do menu do professor (a API também nega o acesso).
@@ -60,10 +63,17 @@ export const MANAGER_NAV: NavGroup[] = [
       { to: '/relatorios', labelKey: 'nav.relatorios', icon: BarChart3, end: true },
       { to: '/relatorios/professores', labelKey: 'nav.professores', icon: UserCog },
       { to: '/equipe', labelKey: 'nav.equipe', icon: ShieldCheck, managersOnly: true },
+      { to: SUBSCRIPTION_PATH, labelKey: 'nav.assinatura', icon: BadgeCheck, managersOnly: true },
       { to: '/configuracoes', labelKey: 'nav.configuracoes', icon: Settings },
     ],
   },
 ]
+
+/** Só para o admin da plataforma, em qualquer papel na academia. */
+const ADMIN_GROUP: NavGroup = {
+  titleKey: 'nav.groups.plataforma',
+  items: [{ to: ADMIN_PATH, labelKey: 'nav.admin', icon: Building2 }],
+}
 
 /** Atalhos da barra inferior da equipe no celular; o resto do menu fica em "Mais". */
 const STAFF_TAB_PATHS = ['/', '/aulas/presenca', '/alunos', '/videos']
@@ -79,8 +89,9 @@ export const STUDENT_NAV: NavItem[] = [
 ]
 
 /** Menu visível para o papel; grupos que ficam vazios somem. */
-export function navFor(isManager: boolean): NavGroup[] {
-  if (isManager) return MANAGER_NAV
-  return MANAGER_NAV.map((g) => ({ ...g, items: g.items.filter((item) => !item.managersOnly) }))
-    .filter((g) => g.items.length > 0)
+export function navFor(isManager: boolean, isPlatformAdmin = false): NavGroup[] {
+  const groups = isManager ? MANAGER_NAV
+    : MANAGER_NAV.map((g) => ({ ...g, items: g.items.filter((item) => !item.managersOnly) }))
+      .filter((g) => g.items.length > 0)
+  return isPlatformAdmin ? [...groups, ADMIN_GROUP] : groups
 }

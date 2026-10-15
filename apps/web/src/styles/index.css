@@ -21,6 +21,7 @@
 @import './reports.css' layer(legacy);
 @import './videos.css' layer(legacy);
 @import './install.css' layer(legacy);
+@import './subscription.css' layer(legacy);
 
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
