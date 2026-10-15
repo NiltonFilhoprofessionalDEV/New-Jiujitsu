@@ -19,7 +19,7 @@ function openPaymentPage(url: string): boolean {
 }
 
 /**
- * Primeira vez: CPF/CNPJ de quem paga e "Assinar". Depois, abre a fatura em aberto.
+ * Primeira vez: CPF/CNPJ de quem paga e "Assinar". Depois, abre a fatura em aberto (com o mês em dia, só informa).
  * O pagamento (Pix, boleto ou cartão) acontece na página do Asaas.
  */
 export function CheckoutForm({ access }: { access: AcademyAccess }) {
@@ -29,6 +29,9 @@ export function CheckoutForm({ access }: { access: AcademyAccess }) {
 
   if (!access.onlinePayment) {
     return <div className="notice"><p>{t('subscription.checkout.unavailable')}</p></div>
+  }
+  if (access.subscribed && access.status === 'ACTIVE') {
+    return <div className="notice"><p>{t('subscription.checkout.upToDate')}</p></div>
   }
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {

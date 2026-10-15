@@ -1193,7 +1193,8 @@
       "payOpen": "Pagar fatura em aberto",
       "opening": "Abrindo o pagamento...",
       "methods": "Pix, boleto ou cartão na página segura do Asaas. A cobrança se repete todo mês.",
-      "unavailable": "O pagamento online está indisponível no momento. Tente novamente mais tarde."
+      "unavailable": "O pagamento online está indisponível no momento. Tente novamente mais tarde.",
+      "upToDate": "Pagamento em dia. O Asaas gera a próxima cobrança todo mês e envia o aviso por e-mail; no cartão, ela é paga automaticamente."
     },
     "banner": {
       "trial_one": "Seu teste grátis termina em 1 dia. Assine para a equipe continuar usando o app.",
