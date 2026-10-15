@@ -1,7 +1,7 @@
 package br.com.academia.api.auth;
 
+import java.time.Clock;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -16,6 +16,7 @@ import br.com.academia.api.auth.AuthDtos.RegisterAcademyRequest;
 import br.com.academia.api.auth.AuthDtos.SessionResponse;
 import br.com.academia.api.auth.AuthDtos.UserSummary;
 import br.com.academia.api.common.ApiException;
+import br.com.academia.api.config.AppProperties;
 import br.com.academia.api.membership.Membership;
 import br.com.academia.api.membership.MembershipRepository;
 import br.com.academia.api.membership.MembershipRole;
@@ -28,8 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthService {
 
-	private static final Duration TRIAL = Duration.ofDays(14);
-
 	private final UserRepository users;
 	private final AcademyRepository academies;
 	private final MembershipRepository memberships;
@@ -37,10 +36,13 @@ public class AuthService {
 	private final PasswordEncoder passwords;
 	private final TokenService tokens;
 	private final LoginRateLimiter rateLimiter;
+	private final Duration trial;
+	private final Clock clock;
 	private final String timingDummyHash;
 
 	public AuthService(UserRepository users, AcademyRepository academies, MembershipRepository memberships,
-			SlugGenerator slugs, PasswordEncoder passwords, TokenService tokens, LoginRateLimiter rateLimiter) {
+			SlugGenerator slugs, PasswordEncoder passwords, TokenService tokens, LoginRateLimiter rateLimiter,
+			AppProperties props, Clock clock) {
 		this.users = users;
 		this.academies = academies;
 		this.memberships = memberships;
@@ -48,6 +50,8 @@ public class AuthService {
 		this.passwords = passwords;
 		this.tokens = tokens;
 		this.rateLimiter = rateLimiter;
+		this.trial = props.subscription().trial();
+		this.clock = clock;
 		this.timingDummyHash = passwords.encode(UUID.randomUUID().toString());
 	}
 
@@ -55,7 +59,7 @@ public class AuthService {
 	public IssuedSession registerAcademy(RegisterAcademyRequest req) {
 		User user = createUser(req.name(), req.email(), req.password());
 		String name = req.academyName().trim();
-		Academy academy = academies.save(new Academy(name, slugs.uniqueSlug(name), Instant.now().plus(TRIAL)));
+		Academy academy = academies.save(new Academy(name, slugs.uniqueSlug(name), clock.instant().plus(trial)));
 		Membership owner = memberships.save(new Membership(user, academy, MembershipRole.OWNER));
 		return issue(owner);
 	}

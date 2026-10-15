@@ -1,9 +1,13 @@
 package br.com.academia.api.config;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Locale;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,7 +23,10 @@ public record AppProperties(
 		@NotNull Login login,
 		@NotNull Signup signup,
 		@NotNull RateLimit rateLimit,
-		@NotNull ZoneId timeZone) {
+		@NotNull ZoneId timeZone,
+		@NotNull @Valid Subscription subscription,
+		@NotNull Platform platform,
+		@NotNull @Valid Asaas asaas) {
 
 	public record Jwt(
 			@NotBlank String secret,
@@ -48,5 +55,42 @@ public record AppProperties(
 
 	/** Teto geral de requisições por IP, por minuto. */
 	public record RateLimit(@Min(1) int requestsPerMinute) {
+	}
+
+	/** Assinatura das academias na plataforma. */
+	public record Subscription(
+			@Min(1) int trialDays,
+			@Min(0) int graceDays,
+			@NotNull @DecimalMin("1.00") BigDecimal monthlyPrice) {
+
+		public Duration trial() {
+			return Duration.ofDays(trialDays);
+		}
+
+		public Duration grace() {
+			return Duration.ofDays(graceDays);
+		}
+	}
+
+	/** E-mails dos administradores da plataforma (painel {@code /admin}). */
+	public record Platform(List<String> adminEmails) {
+
+		public List<String> adminEmails() {
+			return adminEmails == null ? List.of()
+					: adminEmails.stream().map(s -> s.trim().toLowerCase(Locale.ROOT)).filter(s -> !s.isEmpty()).toList();
+		}
+	}
+
+	/** Integração com o Asaas. Sem chave, o pagamento online fica desligado. */
+	public record Asaas(@NotBlank String baseUrl, String apiKey, String webhookToken) {
+
+		public boolean enabled() {
+			return apiKey != null && !apiKey.isBlank();
+		}
+
+		@Override
+		public String toString() {
+			return "Asaas[baseUrl=" + baseUrl + ", enabled=" + enabled() + "]";
+		}
 	}
 }

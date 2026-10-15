@@ -52,12 +52,12 @@ dias inteiros, no fuso `app.time-zone`, até `accessUntil` em `TRIAL`/`ACTIVE` e
 
 `HandlerInterceptor` depois da autenticação: se o papel for de equipe (`OWNER`, `CO_MANAGER`,
 `INSTRUCTOR`) e a academia estiver `SUSPENDED`, responde **403** com `code: ACADEMY_SUSPENDED`. Liberado
-mesmo bloqueado: `/me`, `/auth/**`, `/subscription/**`, `/platform/**`, `/public/**` e `/webhooks/**`. Aluno e responsável nunca são
+mesmo bloqueado: `/me`, `/auth/**`, `/academy-access/**`, `/platform/**`, `/public/**` e `/webhooks/**`. Aluno e responsável nunca são
 bloqueados. Custo: uma leitura por chave primária por requisição da equipe (aceitável; sem cache por ora).
 
 ### API nova
 
-- `GET /subscription` (equipe): `status`, `trialEndsAt`, `paidUntil`, `accessUntil`, `suspendsAt`,
+- `GET /academy-access` (equipe): `status`, `trialEndsAt`, `paidUntil`, `accessUntil`, `suspendsAt`,
   `daysLeft`, `monthlyPrice`. O professor recebe o mesmo, para saber se a academia está suspensa.
 - `GET /platform/access` (qualquer logado): `{ admin: boolean }`. Admin = e-mail do usuário do token está
   em `app.platform.admin-emails` (comparação sem diferenciar maiúsculas).
@@ -83,7 +83,7 @@ bloqueados. Custo: uma leitura por chave primária por requisição da equipe (a
 
 - Unitário: `AccessRules` nas bordas (último segundo do teste, primeiro dia de tolerância, fim da
   tolerância, `paid_until` maior/menor que o teste), com relógio fixo.
-- Integração: equipe bloqueada recebe `ACADEMY_SUSPENDED` e ainda acessa `/me` e `/subscription`; aluno
+- Integração: equipe bloqueada recebe `ACADEMY_SUSPENDED` e ainda acessa `/me` e `/academy-access`; aluno
   da academia bloqueada continua acessando; não-admin recebe 403 em `/platform/**`; liberação estende as
   datas certas e grava a auditoria; academia nova nasce com 14 dias.
 
@@ -102,7 +102,7 @@ Chamadas ao Asaas com `access_token`, `User-Agent: BJJPulse/1.0` e `Content-Type
 
 ### Assinar (gestor)
 
-1. `POST /subscription/checkout` com `{ "cpfCnpj": "..." }` (só na primeira vez; CPF ou CNPJ válido,
+1. `POST /academy-access/checkout` com `{ "cpfCnpj": "..." }` (só na primeira vez; CPF ou CNPJ válido,
    validado aqui antes de ir ao Asaas).
 2. Sem cliente ainda: `POST /customers` (`name` = academia, `email` = dono, `cpfCnpj`,
    `externalReference` = id da academia) e guarda `academies.asaas_customer_id`.

@@ -60,3 +60,16 @@ app:
   billing:
     # Emissão diária das mensalidades (no fuso acima)
     cron: ${APP_BILLING_CRON:0 0 6 * * *}
+  # Assinatura das academias na plataforma: teste grátis, tolerância antes do bloqueio e mensalidade
+  subscription:
+    trial-days: ${APP_SUBSCRIPTION_TRIAL_DAYS:14}
+    grace-days: ${APP_SUBSCRIPTION_GRACE_DAYS:5}
+    monthly-price: ${APP_SUBSCRIPTION_MONTHLY_PRICE:100.00}
+  platform:
+    # E-mails separados por vírgula com acesso ao painel /admin
+    admin-emails: ${APP_PLATFORM_ADMIN_EMAILS:}
+  asaas:
+    # Sandbox por padrão; produção: https://api.asaas.com/v3 (a chave precisa ser do mesmo ambiente)
+    base-url: ${APP_ASAAS_BASE_URL:https://api-sandbox.asaas.com/v3}
+    api-key: ${APP_ASAAS_API_KEY:}
+    webhook-token: ${APP_ASAAS_WEBHOOK_TOKEN:}

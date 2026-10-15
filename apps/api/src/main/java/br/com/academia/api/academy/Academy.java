@@ -2,6 +2,7 @@ package br.com.academia.api.academy;
 
 import static br.com.academia.api.common.TextNormalizer.blankToNull;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -43,6 +44,15 @@ public class Academy {
 	@Column(name = "trial_ends_at", nullable = false)
 	private Instant trialEndsAt;
 
+	@Column(name = "paid_until")
+	private Instant paidUntil;
+
+	@Column(name = "asaas_customer_id")
+	private String asaasCustomerId;
+
+	@Column(name = "asaas_subscription_id", unique = true)
+	private String asaasSubscriptionId;
+
 	@Column(name = "created_at", nullable = false, updatable = false)
 	private Instant createdAt = Instant.now();
 
@@ -77,6 +87,33 @@ public class Academy {
 		return new AcademyProfile(name, cnpj, email, phone, address, city, state);
 	}
 
+	/** Estende o teste a partir do maior entre o fim atual e {@code now}: teste vencido recomeça de hoje. */
+	public void extendTrial(Duration extra, Instant now) {
+		trialEndsAt = latest(trialEndsAt, now).plus(extra);
+	}
+
+	/** Estende o período pago a partir do maior entre o fim atual e {@code now}. */
+	public void extendPaidPeriod(Duration extra, Instant now) {
+		paidUntil = latest(paidUntil, now).plus(extra);
+	}
+
+	/** Garante o período pago até {@code until}; nunca encurta (eventos repetidos dão o mesmo resultado). */
+	public void payUntil(Instant until) {
+		paidUntil = latest(paidUntil, until);
+	}
+
+	public void linkAsaasCustomer(String customerId) {
+		this.asaasCustomerId = customerId;
+	}
+
+	public void linkAsaasSubscription(String subscriptionId) {
+		this.asaasSubscriptionId = subscriptionId;
+	}
+
+	private static Instant latest(Instant current, Instant other) {
+		return current != null && current.isAfter(other) ? current : other;
+	}
+
 	public UUID getId() {
 		return id;
 	}
@@ -95,5 +132,17 @@ public class Academy {
 
 	public Instant getTrialEndsAt() {
 		return trialEndsAt;
+	}
+
+	public Instant getPaidUntil() {
+		return paidUntil;
+	}
+
+	public String getAsaasCustomerId() {
+		return asaasCustomerId;
+	}
+
+	public String getAsaasSubscriptionId() {
+		return asaasSubscriptionId;
 	}
 }

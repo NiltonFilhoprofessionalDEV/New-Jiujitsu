@@ -36,10 +36,15 @@ public class StaffFixture {
 
 	/** Vincula um professor novo à academia do dono e devolve o access token dele. */
 	public String instructorTokenFor(MockMvc mvc, String ownerToken) throws Exception {
+		return memberTokenFor(mvc, ownerToken, MembershipRole.INSTRUCTOR);
+	}
+
+	/** Vincula uma conta nova com o papel dado à academia do dono e devolve o access token dela. */
+	public String memberTokenFor(MockMvc mvc, String ownerToken, MembershipRole role) throws Exception {
 		String academyId = read(mvc.perform(auth(get(CTX + "/me"), ownerToken)).andReturn(), "$.academyId");
-		User user = users.save(new User("prof-" + UUID.randomUUID() + "@teste.dev", "x", INSTRUCTOR_NAME));
+		User user = users.save(new User("membro-" + UUID.randomUUID() + "@teste.dev", "x", INSTRUCTOR_NAME));
 		var academy = academies.findById(UUID.fromString(academyId)).orElseThrow();
-		Membership membership = memberships.save(new Membership(user, academy, MembershipRole.INSTRUCTOR));
+		Membership membership = memberships.save(new Membership(user, academy, role));
 		return tokens.issueAccessToken(membership);
 	}
 }

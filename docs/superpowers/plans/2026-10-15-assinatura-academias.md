@@ -29,11 +29,11 @@ i18next.
 ### Task 1: Regra de acesso + configuração
 
 **Files:**
-- Create: `apps/api/src/main/java/br/com/academia/api/subscription/AccessRules.java`
-- Create: `apps/api/src/main/java/br/com/academia/api/subscription/AccessStatus.java`
+- Create: `apps/api/src/main/java/br/com/academia/api/access/AccessRules.java`
+- Create: `apps/api/src/main/java/br/com/academia/api/access/AccessStatus.java`
 - Modify: `config/AppProperties.java` (records `Subscription`, `Platform`, `Asaas`), `application.yml`,
   `apps/api/.env.example`, `docker-compose.prod.yml`, `TestcontainersConfiguration.java`
-- Test: `apps/api/src/test/java/br/com/academia/api/subscription/AccessRulesTest.java`
+- Test: `apps/api/src/test/java/br/com/academia/api/access/AccessRulesTest.java`
 
 **Interfaces (Produces):**
 ```java
@@ -88,21 +88,21 @@ create table payment_events (
 
 - [ ] Escrever migração e entidade; subir a suíte (`ApiApplicationTests`) para validar `ddl-auto: validate`.
 
-### Task 3: `GET /subscription` + bloqueio da equipe
+### Task 3: `GET /academy-access` + bloqueio da equipe
 
 **Files:**
-- Create: `subscription/SubscriptionService.java` (`Access accessOf(UUID academyId)`, `view(CurrentUser)`),
-  `subscription/SubscriptionController.java`, `subscription/SubscriptionDtos.java`,
-  `subscription/SuspendedAcademyGuard.java` (`HandlerInterceptor`), `config/WebConfig.java`
-- Test: `subscription/SubscriptionIntegrationTest.java`
+- Create: `access/AcademyAccessService.java` (`Access accessOf(UUID academyId)`, `view(CurrentUser)`),
+  `access/AcademyAccessController.java`, `access/AcademyAccessDtos.java`,
+  `access/SuspendedAcademyGuard.java` (`HandlerInterceptor`), `config/WebConfig.java`
+- Test: `access/AcademyAccessIntegrationTest.java`
 
 Guard: só age com `JwtAuthenticationToken`; papel de equipe; caminho fora da lista liberada
-(`/me`, `/auth/`, `/subscription`, `/platform/`, `/public/`, `/webhooks/`); `accessOf(...).status() == SUSPENDED`
+(`/me`, `/auth/`, `/academy-access`, `/platform/`, `/public/`, `/webhooks/`); `accessOf(...).status() == SUSPENDED`
 → lança `ApiException(403, "ACADEMY_SUSPENDED")` (o handler existente formata).
 
 - [ ] Testes: nova academia → `TRIAL`, `daysLeft` 14, preço 100.00; com `trial_ends_at` 10 dias atrás
   (JdbcTemplate) → `SUSPENDED`, gestor recebe 403 `ACADEMY_SUSPENDED` em `/students/page` mas 200 em `/me`
-  e `/subscription`; professor também bloqueado; aluno (convite aceito) acessa `/portal/...` e `/videos`;
+  e `/academy-access`; professor também bloqueado; aluno (convite aceito) acessa `/portal/...` e `/videos`;
   com 2 dias atrás → `GRACE` e equipe liberada.
 - [ ] Implementar; testes passam; commit.
 
@@ -124,10 +124,10 @@ Guard: só age com `JwtAuthenticationToken`; papel de equipe; caminho fora da li
 ### Task 5: Cliente Asaas + checkout
 
 **Files:**
-- Create: `subscription/asaas/AsaasClient.java` (`createCustomer`, `createSubscription`,
-  `openPayments(subscriptionId)`), `subscription/asaas/AsaasDtos.java`, `common/Cnpj.java`,
-  `subscription/CheckoutService.java`; Modify `SubscriptionController` (`POST /subscription/checkout`)
-- Test: `common/CnpjTest.java`; `subscription/CheckoutIntegrationTest.java` com `AsaasClient` mockado
+- Create: `access/asaas/AsaasClient.java` (`createCustomer`, `createSubscription`,
+  `openPayments(subscriptionId)`), `access/asaas/AsaasDtos.java`, `common/Cnpj.java`,
+  `access/CheckoutService.java`; Modify `AcademyAccessController` (`POST /academy-access/checkout`)
+- Test: `common/CnpjTest.java`; `access/CheckoutIntegrationTest.java` com `AsaasClient` mockado
   (`@MockitoBean`)
 
 - [ ] Testes: CNPJ válido/inválido; checkout sem documento na primeira vez → 400 `TAX_ID_REQUIRED`;
@@ -139,10 +139,10 @@ Guard: só age com `JwtAuthenticationToken`; papel de equipe; caminho fora da li
 ### Task 6: Webhook
 
 **Files:**
-- Create: `subscription/webhook/AsaasWebhookController.java`, `subscription/webhook/PaymentEvent.java`,
-  `subscription/webhook/PaymentEventRepository.java`, `subscription/webhook/PaymentWebhookService.java`;
+- Create: `access/webhook/AsaasWebhookController.java`, `access/webhook/PaymentEvent.java`,
+  `access/webhook/PaymentEventRepository.java`, `access/webhook/PaymentWebhookService.java`;
   Modify `SecurityConfig` (`POST /webhooks/asaas` público)
-- Test: `subscription/webhook/AsaasWebhookIntegrationTest.java`
+- Test: `access/webhook/AsaasWebhookIntegrationTest.java`
 
 - [ ] Testes: sem token / token errado → 401; `PAYMENT_RECEIVED` com vencimento D → `paid_until` = D + 1 mês
   (fim do dia) e status `ACTIVE`; mesmo `id` reenviado → 200 e uma linha só; `PAYMENT_CONFIRMED` +
