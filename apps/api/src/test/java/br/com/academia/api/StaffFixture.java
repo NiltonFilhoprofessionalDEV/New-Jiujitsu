@@ -41,8 +41,15 @@ public class StaffFixture {
 
 	/** Vincula uma conta nova com o papel dado à academia do dono e devolve o access token dela. */
 	public String memberTokenFor(MockMvc mvc, String ownerToken, MembershipRole role) throws Exception {
+		return memberTokenFor(mvc, ownerToken, role, "membro-" + UUID.randomUUID() + "@teste.dev");
+	}
+
+	/** Como o anterior, reaproveitando a conta do e-mail se ela já existir (ex.: admin da plataforma). */
+	public String memberTokenFor(MockMvc mvc, String ownerToken, MembershipRole role, String email)
+			throws Exception {
 		String academyId = read(mvc.perform(auth(get(CTX + "/me"), ownerToken)).andReturn(), "$.academyId");
-		User user = users.save(new User("membro-" + UUID.randomUUID() + "@teste.dev", "x", INSTRUCTOR_NAME));
+		User user = users.findByEmailIgnoreCase(email)
+				.orElseGet(() -> users.save(new User(email, "x", INSTRUCTOR_NAME)));
 		var academy = academies.findById(UUID.fromString(academyId)).orElseThrow();
 		Membership membership = memberships.save(new Membership(user, academy, role));
 		return tokens.issueAccessToken(membership);
