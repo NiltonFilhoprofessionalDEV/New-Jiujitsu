@@ -1,6 +1,6 @@
 # Assinatura das academias: teste grátis, bloqueio e painel do admin
 
-Data: 2026-10-15 · Status: aguardando revisão
+Data: 2026-10-15 · Status: aprovado (etapas 1 e 2)
 
 ## Contexto
 
@@ -39,7 +39,9 @@ dias inteiros, no fuso `app.time-zone`, até `accessUntil` em `TRIAL`/`ACTIVE` e
 
 ### Banco (migração V11)
 
-- `academies.paid_until timestamptz null`.
+- `academies.paid_until timestamptz null`, `asaas_customer_id varchar(40) null`,
+  `asaas_subscription_id varchar(40) null unique` (os dois últimos usados na etapa 2).
+- Tabela `payment_events` (etapa 2, abaixo).
 - `academies.trial_ends_at = now() + interval '14 days'` para as academias que já existem (decisão acima).
   Nenhuma outra coluna ou tabela existente é alterada.
 - Tabela `academy_access_grants` (auditoria do que o admin libera): `id`, `academy_id`, `kind`
@@ -50,7 +52,7 @@ dias inteiros, no fuso `app.time-zone`, até `accessUntil` em `TRIAL`/`ACTIVE` e
 
 `HandlerInterceptor` depois da autenticação: se o papel for de equipe (`OWNER`, `CO_MANAGER`,
 `INSTRUCTOR`) e a academia estiver `SUSPENDED`, responde **403** com `code: ACADEMY_SUSPENDED`. Liberado
-mesmo bloqueado: `/me`, `/auth/**`, `/subscription/**` e `/platform/**`. Aluno e responsável nunca são
+mesmo bloqueado: `/me`, `/auth/**`, `/subscription/**`, `/platform/**`, `/public/**` e `/webhooks/**`. Aluno e responsável nunca são
 bloqueados. Custo: uma leitura por chave primária por requisição da equipe (aceitável; sem cache por ora).
 
 ### API nova
@@ -70,8 +72,7 @@ bloqueados. Custo: uma leitura por chave primária por requisição da equipe (a
 
 - **Faixa de aviso** (só gestor, no topo do painel): `TRIAL` com `daysLeft ≤ 7` ("Seu teste termina em
   N dias · Assinar") e `GRACE` sempre ("Assinatura vencida: o acesso da equipe será suspenso em N dias").
-- **Tela Assinatura** (`/assinatura`, gestor): situação, datas e "R$ 100,00/mês". Na etapa 1 o botão de
-  pagar mostra "Pagamento online em breve" + o contato de suporte (ver Pendências).
+- **Tela Assinatura** (`/assinatura`, gestor): situação, datas e "R$ 100,00/mês"; pagamento na etapa 2.
 - **Suspensa**: o painel da equipe troca o conteúdo por uma tela de bloqueio. Gestor vê o botão para a
   tela Assinatura; professor vê "O acesso da academia está suspenso. Fale com o gestor." O erro
   `ACADEMY_SUSPENDED` vindo de qualquer chamada também leva a essa tela.
@@ -86,18 +87,54 @@ bloqueados. Custo: uma leitura por chave primária por requisição da equipe (a
   da academia bloqueada continua acessando; não-admin recebe 403 em `/platform/**`; liberação estende as
   datas certas e grava a auditoria; academia nova nasce com 14 dias.
 
-## Etapa 2 (resumo; detalhar quando houver conta no Asaas)
+## Etapa 2: pagamento pelo Asaas (o dono já tem conta)
 
-Gestor informa CPF/CNPJ → servidor cria cliente e assinatura mensal no Asaas (`billingType`
-indefinido: Pix, boleto ou cartão na página do Asaas) → abre o `invoiceUrl` → webhook
-`PAYMENT_CONFIRMED`/`PAYMENT_RECEIVED` estende `paid_until`. Webhook validado pelo cabeçalho
-`asaas-access-token`, eventos persistidos e idempotentes. Chave da API e token só em variáveis de
-ambiente. O cartão nunca passa pelo nosso servidor.
+### Configuração (só variáveis de ambiente; nada no código nem no repositório)
+
+| Variável | Uso |
+|---|---|
+| `APP_ASAAS_BASE_URL` | `https://api-sandbox.asaas.com/v3` (padrão) ou `https://api.asaas.com/v3` |
+| `APP_ASAAS_API_KEY` | Chave do mesmo ambiente da URL. Vazia = pagamento online desligado |
+| `APP_ASAAS_WEBHOOK_TOKEN` | 32–255 caracteres, igual ao cadastrado no webhook do painel do Asaas |
+
+Chamadas ao Asaas com `access_token`, `User-Agent: BJJPulse/1.0` e `Content-Type: application/json`
+(`RestClient` do Spring; nenhuma dependência nova). Tempo limite de 60 s.
+
+### Assinar (gestor)
+
+1. `POST /subscription/checkout` com `{ "cpfCnpj": "..." }` (só na primeira vez; CPF ou CNPJ válido,
+   validado aqui antes de ir ao Asaas).
+2. Sem cliente ainda: `POST /customers` (`name` = academia, `email` = dono, `cpfCnpj`,
+   `externalReference` = id da academia) e guarda `academies.asaas_customer_id`.
+3. Sem assinatura ainda: `POST /subscriptions` com `billingType: UNDEFINED`, `cycle: MONTHLY`,
+   `value` = preço, `nextDueDate` = maior entre hoje e o fim do teste (o gestor não perde dias grátis),
+   `externalReference` = id da academia; guarda `academies.asaas_subscription_id`.
+4. Responde `{ invoiceUrl }` da cobrança em aberto mais antiga da assinatura
+   (`GET /subscriptions/{id}/payments`, status `PENDING` ou `OVERDUE`). O app abre essa página, onde o
+   gestor paga com Pix, boleto ou cartão. Já assinada e sem cobrança em aberto: `409 NOTHING_TO_PAY`.
+5. Falha do Asaas vira `502 PAYMENT_PROVIDER_ERROR` (sem vazar a resposta do Asaas para o cliente).
+   Pagamento desligado vira `503 PAYMENT_UNAVAILABLE`.
+
+### Webhook
+
+`POST /webhooks/asaas` (público, fora do bloqueio):
+
+- Cabeçalho `asaas-access-token` comparado em tempo constante com o token configurado; diferente ou
+  token não configurado: 401.
+- Tabela `payment_events` (`event_id` único, `event`, `payment_id`, `subscription_id`, `payload jsonb`,
+  `received_at`). Evento repetido: 200 sem reprocessar. O processamento acontece na mesma transação da
+  gravação: se falhar, nada é gravado e o Asaas reenvia.
+- `PAYMENT_CONFIRMED` ou `PAYMENT_RECEIVED` de uma assinatura conhecida: `paid_until` =
+  maior entre o atual e (vencimento da cobrança + 1 mês, fim do dia no fuso da academia). Os dois eventos
+  da mesma cobrança dão o mesmo resultado.
+- Demais eventos: só gravados (estorno e cancelamento ficam para depois).
+
+### Tela Assinatura (etapa 2)
+
+Mostra situação e "R$ 100,00/mês". Botão "Assinar" pede CPF/CNPJ na primeira vez; depois vira
+"Pagar fatura em aberto". Pagamento desligado: aviso "Pagamento online indisponível no momento".
 
 ## Fora do escopo
 
-Planos por faixa de alunos, cupons, nota fiscal, cancelamento pelo app (etapa 2), e-mails automáticos.
-
-## Pendências
-
-- Contato de suporte exibido na tela Assinatura durante a etapa 1 (WhatsApp ou e-mail).
+Planos por faixa de alunos, cupons, nota fiscal, cancelamento pelo app, estorno automático, e-mails
+automáticos.
