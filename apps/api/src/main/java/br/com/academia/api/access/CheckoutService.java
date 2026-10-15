@@ -51,7 +51,7 @@ public class CheckoutService {
 	/** Sem rollback em erro esperado: o cliente criado no Asaas fica gravado mesmo se a assinatura falhar. */
 	@Transactional(noRollbackFor = ApiException.class)
 	public CheckoutResponse checkout(CurrentUser me, CheckoutRequest req) {
-		if (!asaas.enabled()) {
+		if (!access.enforced() || !asaas.enabled()) {
 			throw AsaasClient.unavailable();
 		}
 		Academy academy = academies.findForUpdate(me.academyId())

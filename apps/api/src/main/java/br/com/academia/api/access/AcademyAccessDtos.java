@@ -11,8 +11,9 @@ public final class AcademyAccessDtos {
 	private AcademyAccessDtos() {
 	}
 
-	/** Assinatura da academia vista pela equipe. */
+	/** Assinatura da academia vista pela equipe. Com {@code enforced} falso, o app está livre. */
 	public record AccessView(
+			boolean enforced,
 			AccessStatus status,
 			Instant trialEndsAt,
 			Instant paidUntil,
@@ -23,8 +24,9 @@ public final class AcademyAccessDtos {
 			boolean onlinePayment,
 			boolean subscribed) {
 
-		static AccessView of(Academy academy, Access access, BigDecimal price, boolean onlinePayment) {
-			return new AccessView(access.status(), academy.getTrialEndsAt(), academy.getPaidUntil(),
+		static AccessView of(Academy academy, Access access, BigDecimal price, boolean enforced,
+				boolean onlinePayment) {
+			return new AccessView(enforced, access.status(), academy.getTrialEndsAt(), academy.getPaidUntil(),
 					access.accessUntil(), access.suspendsAt(), access.daysLeft(), price, onlinePayment,
 					academy.getAsaasSubscriptionId() != null);
 		}

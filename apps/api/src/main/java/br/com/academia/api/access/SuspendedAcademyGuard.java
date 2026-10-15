@@ -31,7 +31,7 @@ public class SuspendedAcademyGuard implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-		if (!(SecurityContextHolder.getContext().getAuthentication() instanceof JwtAuthenticationToken)) {
+		if (!access.enforced() || !(SecurityContextHolder.getContext().getAuthentication() instanceof JwtAuthenticationToken)) {
 			return true;
 		}
 		String path = request.getRequestURI().substring(request.getContextPath().length());

@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { Navigate } from 'react-router'
 
 import { formatMoney } from '@/billing/money'
 import { DataItem } from '@/components/DataItem'
@@ -15,6 +16,7 @@ const CENTS_PER_REAL = 100
 export function SubscriptionPage() {
   const { t } = useTranslation()
   const { data: access, isLoading, isError } = useAcademyAccess()
+  if (access && !access.enforced) return <Navigate to="/" replace />
   return (
     <div className="page">
       <PageHeader eyebrow={t('common.yourAcademy')} title={t('subscription.title')}

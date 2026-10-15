@@ -57,8 +57,12 @@ public record AppProperties(
 	public record RateLimit(@Min(1) int requestsPerMinute) {
 	}
 
-	/** Assinatura das academias na plataforma. */
+	/**
+	 * Assinatura das academias na plataforma. Com {@code enforced} desligado, o app fica livre:
+	 * ninguém é bloqueado e a tela de assinatura some.
+	 */
 	public record Subscription(
+			boolean enforced,
 			@Min(1) int trialDays,
 			@Min(0) int graceDays,
 			@NotNull @DecimalMin("1.00") BigDecimal monthlyPrice) {

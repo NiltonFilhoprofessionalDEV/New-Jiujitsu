@@ -88,10 +88,16 @@ export const STUDENT_NAV: NavItem[] = [
   { to: `${STUDENT_HOME}/ajustes`, labelKey: 'account.tabs.settings', icon: Settings },
 ]
 
-/** Menu visível para o papel; grupos que ficam vazios somem. */
-export function navFor(isManager: boolean, isPlatformAdmin = false): NavGroup[] {
-  const groups = isManager ? MANAGER_NAV
-    : MANAGER_NAV.map((g) => ({ ...g, items: g.items.filter((item) => !item.managersOnly) }))
-      .filter((g) => g.items.length > 0)
+type NavOptions = { isPlatformAdmin?: boolean; subscriptionEnforced?: boolean }
+
+/** Menu visível para o papel; grupos que ficam vazios somem. Sem assinatura ativa, o item dela some. */
+export function navFor(
+  isManager: boolean,
+  { isPlatformAdmin = false, subscriptionEnforced = false }: NavOptions = {},
+): NavGroup[] {
+  const visible = (item: NavItem) =>
+    (isManager || !item.managersOnly) && (subscriptionEnforced || item.to !== SUBSCRIPTION_PATH)
+  const groups = MANAGER_NAV.map((g) => ({ ...g, items: g.items.filter(visible) }))
+    .filter((g) => g.items.length > 0)
   return isPlatformAdmin ? [...groups, ADMIN_GROUP] : groups
 }

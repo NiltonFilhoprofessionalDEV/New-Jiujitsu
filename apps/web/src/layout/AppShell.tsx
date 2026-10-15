@@ -29,7 +29,8 @@ export function AppShell() {
   const { pathname } = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
   const close = () => setMenuOpen(false)
-  const blocked = access?.status === 'SUSPENDED' && !OPEN_WHEN_SUSPENDED.includes(pathname)
+  const enforced = access?.enforced === true
+  const blocked = enforced && access.status === 'SUSPENDED' && !OPEN_WHEN_SUSPENDED.includes(pathname)
 
   useEffect(() => {
     if (!menuOpen) return
@@ -43,10 +44,10 @@ export function AppShell() {
   return (
     <div className="shell" data-menu-open={menuOpen}>
       <Topbar />
-      <Sidebar groups={navFor(isManager, isAdmin)} onClose={close} />
+      <Sidebar groups={navFor(isManager, { isPlatformAdmin: isAdmin, subscriptionEnforced: enforced })} onClose={close} />
       <button type="button" className="scrim" tabIndex={-1} aria-label={t('topbar.closeMenu')} onClick={close} />
       <main className="main">
-        {isManager && access && <AccessBanner access={access} />}
+        {isManager && enforced && <AccessBanner access={access} />}
         {blocked ? <SuspendedScreen isManager={isManager} /> : <Outlet />}
       </main>
       <BottomNav items={STAFF_TABS} onMore={() => setMenuOpen((open) => !open)} moreOpen={menuOpen} onNavigate={close} />

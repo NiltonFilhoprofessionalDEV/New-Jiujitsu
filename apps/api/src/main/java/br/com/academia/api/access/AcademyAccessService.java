@@ -34,7 +34,12 @@ public class AcademyAccessService {
 	public AccessView view(UUID academyId) {
 		Academy academy = find(academyId);
 		return AccessView.of(academy, evaluate(academy), props.subscription().monthlyPrice(),
-				props.asaas().enabled());
+				enforced(), enforced() && props.asaas().enabled());
+	}
+
+	/** Desligado, o app fica livre: ninguém é bloqueado e não há cobrança da assinatura. */
+	public boolean enforced() {
+		return props.subscription().enforced();
 	}
 
 	public Access evaluate(Academy academy) {

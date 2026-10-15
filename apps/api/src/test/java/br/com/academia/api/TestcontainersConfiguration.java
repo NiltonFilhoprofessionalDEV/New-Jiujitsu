@@ -32,6 +32,7 @@ public class TestcontainersConfiguration {
 			registry.add("app.cookie.secure", () -> "true");
 			// Toda a suíte sai do mesmo IP; o teto geral tem teste próprio
 			registry.add("app.rate-limit.requests-per-minute", () -> "1000000");
+			registry.add("app.subscription.enforced", () -> "true");
 			registry.add("app.platform.admin-emails", () -> PLATFORM_ADMIN_EMAIL);
 			registry.add("app.asaas.api-key", () -> "chave-de-teste");
 			registry.add("app.asaas.webhook-token", () -> ASAAS_WEBHOOK_TOKEN);

@@ -1,7 +1,11 @@
 export type AccessStatus = 'TRIAL' | 'ACTIVE' | 'GRACE' | 'SUSPENDED'
 
-/** Assinatura da academia na plataforma (não confundir com as mensalidades dos alunos). */
+/**
+ * Assinatura da academia na plataforma (não confundir com as mensalidades dos alunos).
+ * {@code enforced} falso: app livre, sem aviso, bloqueio nem tela de assinatura.
+ */
 export type AcademyAccess = {
+  enforced: boolean
   status: AccessStatus
   trialEndsAt: string
   paidUntil: string | null

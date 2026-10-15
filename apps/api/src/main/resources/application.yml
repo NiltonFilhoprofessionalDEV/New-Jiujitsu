@@ -62,6 +62,8 @@ app:
     cron: ${APP_BILLING_CRON:0 0 6 * * *}
   # Assinatura das academias na plataforma: teste grátis, tolerância antes do bloqueio e mensalidade
   subscription:
+    # Desligado: app livre, sem bloqueio nem cobrança da assinatura
+    enforced: ${APP_SUBSCRIPTION_ENFORCED:false}
     trial-days: ${APP_SUBSCRIPTION_TRIAL_DAYS:14}
     grace-days: ${APP_SUBSCRIPTION_GRACE_DAYS:5}
     monthly-price: ${APP_SUBSCRIPTION_MONTHLY_PRICE:100.00}

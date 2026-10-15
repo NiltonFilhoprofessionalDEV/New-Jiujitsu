@@ -43,6 +43,7 @@ class AcademyAccessIntegrationTest {
 
 		mvc.perform(auth(get(CTX + "/academy-access"), owner))
 				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.enforced").value(true))
 				.andExpect(jsonPath("$.status").value("TRIAL"))
 				.andExpect(jsonPath("$.daysLeft").value(14))
 				.andExpect(jsonPath("$.monthlyPrice").value(100.00))
