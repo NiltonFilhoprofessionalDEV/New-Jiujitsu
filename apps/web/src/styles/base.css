@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+html {
+  /* Evita zoom por double-tap ao trocar de tela / tocar botões no mobile. */
+  touch-action: manipulation;
+}
+
 html,
 body,
 #root {

@@ -134,6 +134,12 @@ public class Student {
 		this.beltSize = data.beltSize();
 	}
 
+	/** A tela não edita mais esses campos; uma atualização não apaga o que já estava salvo. */
+	public void keepEquipmentSizes(String giSize, String beltSize) {
+		this.giSize = giSize;
+		this.beltSize = beltSize;
+	}
+
 	/** Graduação registrada (ou desfeita): só faixa, grau e data mudam; o histórico fica em {@code graduations}. */
 	public void applyGraduation(Belt belt, int degrees, LocalDate awardedAt) {
 		belt.requireValidDegrees(degrees);

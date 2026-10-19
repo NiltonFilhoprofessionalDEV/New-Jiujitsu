@@ -24,7 +24,8 @@ public class SecurityConfig {
 
 	/** O webhook do Asaas autentica pelo próprio token no cabeçalho, não por JWT. */
 	private static final String[] PUBLIC_POST = {
-			"/auth/login", "/auth/register-academy", "/auth/refresh", "/auth/logout", "/webhooks/asaas" };
+			"/auth/login", "/auth/register-academy", "/auth/refresh", "/auth/logout",
+			"/auth/forgot-password", "/auth/reset-password", "/webhooks/asaas" };
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

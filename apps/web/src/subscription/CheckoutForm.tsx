@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { MaskedInput } from '@/components/MaskedInput'
 import { apiErrorMessage } from '@/lib/apiErrors'
+import { maskCpfCnpj } from '@/lib/masks'
 import { formText } from '@/lib/formText'
 
 import { useCheckout } from './accessApi'
@@ -49,8 +51,8 @@ export function CheckoutForm({ access }: { access: AcademyAccess }) {
       {!access.subscribed && (
         <div className="field">
           <label htmlFor="checkout-tax-id">{t('subscription.checkout.taxId')}</label>
-          <input id="checkout-tax-id" name="cpfCnpj" className="input" required maxLength={20}
-            autoComplete="off" placeholder={t('subscription.checkout.taxIdPlaceholder')} />
+          <MaskedInput id="checkout-tax-id" name="cpfCnpj" className="input" required mask={maskCpfCnpj}
+            maxLength={18} autoComplete="off" placeholder={t('subscription.checkout.taxIdPlaceholder')} />
           <span className="hint">{t('subscription.checkout.taxIdHint')}</span>
         </div>
       )}

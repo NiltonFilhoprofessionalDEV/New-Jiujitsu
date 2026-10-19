@@ -49,7 +49,7 @@ public final class ApiTestSupport {
 
 	public static String registerBody(String email) {
 		return """
-				{"academyName":"Academia Teste","name":"Gestor Teste","email":"%s","password":"%s"}
+				{"academyName":"Academia Teste","name":"Gestor Teste","email":"%s","password":"%s","confirmOwner":true}
 				""".formatted(email, PASSWORD);
 	}
 

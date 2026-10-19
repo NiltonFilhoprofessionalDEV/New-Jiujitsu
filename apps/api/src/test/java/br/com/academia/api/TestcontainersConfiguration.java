@@ -34,6 +34,7 @@ public class TestcontainersConfiguration {
 			registry.add("app.rate-limit.requests-per-minute", () -> "1000000");
 			registry.add("app.subscription.enforced", () -> "true");
 			registry.add("app.platform.admin-emails", () -> PLATFORM_ADMIN_EMAIL);
+			registry.add("app.registration.open", () -> "true");
 			registry.add("app.asaas.api-key", () -> "chave-de-teste");
 			registry.add("app.asaas.webhook-token", () -> ASAAS_WEBHOOK_TOKEN);
 		};

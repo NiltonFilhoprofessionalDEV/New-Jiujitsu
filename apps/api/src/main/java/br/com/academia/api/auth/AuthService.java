@@ -57,6 +57,10 @@ public class AuthService {
 
 	@Transactional
 	public IssuedSession registerAcademy(RegisterAcademyRequest req) {
+		if (!req.confirmOwner()) {
+			throw ApiException.badRequest("OWNER_CONFIRMATION_REQUIRED",
+					"Confirme que você é o responsável e está criando uma academia nova");
+		}
 		User user = createUser(req.name(), req.email(), req.password());
 		String name = req.academyName().trim();
 		Academy academy = academies.save(new Academy(name, slugs.uniqueSlug(name), clock.instant().plus(trial)));

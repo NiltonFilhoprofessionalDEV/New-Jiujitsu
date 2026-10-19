@@ -86,7 +86,10 @@ public class StudentService {
 	@Transactional
 	public StudentDetail update(UUID academyId, UUID id, StudentRequest request) {
 		Student student = require(academyId, id);
+		String giSize = student.getGiSize();
+		String beltSize = student.getBeltSize();
 		student.apply(normalize(academyId, request, id));
+		student.keepEquipmentSizes(giSize, beltSize);
 		return StudentDetail.of(student);
 	}
 

@@ -3,6 +3,7 @@ import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useAuth } from '@/auth/useAuth'
+import { PasswordField } from '@/components/PasswordField'
 import { problemOf } from '@/lib/api'
 import { apiErrorMessage } from '@/lib/apiErrors'
 
@@ -45,21 +46,20 @@ function PasswordFields() {
       <form className="form-grid" onSubmit={onSubmit}>
         <div className="field span-2">
           <label htmlFor="pw-current">{t('settings.password.current')}</label>
-          <input id="pw-current" name="currentPassword" type="password" className="input" required maxLength={72}
-            autoComplete="current-password" />
+          <PasswordField id="pw-current" name="currentPassword" required maxLength={72} autoComplete="current-password" />
         </div>
         <div className="field">
           <label htmlFor="pw-new">{t('settings.password.new')}</label>
-          <input id="pw-new" name="newPassword" type="password" className="input" required minLength={8}
-            maxLength={72} autoComplete="new-password" aria-invalid={Boolean(fieldErrors.newPassword)} />
+          <PasswordField id="pw-new" name="newPassword" required minLength={8} maxLength={72}
+            autoComplete="new-password" aria-invalid={Boolean(fieldErrors.newPassword)} />
           {fieldErrors.newPassword
             ? <span className="field-error">{fieldErrors.newPassword}</span>
             : <span className="hint">{t('auth.passwordHint')}</span>}
         </div>
         <div className="field">
           <label htmlFor="pw-confirm">{t('settings.password.confirm')}</label>
-          <input id="pw-confirm" name="confirmPassword" type="password" className="input" required minLength={8}
-            maxLength={72} autoComplete="new-password" aria-invalid={mismatch} />
+          <PasswordField id="pw-confirm" name="confirmPassword" required minLength={8} maxLength={72}
+            autoComplete="new-password" aria-invalid={mismatch} />
           {mismatch && <span className="field-error">{t('settings.password.mismatch')}</span>}
         </div>
         <div className="form-actions span-2">

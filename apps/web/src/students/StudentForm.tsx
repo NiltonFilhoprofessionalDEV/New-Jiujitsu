@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { MaskedInput } from '@/components/MaskedInput'
 import { problemOf } from '@/lib/api'
+import { maskCpf, maskPhone } from '@/lib/masks'
 import { apiErrorMessage } from '@/lib/apiErrors'
 import { formText } from '@/lib/formText'
 
@@ -35,8 +37,8 @@ function toRequest(form: FormData, kind: StudentKind): StudentRequest {
     degreeAwardedAt: training ? formText(form, 'degreeAwardedAt') : null,
     beltRuler: (formText(form, 'beltRuler') ?? 'AUTO') as BeltRuler,
     enrollmentDate: formText(form, 'enrollmentDate'),
-    giSize: training ? formText(form, 'giSize') : null,
-    beltSize: training ? formText(form, 'beltSize') : null,
+    giSize: null,
+    beltSize: null,
   }
 }
 
@@ -106,11 +108,13 @@ export function StudentForm({ student, householdId, onSaved, onCancel }: Student
       </div>
       <div className="field">
         <label htmlFor="sf-cpf">{t('students.form.cpf')}</label>
-        <input id="sf-cpf" name="cpf" className="input" inputMode="numeric" placeholder="000.000.000-00" maxLength={14} defaultValue={student?.cpf ?? ''} />
+        <MaskedInput id="sf-cpf" name="cpf" className="input" inputMode="numeric" mask={maskCpf}
+          placeholder="000.000.000-00" maxLength={14} defaultValue={student?.cpf} autoComplete="off" />
       </div>
       <div className="field">
         <label htmlFor="sf-phone">{t('students.form.phone')}</label>
-        <input id="sf-phone" name="phone" type="tel" className="input" maxLength={30} defaultValue={student?.phone ?? ''}
+        <MaskedInput id="sf-phone" name="phone" type="tel" className="input" mask={maskPhone} maxLength={15}
+          placeholder="(11) 99999-9999" autoComplete="tel" defaultValue={student?.phone}
           aria-invalid={Boolean(fieldErrors.phone)} />
         {fieldError('phone')}
       </div>
@@ -123,8 +127,9 @@ export function StudentForm({ student, householdId, onSaved, onCancel }: Student
       </div>
       <div className="field">
         <label htmlFor="sf-emergency">{t('students.form.emergencyPhone', { context: kind })}</label>
-        <input id="sf-emergency" name="emergencyPhone" type="tel" className="input" maxLength={30} required={training}
-          defaultValue={student?.emergencyPhone ?? ''} aria-invalid={Boolean(fieldErrors.emergencyPhone)} />
+        <MaskedInput id="sf-emergency" name="emergencyPhone" type="tel" className="input" mask={maskPhone}
+          maxLength={15} required={training} placeholder="(11) 99999-9999" autoComplete="tel"
+          defaultValue={student?.emergencyPhone} aria-invalid={Boolean(fieldErrors.emergencyPhone)} />
         {fieldError('emergencyPhone')}
       </div>
       <div className="field">
@@ -163,14 +168,6 @@ export function StudentForm({ student, householdId, onSaved, onCancel }: Student
                 </option>
               ))}
             </select>
-          </div>
-          <div className="field">
-            <label htmlFor="sf-gi">{t('students.form.giSize')}</label>
-            <input id="sf-gi" name="giSize" className="input" maxLength={20} defaultValue={student?.giSize ?? ''} />
-          </div>
-          <div className="field">
-            <label htmlFor="sf-belt-size">{t('students.form.beltSize')}</label>
-            <input id="sf-belt-size" name="beltSize" className="input" maxLength={20} defaultValue={student?.beltSize ?? ''} />
           </div>
         </>
       )}

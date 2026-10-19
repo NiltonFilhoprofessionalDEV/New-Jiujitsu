@@ -4,6 +4,7 @@ export type MembershipSummary = {
   id: string
   role: MembershipRole
   academy: { id: string; name: string; slug: string }
+  platformSupport: boolean
 }
 
 export type Session = {

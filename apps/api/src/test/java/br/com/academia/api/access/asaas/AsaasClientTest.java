@@ -110,7 +110,7 @@ class AsaasClientTest {
 
 	private static AsaasClient clientFor(String baseUrl, String apiKey) {
 		AppProperties props = new AppProperties(null, null, null, null, null, null, null, null, null,
-				new AppProperties.Asaas(baseUrl, apiKey, null));
+				new AppProperties.Asaas(baseUrl, apiKey, null), null, new AppProperties.Registration(false));
 		return new AsaasClient(props);
 	}
 }

@@ -35,4 +35,10 @@ public interface MembershipRepository extends JpaRepository<Membership, UUID> {
 			where m.user.id = ?1 and m.academy.id = ?2 and m.role in ?3
 			""")
 	boolean existsInAcademyWithRoles(UUID userId, UUID academyId, Collection<MembershipRole> roles);
+
+	@Query("""
+			select m from Membership m join fetch m.academy join fetch m.user
+			where m.user.id = ?1 and m.academy.id = ?2
+			""")
+	List<Membership> findByUserAndAcademy(UUID userId, UUID academyId);
 }

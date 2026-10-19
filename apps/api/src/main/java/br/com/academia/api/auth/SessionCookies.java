@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SessionCookies {
 
-	static final String REFRESH_COOKIE = "refresh_token";
+	public static final String REFRESH_COOKIE = "refresh_token";
 	private static final String COOKIE_PATH = "/api/v2/auth";
 
 	private final AppProperties props;

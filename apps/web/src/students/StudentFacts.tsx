@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 
 import { DataItem } from '@/components/DataItem'
 
+import { formatPhone } from '@/lib/masks'
+
 import { ageFrom } from './belts'
 import { formatCpf, formatDate } from './format'
 import type { StudentDetail } from './types'
@@ -21,9 +23,9 @@ function useFactGroups(student: StudentDetail): Group[] {
       title: t('students.facts.contact'),
       facts: [
         { label: t('students.form.email'), value: student.email },
-        { label: t('students.form.phone'), value: student.phone },
+        { label: t('students.form.phone'), value: formatPhone(student.phone) },
         { label: t('students.form.emergencyContact'), value: student.emergencyContact },
-        { label: t('students.form.emergencyPhone'), value: student.emergencyPhone },
+        { label: t('students.form.emergencyPhone'), value: formatPhone(student.emergencyPhone) },
       ],
     },
     {
@@ -42,8 +44,6 @@ function useFactGroups(student: StudentDetail): Group[] {
             { label: t('students.form.degreeAwardedAt'), value: student.degreeAwardedAt && formatDate(student.degreeAwardedAt) },
             { label: t('students.form.beltRuler'),
               value: student.beltRuler !== 'AUTO' && t(`students.ruler.${student.beltRuler}`) },
-            { label: t('students.form.giSize'), value: student.giSize },
-            { label: t('students.form.beltSize'), value: student.beltSize },
           ]
         : [{ label: t('students.form.enrollmentDate', { context: student.kind }), value: formatDate(student.enrollmentDate) }],
     },

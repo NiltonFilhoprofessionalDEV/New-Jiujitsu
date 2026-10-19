@@ -10,6 +10,7 @@ import { SuspendedScreen } from '@/subscription/SuspendedScreen'
 import { ADMIN_PATH, SUBSCRIPTION_PATH } from '@/subscription/types'
 
 import { BottomNav } from './BottomNav'
+import { SupportBanner } from './SupportBanner'
 import { navFor, STAFF_TABS } from './navItems'
 import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
@@ -47,6 +48,7 @@ export function AppShell() {
       <Sidebar groups={navFor(isManager, { isPlatformAdmin: isAdmin, subscriptionEnforced: enforced })} onClose={close} />
       <button type="button" className="scrim" tabIndex={-1} aria-label={t('topbar.closeMenu')} onClick={close} />
       <main className="main">
+        <SupportBanner />
         {isManager && enforced && <AccessBanner access={access} />}
         {blocked ? <SuspendedScreen isManager={isManager} /> : <Outlet />}
       </main>

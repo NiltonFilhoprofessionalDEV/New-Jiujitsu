@@ -23,7 +23,7 @@ class PlatformAcademyQuery {
 			from academies a
 			left join lateral (
 			    select u.name, u.email from memberships m join users u on u.id = m.user_id
-			    where m.academy_id = a.id and m.role = 'OWNER'
+			    where m.academy_id = a.id and m.role = 'OWNER' and m.platform_support = false
 			    order by m.created_at limit 1
 			) o on true
 			""";

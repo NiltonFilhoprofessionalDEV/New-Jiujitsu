@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { MaskedInput } from '@/components/MaskedInput'
 import { problemOf } from '@/lib/api'
+import { maskCnpj, maskPhone } from '@/lib/masks'
 import { apiErrorMessage } from '@/lib/apiErrors'
 import { formText } from '@/lib/formText'
 
@@ -64,9 +66,16 @@ export function AcademyProfileForm() {
           {FIELDS.map((f) => (
             <div key={f.name} className={f.span ? 'field span-2' : 'field'}>
               <label htmlFor={`ap-${f.name}`}>{t(`settings.academy.${f.name}`)}</label>
-              <input id={`ap-${f.name}`} name={f.name} type={f.type ?? 'text'} className="input"
-                maxLength={f.maxLength} pattern={f.pattern} defaultValue={profile[f.name] ?? ''}
-                aria-invalid={Boolean(fieldErrors[f.name])} />
+              {f.name === 'phone' || f.name === 'cnpj' ? (
+                <MaskedInput id={`ap-${f.name}`} name={f.name} type={f.type ?? 'text'} className="input"
+                  mask={f.name === 'phone' ? maskPhone : maskCnpj} maxLength={f.name === 'phone' ? 15 : 18}
+                  placeholder={f.name === 'phone' ? '(11) 99999-9999' : '00.000.000/0000-00'}
+                  defaultValue={profile[f.name]} aria-invalid={Boolean(fieldErrors[f.name])} />
+              ) : (
+                <input id={`ap-${f.name}`} name={f.name} type={f.type ?? 'text'} className="input"
+                  maxLength={f.maxLength} pattern={f.pattern} defaultValue={profile[f.name] ?? ''}
+                  aria-invalid={Boolean(fieldErrors[f.name])} />
+              )}
               {fieldErrors[f.name] && <span className="field-error">{fieldErrors[f.name]}</span>}
             </div>
           ))}

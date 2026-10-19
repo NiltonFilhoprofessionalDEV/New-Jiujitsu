@@ -1,12 +1,15 @@
 package br.com.academia.api.auth;
 
 import br.com.academia.api.auth.AuthDtos.ChangePasswordRequest;
+import br.com.academia.api.auth.AuthDtos.ForgotPasswordRequest;
 import br.com.academia.api.auth.AuthDtos.LoginRequest;
 import br.com.academia.api.auth.AuthDtos.RegisterAcademyRequest;
+import br.com.academia.api.auth.AuthDtos.ResetPasswordRequest;
 import br.com.academia.api.auth.AuthDtos.SessionResponse;
 import br.com.academia.api.auth.AuthDtos.SwitchAcademyRequest;
 import br.com.academia.api.common.ApiException;
 import br.com.academia.api.common.CurrentUser;
+import br.com.academia.api.config.AppProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -25,16 +28,22 @@ public class AuthController {
 
 	private final AuthService auth;
 	private final PasswordService passwords;
+	private final PasswordResetService resets;
 	private final SessionCookies cookies;
+	private final boolean registrationOpen;
 
-	public AuthController(AuthService auth, PasswordService passwords, SessionCookies cookies) {
+	public AuthController(AuthService auth, PasswordService passwords, PasswordResetService resets,
+			SessionCookies cookies, AppProperties props) {
 		this.auth = auth;
 		this.passwords = passwords;
+		this.resets = resets;
 		this.cookies = cookies;
+		this.registrationOpen = props.registration().open();
 	}
 
 	@PostMapping("/register-academy")
 	public ResponseEntity<SessionResponse> registerAcademy(@Valid @RequestBody RegisterAcademyRequest body) {
+		PublicRegistration.requireOpen(registrationOpen);
 		return cookies.respond(HttpStatus.CREATED, auth.registerAcademy(body));
 	}
 
@@ -57,6 +66,19 @@ public class AuthController {
 			@CookieValue(name = REFRESH_COOKIE, required = false) String refreshToken) {
 		CurrentUser me = CurrentUser.get();
 		return cookies.respond(HttpStatus.OK, auth.switchAcademy(me.userId(), body.membershipId(), refreshToken));
+	}
+
+	@PostMapping("/forgot-password")
+	public ResponseEntity<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest body,
+			HttpServletRequest request) {
+		resets.request(body.email(), request.getRemoteAddr());
+		return ResponseEntity.noContent().build();
+	}
+
+	@PostMapping("/reset-password")
+	public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest body) {
+		resets.reset(body.token(), body.password());
+		return ResponseEntity.noContent().build();
 	}
 
 	@PostMapping("/password")

@@ -3,6 +3,7 @@ import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
+import { PasswordField } from '@/components/PasswordField'
 import { InstallApp } from '@/pwa/InstallApp'
 
 import { authErrorMessage } from '../authErrors'
@@ -43,22 +44,15 @@ export function LoginPage() {
         </div>
         <div className="field">
           <label htmlFor="password">{t('auth.password')}</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            className="input"
-            autoComplete="current-password"
-            required
-          />
+          <PasswordField id="password" name="password" autoComplete="current-password" required />
         </div>
+        <p className="auth-footer" style={{ margin: 0 }}>
+          <Link to="/esqueci-senha">{t('auth.forgotLink')}</Link>
+        </p>
         <button type="submit" className="btn btn-primary btn-block" disabled={submitting}>
           {t('auth.submitLogin')}
         </button>
       </form>
-      <p className="auth-footer">
-        {t('auth.noAccount')} <Link to="/register-academy">{t('auth.registerAcademy')}</Link>
-      </p>
     </AuthLayout>
   )
 }

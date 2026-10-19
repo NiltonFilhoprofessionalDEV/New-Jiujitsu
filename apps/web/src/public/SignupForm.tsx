@@ -1,7 +1,10 @@
 import type { FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { MaskedInput } from '@/components/MaskedInput'
+import { PasswordField } from '@/components/PasswordField'
 import { problemOf } from '@/lib/api'
+import { maskCpf, maskPhone } from '@/lib/masks'
 import { apiErrorMessage } from '@/lib/apiErrors'
 import { formText } from '@/lib/formText'
 import { BeltFields } from '@/students/BeltFields'
@@ -72,20 +75,20 @@ export function SignupForm({ kind, fixedEmail, initialName, submitLabel, pending
       </div>
       <div className="field span-2">
         <label htmlFor="su-password">{t('auth.password')}</label>
-        <input id="su-password" name="password" type="password" className="input" required minLength={8} maxLength={72}
+        <PasswordField id="su-password" name="password" required minLength={8} maxLength={72}
           autoComplete="new-password" aria-invalid={Boolean(fieldErrors.password)} />
         {fieldError('password') ?? <span className="hint">{t('auth.passwordHint')}</span>}
       </div>
       <div className="field">
         <label htmlFor="su-phone">{t('students.form.phone')}</label>
-        <input id="su-phone" name="phone" type="tel" className="input" maxLength={30} autoComplete="tel"
-          aria-invalid={Boolean(fieldErrors.phone)} />
+        <MaskedInput id="su-phone" name="phone" type="tel" className="input" mask={maskPhone} maxLength={15}
+          placeholder="(11) 99999-9999" autoComplete="tel" aria-invalid={Boolean(fieldErrors.phone)} />
         {fieldError('phone')}
       </div>
       <div className="field">
         <label htmlFor="su-cpf">{t('students.form.cpf')}</label>
-        <input id="su-cpf" name="cpf" className="input" inputMode="numeric" maxLength={14}
-          aria-invalid={Boolean(fieldErrors.cpf)} />
+        <MaskedInput id="su-cpf" name="cpf" className="input" inputMode="numeric" mask={maskCpf}
+          placeholder="000.000.000-00" maxLength={14} autoComplete="off" aria-invalid={Boolean(fieldErrors.cpf)} />
         {fieldError('cpf')}
       </div>
       {training && (
@@ -98,7 +101,8 @@ export function SignupForm({ kind, fixedEmail, initialName, submitLabel, pending
           </div>
           <div className="field">
             <label htmlFor="su-emergency">{t('students.form.emergencyPhone', { context: kind })}</label>
-            <input id="su-emergency" name="emergencyPhone" type="tel" className="input" required maxLength={30}
+            <MaskedInput id="su-emergency" name="emergencyPhone" type="tel" className="input" mask={maskPhone}
+              required maxLength={15} placeholder="(11) 99999-9999" autoComplete="tel"
               aria-invalid={Boolean(fieldErrors.emergencyPhone)} />
             {fieldError('emergencyPhone')}
           </div>

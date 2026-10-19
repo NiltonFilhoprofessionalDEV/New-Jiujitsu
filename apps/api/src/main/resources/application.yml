@@ -70,8 +70,15 @@ app:
   platform:
     # E-mails separados por vírgula com acesso ao painel /admin
     admin-emails: ${APP_PLATFORM_ADMIN_EMAILS:}
+  # Sem variável de ambiente: o cadastro aberto não volta a ligar por configuração de deploy.
+  registration:
+    open: false
   asaas:
     # Sandbox por padrão; produção: https://api.asaas.com/v3 (a chave precisa ser do mesmo ambiente)
     base-url: ${APP_ASAAS_BASE_URL:https://api-sandbox.asaas.com/v3}
     api-key: ${APP_ASAAS_API_KEY:}
     webhook-token: ${APP_ASAAS_WEBHOOK_TOKEN:}
+  mail:
+    api-key: ${APP_RESEND_API_KEY:}
+    from: ${APP_MAIL_FROM:BJJ Pulse <nao-responda@bjjpulse.com.br>}
+    public-url: ${APP_PUBLIC_URL:http://localhost:5173}

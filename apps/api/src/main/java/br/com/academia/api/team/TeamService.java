@@ -34,6 +34,7 @@ public class TeamService {
 	@Transactional(readOnly = true)
 	public List<TeamMember> list(CurrentUser me) {
 		return memberships.findActiveInAcademyByRoles(me.academyId(), StaffService.STAFF_ROLES).stream()
+				.filter(m -> !m.isPlatformSupport())
 				.map(m -> TeamMember.of(m, me.membershipId()))
 				.toList();
 	}

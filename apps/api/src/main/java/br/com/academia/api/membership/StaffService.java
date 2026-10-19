@@ -29,6 +29,7 @@ public class StaffService {
 	@Transactional(readOnly = true)
 	public List<StaffMember> list(UUID academyId) {
 		return memberships.findActiveInAcademyByRoles(academyId, STAFF_ROLES).stream()
+				.filter(m -> !m.isPlatformSupport())
 				.map(m -> new StaffMember(m.getId(), m.getUser().getName(), m.getRole()))
 				.toList();
 	}

@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { CopyButton } from '@/components/CopyButton'
 import { apiErrorMessage } from '@/lib/apiErrors'
 import { formText } from '@/lib/formText'
+import { MaskedInput } from '@/components/MaskedInput'
+import { maskPhone } from '@/lib/masks'
 import { whatsappUrl } from '@/lib/phone'
 
 import { useCreateInvite } from './invitesApi'
@@ -47,7 +49,8 @@ export function NewInviteForm() {
         </div>
         <div className="field">
           <label htmlFor="inv-phone">{t('invites.form.phone')}</label>
-          <input id="inv-phone" name="phone" type="tel" className="input" maxLength={30} />
+          <MaskedInput id="inv-phone" name="phone" type="tel" className="input" mask={maskPhone} maxLength={15}
+            placeholder="(11) 99999-9999" autoComplete="tel" />
         </div>
         <label className="checkbox-inline span-2" title={t('invites.form.responsibleTitle')}>
           <input type="checkbox" name="responsible" />

@@ -1,6 +1,7 @@
 import type { FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { PasswordField } from '@/components/PasswordField'
 import { problemOf } from '@/lib/api'
 import { apiErrorMessage } from '@/lib/apiErrors'
 import { formText } from '@/lib/formText'
@@ -49,8 +50,8 @@ export function StaffSignupForm({ info, pending, error, onSubmit }: Props) {
       </div>
       <div className="field span-2">
         <label htmlFor="ss-password">{t('auth.password')}</label>
-        <input id="ss-password" name="password" type="password" className="input" required minLength={8}
-          maxLength={72} autoComplete="new-password" aria-invalid={Boolean(fieldErrors.password)} />
+        <PasswordField id="ss-password" name="password" required minLength={8} maxLength={72}
+          autoComplete="new-password" aria-invalid={Boolean(fieldErrors.password)} />
         {fieldError('password') ?? <span className="hint">{t('auth.passwordHint')}</span>}
       </div>
       <div className="form-actions span-2">

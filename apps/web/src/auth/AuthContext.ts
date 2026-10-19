@@ -12,6 +12,7 @@ export type RegisterAcademyInput = {
   name: string
   email: string
   password: string
+  confirmOwner: boolean
 }
 
 export type AuthContextValue = {
@@ -19,12 +20,14 @@ export type AuthContextValue = {
   session: Session | null
   activeMembership: MembershipSummary | null
   login: (email: string, password: string) => Promise<void>
-  registerAcademy: (input: RegisterAcademyInput) => Promise<void>
+  registerAcademy: (token: string, input: RegisterAcademyInput) => Promise<void>
   /** Aceita o convite e já entra na academia com a nova conta. */
   acceptInvite: (token: string, input: SignupInput) => Promise<void>
   /** Convite de equipe: {@code input} cria a conta; {@code null} aceita com a conta já logada. */
   acceptStaffInvite: (token: string, input: StaffSignupInput | null) => Promise<void>
   switchAcademy: (membershipId: string) => Promise<void>
+  /** Entra numa academia como administrador da plataforma. */
+  enterAcademy: (academyId: string) => Promise<void>
   /** Troca a senha; as outras sessões caem e esta recebe uma sessão nova. */
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>
   logout: () => Promise<void>

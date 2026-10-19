@@ -1,8 +1,10 @@
 import type { ComponentType } from 'react'
 import { createBrowserRouter, Navigate } from 'react-router'
 
+import { ForgotPasswordPage } from '@/auth/pages/ForgotPasswordPage'
 import { LoginPage } from '@/auth/pages/LoginPage'
 import { RegisterAcademyPage } from '@/auth/pages/RegisterAcademyPage'
+import { ResetPasswordPage } from '@/auth/pages/ResetPasswordPage'
 import { RedirectIfAuthenticated, RequireAuth, RequireManager, RequireStaff } from '@/auth/RequireAuth'
 import { STUDENT_HOME } from '@/auth/types'
 import { AppShell } from '@/layout/AppShell'
@@ -63,11 +65,14 @@ export const router = createBrowserRouter([
         path: '/equipe/convite/:token',
         lazy: page(() => import('@/team/AcceptStaffInvitePage'), (m) => m.AcceptStaffInvitePage),
       },
+      { path: '/esqueci-senha', element: <ForgotPasswordPage /> },
+      { path: '/redefinir-senha', element: <ResetPasswordPage /> },
+      { path: '/academia/convite/:token', element: <RegisterAcademyPage /> },
+      { path: '/register-academy', element: <Navigate to="/login" replace /> },
       {
         element: <RedirectIfAuthenticated />,
         children: [
           { path: '/login', element: <LoginPage /> },
-          { path: '/register-academy', element: <RegisterAcademyPage /> },
         ],
       },
       {

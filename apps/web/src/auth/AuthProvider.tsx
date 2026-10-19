@@ -41,7 +41,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   const registerAcademy = useCallback(
-    (input: RegisterAcademyInput) => enter(api.post<Session>('/auth/register-academy', input)),
+    (token: string, input: RegisterAcademyInput) =>
+      enter(api.post<Session>(`/public/academy-invites/${encodeURIComponent(token)}/accept`, input)),
     [enter],
   )
 
@@ -66,6 +67,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [enter],
   )
 
+  const enterAcademy = useCallback(
+    (academyId: string) => enter(api.post<Session>(`/platform/academies/${academyId}/enter`)),
+    [enter],
+  )
+
   const changePassword = useCallback(
     (currentPassword: string, newPassword: string) =>
       enter(api.post<Session>('/auth/password', { currentPassword, newPassword })),
@@ -85,9 +91,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const activeMembership = session?.memberships.find((m) => m.id === session.activeMembershipId) ?? null
     return {
       status, session, activeMembership, login, registerAcademy, acceptInvite, acceptStaffInvite, switchAcademy,
-      changePassword, logout,
+      enterAcademy, changePassword, logout,
     }
-  }, [status, session, login, registerAcademy, acceptInvite, acceptStaffInvite, switchAcademy, changePassword, logout])
+  }, [status, session, login, registerAcademy, acceptInvite, acceptStaffInvite, switchAcademy, enterAcademy,
+    changePassword, logout])
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

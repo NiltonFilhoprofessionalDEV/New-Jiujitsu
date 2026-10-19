@@ -7,6 +7,7 @@ import br.com.academia.api.access.Access;
 import br.com.academia.api.access.AccessStatus;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -36,6 +37,9 @@ public final class PlatformDtos {
 					row.ownerEmail(), row.activeStudents(), row.subscribed(), row.trialEndsAt(), row.paidUntil(),
 					access.status(), access.accessUntil(), access.suspendsAt(), access.daysLeft());
 		}
+	}
+
+	public record DeleteAcademyRequest(@NotBlank @Size(max = 120) String confirmName) {
 	}
 
 	public record GrantRequest(

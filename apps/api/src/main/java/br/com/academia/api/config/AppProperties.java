@@ -26,7 +26,9 @@ public record AppProperties(
 		@NotNull ZoneId timeZone,
 		@NotNull @Valid Subscription subscription,
 		@NotNull Platform platform,
-		@NotNull @Valid Asaas asaas) {
+		@NotNull @Valid Asaas asaas,
+		@NotNull @Valid Mail mail,
+		@NotNull Registration registration) {
 
 	public record Jwt(
 			@NotBlank String secret,
@@ -95,6 +97,26 @@ public record AppProperties(
 		@Override
 		public String toString() {
 			return "Asaas[baseUrl=" + baseUrl + ", enabled=" + enabled() + "]";
+		}
+	}
+
+	/**
+	 * Cadastro público direto de academia. Fica fechado: academia nova só entra pelo convite do admin.
+	 * Os testes ligam {@code open} para continuar criando academias sem convite.
+	 */
+	public record Registration(boolean open) {
+	}
+
+	/** Envio de e-mail pelo Resend. Sem chave, a recuperação de senha fica desligada. */
+	public record Mail(String apiKey, String from, @NotBlank String publicUrl) {
+
+		public boolean enabled() {
+			return apiKey != null && !apiKey.isBlank() && from != null && !from.isBlank();
+		}
+
+		@Override
+		public String toString() {
+			return "Mail[enabled=" + enabled() + ", publicUrl=" + publicUrl + "]";
 		}
 	}
 }

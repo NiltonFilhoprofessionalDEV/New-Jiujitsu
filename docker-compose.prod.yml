@@ -47,6 +47,9 @@ services:
       APP_ASAAS_BASE_URL: ${APP_ASAAS_BASE_URL:-https://api.asaas.com/v3}
       APP_ASAAS_API_KEY: ${APP_ASAAS_API_KEY:-}
       APP_ASAAS_WEBHOOK_TOKEN: ${APP_ASAAS_WEBHOOK_TOKEN:-}
+      APP_RESEND_API_KEY: ${APP_RESEND_API_KEY:-}
+      APP_MAIL_FROM: "${APP_MAIL_FROM:-BJJ Pulse <nao-responda@bjjpulse.com.br>}"
+      APP_PUBLIC_URL: ${APP_PUBLIC_URL:-https://bjjpulse.com.br}
       JAVA_TOOL_OPTIONS: ${API_JAVA_OPTS:--XX:MaxRAMPercentage=75 -XX:+ExitOnOutOfMemoryError}
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/api/v2/actuator/health | grep -q UP"]

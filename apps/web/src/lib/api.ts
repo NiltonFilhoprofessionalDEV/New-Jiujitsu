@@ -4,7 +4,13 @@ import type { Session } from '@/auth/types'
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api/v2'
 
-const AUTH_PATHS = ['/auth/login', '/auth/register-academy', '/auth/refresh', '/auth/logout']
+const AUTH_PATHS = [
+  '/auth/login',
+  '/auth/register-academy',
+  '/auth/refresh',
+  '/auth/logout',
+  '/public/academy-invites',
+]
 
 let accessToken: string | null = null
 let refreshInFlight: Promise<Session | null> | null = null

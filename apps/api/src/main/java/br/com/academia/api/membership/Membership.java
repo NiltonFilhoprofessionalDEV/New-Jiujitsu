@@ -48,6 +48,10 @@ public class Membership {
 	@Column(nullable = false)
 	private boolean active = true;
 
+	/** Vínculo criado pelo admin da plataforma para entrar na academia sem aparecer na equipe. */
+	@Column(name = "platform_support", nullable = false)
+	private boolean platformSupport = false;
+
 	@Column(name = "last_used_at")
 	private Instant lastUsedAt;
 
@@ -67,6 +71,13 @@ public class Membership {
 	public static Membership pending(User user, Academy academy, MembershipRole role) {
 		Membership membership = new Membership(user, academy, role);
 		membership.active = false;
+		return membership;
+	}
+
+	/** Dono oculto: o admin da plataforma entra na academia sem constar na equipe. */
+	public static Membership platformSupport(User user, Academy academy) {
+		Membership membership = new Membership(user, academy, MembershipRole.OWNER);
+		membership.platformSupport = true;
 		return membership;
 	}
 
@@ -101,6 +112,10 @@ public class Membership {
 
 	public boolean isActive() {
 		return active;
+	}
+
+	public boolean isPlatformSupport() {
+		return platformSupport;
 	}
 
 	public Instant getLastUsedAt() {

@@ -20,7 +20,8 @@ public final class AuthDtos {
 			@NotBlank @Size(max = 120) String academyName,
 			@NotBlank @Size(max = 120) String name,
 			@NotBlank @Email @Size(max = 254) String email,
-			@NotBlank @Size(min = 8, max = 72, message = "A senha deve ter entre 8 e 72 caracteres") @BcryptSafe String password) {
+			@NotBlank @Size(min = 8, max = 72, message = "A senha deve ter entre 8 e 72 caracteres") @BcryptSafe String password,
+			boolean confirmOwner) {
 	}
 
 	public record LoginRequest(
@@ -36,14 +37,23 @@ public final class AuthDtos {
 			@NotBlank @Size(min = 8, max = 72, message = "A senha deve ter entre 8 e 72 caracteres") @BcryptSafe String newPassword) {
 	}
 
+	public record ForgotPasswordRequest(@NotBlank @Email @Size(max = 254) String email) {
+	}
+
+	public record ResetPasswordRequest(
+			@NotBlank @Size(max = 64) String token,
+			@NotBlank @Size(min = 8, max = 72, message = "A senha deve ter entre 8 e 72 caracteres") @BcryptSafe String password) {
+	}
+
 	public record AcademySummary(UUID id, String name, String slug) {
 	}
 
-	public record MembershipSummary(UUID id, MembershipRole role, AcademySummary academy) {
+	public record MembershipSummary(UUID id, MembershipRole role, AcademySummary academy, boolean platformSupport) {
 
 		static MembershipSummary of(Membership m) {
 			var a = m.getAcademy();
-			return new MembershipSummary(m.getId(), m.getRole(), new AcademySummary(a.getId(), a.getName(), a.getSlug()));
+			return new MembershipSummary(m.getId(), m.getRole(),
+					new AcademySummary(a.getId(), a.getName(), a.getSlug()), m.isPlatformSupport());
 		}
 	}
 

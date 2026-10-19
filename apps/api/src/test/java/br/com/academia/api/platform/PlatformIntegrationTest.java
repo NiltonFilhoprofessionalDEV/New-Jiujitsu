@@ -108,6 +108,20 @@ class PlatformIntegrationTest {
 				.andExpect(status().isForbidden());
 	}
 
+	@Test
+	void adminEntersAnAcademyWithoutShowingUpOnTheTeam() throws Exception {
+		String owner = registerOwner(mvc);
+		String academyId = academyIdOf(owner);
+
+		mvc.perform(auth(post(CTX + "/platform/academies/" + academyId + "/enter"), adminToken()))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.memberships[?(@.platformSupport == true)].role").value("OWNER"));
+
+		mvc.perform(auth(get(CTX + "/team"), owner))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()").value(1));
+	}
+
 	private String adminToken() throws Exception {
 		return staff.memberTokenFor(mvc, registerOwner(mvc), MembershipRole.INSTRUCTOR, PLATFORM_ADMIN_EMAIL);
 	}
