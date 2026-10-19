@@ -95,4 +95,12 @@ public final class InviteDtos {
 
 	public record PendingCount(long pending) {
 	}
+
+	/** Faixa confirmada pelo gestor ao aprovar a matrícula. A data inicia a contagem da próxima graduação. */
+	public record ApproveEnrollmentRequest(
+			@NotBlank @Size(max = 30) String belt,
+			@Min(0) @Max(10) int degrees,
+			@PastOrPresent LocalDate beltAwardedAt,
+			@PastOrPresent LocalDate degreeAwardedAt) {
+	}
 }

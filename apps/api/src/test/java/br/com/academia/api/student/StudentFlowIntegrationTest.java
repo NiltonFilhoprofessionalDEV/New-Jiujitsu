@@ -207,9 +207,12 @@ class StudentFlowIntegrationTest {
 	}
 
 	private static String studentBody(String name, String email, String cpf, String belt, int degrees) {
+		String dates = belt != null && !(belt.equals("branca") && degrees == 0)
+				? ",\"beltAwardedAt\":\"2020-01-01\"" + (degrees > 0 ? ",\"degreeAwardedAt\":\"2020-06-01\"" : "")
+				: "";
 		return """
-				{"kind":"TRAINING","name":"%s","email":%s,"cpf":%s,"belt":%s,"degrees":%d,%s}
-				""".formatted(name, quoted(email), quoted(cpf), quoted(belt), degrees, EMERGENCY_FIELDS);
+				{"kind":"TRAINING","name":"%s","email":%s,"cpf":%s,"belt":%s,"degrees":%d%s,%s}
+				""".formatted(name, quoted(email), quoted(cpf), quoted(belt), degrees, dates, EMERGENCY_FIELDS);
 	}
 
 	private static String responsibleBody(String name) {

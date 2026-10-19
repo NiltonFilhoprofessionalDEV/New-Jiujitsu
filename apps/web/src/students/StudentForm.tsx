@@ -35,6 +35,7 @@ function toRequest(form: FormData, kind: StudentKind): StudentRequest {
     belt: training ? formText(form, 'belt') : null,
     degrees: training ? Number(form.get('degrees') ?? 0) : null,
     degreeAwardedAt: training ? formText(form, 'degreeAwardedAt') : null,
+    beltAwardedAt: training ? formText(form, 'beltAwardedAt') : null,
     beltRuler: (formText(form, 'beltRuler') ?? 'AUTO') as BeltRuler,
     enrollmentDate: formText(form, 'enrollmentDate'),
     giSize: null,
@@ -47,6 +48,8 @@ export function StudentForm({ student, householdId, onSaved, onCancel }: Student
   const save = useSaveStudent()
   const addDependent = useAddDependent(householdId ?? '')
   const [kind, setKind] = useState<StudentKind>(student?.kind ?? 'TRAINING')
+  const [belt, setBelt] = useState(student?.belt ?? 'branca')
+  const [degrees, setDegrees] = useState(student?.degrees ?? 0)
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const pending = save.isPending || addDependent.isPending
@@ -94,7 +97,8 @@ export function StudentForm({ student, householdId, onSaved, onCancel }: Student
       <div className="field span-2">
         <label htmlFor="sf-name">{t('students.form.name')}</label>
         <input id="sf-name" name="name" className="input" required maxLength={120} autoCapitalize="words"
-          defaultValue={student?.name} aria-invalid={Boolean(fieldErrors.name)} />
+          autoComplete="name" placeholder={t('students.form.namePlaceholder')} defaultValue={student?.name}
+          aria-invalid={Boolean(fieldErrors.name)} />
         {fieldError('name') || <span className="hint">{t('students.form.nameHint')}</span>}
       </div>
       <div className="field">
@@ -118,19 +122,21 @@ export function StudentForm({ student, householdId, onSaved, onCancel }: Student
           aria-invalid={Boolean(fieldErrors.phone)} />
         {fieldError('phone')}
       </div>
-      <div className="field">
-        <label htmlFor="sf-emergency-contact">{t('students.form.emergencyContact', { context: kind })}</label>
-        <input id="sf-emergency-contact" name="emergencyContact" className="input" maxLength={120} required={training}
-          autoCapitalize="words" defaultValue={student?.emergencyContact ?? ''}
-          aria-invalid={Boolean(fieldErrors.emergencyContact)} />
-        {fieldError('emergencyContact') || <span className="hint">{t('students.form.emergencyContactHint')}</span>}
-      </div>
-      <div className="field">
-        <label htmlFor="sf-emergency">{t('students.form.emergencyPhone', { context: kind })}</label>
-        <MaskedInput id="sf-emergency" name="emergencyPhone" type="tel" className="input" mask={maskPhone}
-          maxLength={15} required={training} placeholder="(11) 99999-9999" autoComplete="tel"
-          defaultValue={student?.emergencyPhone} aria-invalid={Boolean(fieldErrors.emergencyPhone)} />
-        {fieldError('emergencyPhone')}
+      <div className="field-pair">
+        <div className="field">
+          <label htmlFor="sf-emergency-contact">{t('students.form.emergencyContact', { context: kind })}</label>
+          <input id="sf-emergency-contact" name="emergencyContact" className="input" maxLength={120} required={training}
+            autoCapitalize="words" autoComplete="off" placeholder={t('students.form.emergencyContactPlaceholder')}
+            defaultValue={student?.emergencyContact ?? ''} aria-invalid={Boolean(fieldErrors.emergencyContact)} />
+          {fieldError('emergencyContact') || <span className="hint">{t('students.form.emergencyContactHint')}</span>}
+        </div>
+        <div className="field">
+          <label htmlFor="sf-emergency">{t('students.form.emergencyPhone', { context: kind })}</label>
+          <MaskedInput id="sf-emergency" name="emergencyPhone" type="tel" className="input" mask={maskPhone}
+            maxLength={15} required={training} placeholder="(11) 99999-9999" autoComplete="tel"
+            defaultValue={student?.emergencyPhone} aria-invalid={Boolean(fieldErrors.emergencyPhone)} />
+          {fieldError('emergencyPhone')}
+        </div>
       </div>
       <div className="field">
         <label htmlFor="sf-birth">{t('students.form.birthDate')}</label>
@@ -154,11 +160,28 @@ export function StudentForm({ student, householdId, onSaved, onCancel }: Student
       {training && (
         <>
           <div className="section-title span-2">{t('students.form.jiujitsu')}</div>
-          <BeltFields idPrefix="sf" initialBelt={student?.belt} initialDegrees={student?.degrees} />
-          <div className="field">
-            <label htmlFor="sf-degree-at">{t('students.form.degreeAwardedAt')}</label>
-            <input id="sf-degree-at" name="degreeAwardedAt" type="date" className="input" defaultValue={student?.degreeAwardedAt ?? ''} />
-          </div>
+          <BeltFields idPrefix="sf" initialBelt={student?.belt} initialDegrees={student?.degrees}
+            onChange={(nextBelt, nextDegrees) => { setBelt(nextBelt); setDegrees(nextDegrees) }} />
+          {belt === 'branca' && degrees === 0 ? (
+            <p className="hint span-2">{t('students.form.whiteBeltClock')}</p>
+          ) : (
+            <div className="field-pair">
+              <div className="field">
+                <label htmlFor="sf-belt-at">{t('students.form.beltAwardedAt')}</label>
+                <input id="sf-belt-at" name="beltAwardedAt" type="date" className="input" required
+                  defaultValue={student?.beltAwardedAt ?? ''} aria-invalid={Boolean(fieldErrors.beltAwardedAt)} />
+                {fieldError('beltAwardedAt') || <span className="hint">{t('students.form.beltAwardedAtHint')}</span>}
+              </div>
+              {degrees > 0 && (
+                <div className="field">
+                  <label htmlFor="sf-degree-at">{t('students.form.degreeAwardedAt')}</label>
+                  <input id="sf-degree-at" name="degreeAwardedAt" type="date" className="input" required
+                    defaultValue={student?.degreeAwardedAt ?? ''} aria-invalid={Boolean(fieldErrors.degreeAwardedAt)} />
+                  {fieldError('degreeAwardedAt') || <span className="hint">{t('students.form.degreeAwardedAtHint')}</span>}
+                </div>
+              )}
+            </div>
+          )}
           <div className="field">
             <label htmlFor="sf-ruler">{t('students.form.beltRuler')}</label>
             <select id="sf-ruler" name="beltRuler" className="input" defaultValue={student?.beltRuler ?? 'AUTO'}>

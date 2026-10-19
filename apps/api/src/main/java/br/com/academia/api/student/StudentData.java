@@ -21,6 +21,7 @@ record StudentData(
 		Belt belt,
 		int degrees,
 		LocalDate degreeAwardedAt,
+		LocalDate beltAwardedAt,
 		BeltRuler beltRuler,
 		LocalDate enrollmentDate,
 		String giSize,

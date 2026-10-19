@@ -33,6 +33,13 @@ export type CreateInviteInput = {
   phone: string | null
 }
 
+export type ApproveRank = {
+  belt: string
+  degrees: number
+  beltAwardedAt: string | null
+  degreeAwardedAt: string | null
+}
+
 export type EnrollmentRequestItem = {
   id: string
   name: string

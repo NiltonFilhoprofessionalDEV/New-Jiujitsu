@@ -69,16 +69,18 @@ class InviteFlowIntegrationTest {
 				.andReturn(), "$[0].id");
 
 		String other = registerOwner(mvc);
-		mvc.perform(auth(post(CTX + "/requests/enrollments/" + requestId + "/approve"), other))
+		mvc.perform(authJson(post(CTX + "/requests/enrollments/" + requestId + "/approve"), other, approveBody()))
 				.andExpect(status().isNotFound());
 
-		mvc.perform(auth(post(CTX + "/requests/enrollments/" + requestId + "/approve"), owner))
+		mvc.perform(authJson(post(CTX + "/requests/enrollments/" + requestId + "/approve"), owner, approveBody()))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.name").value("Ana da Souza"))
 				.andExpect(jsonPath("$.emergencyContact").value(EMERGENCY_CONTACT))
 				.andExpect(jsonPath("$.emergencyPhone").value(EMERGENCY_PHONE))
-				.andExpect(jsonPath("$.belt").value("azul"));
-		mvc.perform(auth(post(CTX + "/requests/enrollments/" + requestId + "/approve"), owner))
+				.andExpect(jsonPath("$.belt").value("azul"))
+				.andExpect(jsonPath("$.beltAwardedAt").value("2024-03-10"))
+				.andExpect(jsonPath("$.degreeAwardedAt").value("2025-08-01"));
+		mvc.perform(authJson(post(CTX + "/requests/enrollments/" + requestId + "/approve"), owner, approveBody()))
 				.andExpect(status().isConflict())
 				.andExpect(jsonPath("$.code").value("REQUEST_ALREADY_DECIDED"));
 
@@ -179,6 +181,12 @@ class InviteFlowIntegrationTest {
 		return json(post(CTX + "/auth/login"), """
 				{"email":"%s","password":"%s"}
 				""".formatted(email, PASSWORD));
+	}
+
+	private static String approveBody() {
+		return """
+				{"belt":"azul","degrees":1,"beltAwardedAt":"2024-03-10","degreeAwardedAt":"2025-08-01"}
+				""";
 	}
 
 	private static String signupBody(String name, String email) {

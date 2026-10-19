@@ -55,7 +55,7 @@ record SignupData(
 
 	StudentRequest toStudentRequest(Kind kind) {
 		return new StudentRequest(kind, name, nickname, email, cpf, phone, emergencyContact, emergencyPhone, birthDate,
-				null, belt, degrees, null, null, null, null, null);
+				null, belt, degrees, null, null, null, null, null, null);
 	}
 
 	private static String blankToDefault(String belt) {

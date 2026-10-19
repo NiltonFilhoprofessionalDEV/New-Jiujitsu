@@ -81,6 +81,9 @@ public class Student {
 	@Column(name = "degree_awarded_at")
 	private LocalDate degreeAwardedAt;
 
+	@Column(name = "belt_awarded_at")
+	private LocalDate beltAwardedAt;
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "belt_ruler", nullable = false)
 	private BeltRuler beltRuler = BeltRuler.AUTO;
@@ -128,6 +131,7 @@ public class Student {
 		this.belt = data.belt();
 		this.degrees = (short) data.degrees();
 		this.degreeAwardedAt = data.degreeAwardedAt();
+		this.beltAwardedAt = data.beltAwardedAt();
 		this.beltRuler = data.beltRuler();
 		this.enrollmentDate = data.enrollmentDate();
 		this.giSize = data.giSize();
@@ -138,6 +142,15 @@ public class Student {
 	public void keepEquipmentSizes(String giSize, String beltSize) {
 		this.giSize = giSize;
 		this.beltSize = beltSize;
+	}
+
+	/** Faixa confirmada pelo gestor, antes de existir graduação registrada pelo app. */
+	void confirmRank(Belt belt, int degrees, LocalDate beltAwardedAt, LocalDate degreeAwardedAt) {
+		belt.requireValidDegrees(degrees);
+		this.belt = belt;
+		this.degrees = (short) degrees;
+		this.beltAwardedAt = beltAwardedAt;
+		this.degreeAwardedAt = degreeAwardedAt;
 	}
 
 	/** Graduação registrada (ou desfeita): só faixa, grau e data mudam; o histórico fica em {@code graduations}. */
@@ -236,6 +249,10 @@ public class Student {
 
 	public LocalDate getDegreeAwardedAt() {
 		return degreeAwardedAt;
+	}
+
+	public LocalDate getBeltAwardedAt() {
+		return beltAwardedAt;
 	}
 
 	public BeltRuler getBeltRuler() {

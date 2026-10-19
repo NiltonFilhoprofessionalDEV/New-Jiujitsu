@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import br.com.academia.api.common.ApiException;
+import br.com.academia.api.common.PersonName;
 import br.com.academia.api.common.RandomTokens;
 import br.com.academia.api.common.TextNormalizer;
 import br.com.academia.api.invite.Invite.Status;
@@ -79,9 +80,11 @@ public class InviteService {
 	@Transactional
 	public InviteView create(UUID academyId, CreateInviteRequest request, UUID createdBy) {
 		String email = TextNormalizer.blankToNull(request.email());
+		String inviteName = TextNormalizer.blankToNull(request.name());
+		PersonName.rejectPhone(inviteName, "name");
 		CreateInviteRequest normalized = new CreateInviteRequest(
 				request.kind(),
-				TextNormalizer.blankToNull(request.name()),
+				inviteName,
 				email == null ? null : email.toLowerCase(Locale.ROOT),
 				TextNormalizer.blankToNull(request.phone()));
 		Instant now = clock.instant();

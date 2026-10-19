@@ -1,6 +1,7 @@
 package br.com.academia.api.common;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -31,6 +32,28 @@ public final class PersonName {
 			out.append(i > 0 && PARTICLES.contains(words[i]) ? words[i] : capitalize(words[i]));
 		}
 		return out.toString();
+	}
+
+	/**
+	 * Telefone no lugar do nome: só dígitos e pontuação, ou um telefone com DDD grudado no texto.
+	 * "62991948360" e "Maria 62991948360" caem aqui; "Maria Souza" e "Joana (mãe)" não.
+	 */
+	public static boolean isPhoneLike(String raw) {
+		if (raw == null || raw.isBlank()) {
+			return false;
+		}
+		boolean hasLetter = raw.codePoints().anyMatch(Character::isLetter);
+		return !hasLetter || Phone.isValid(raw);
+	}
+
+	public static FieldError phoneInName(String field) {
+		return new FieldError(field, "PERSON_NAME_REQUIRED", "Informe o nome da pessoa, não o telefone");
+	}
+
+	public static void rejectPhone(String raw, String field) {
+		if (isPhoneLike(raw)) {
+			throw ApiException.invalidFields(List.of(phoneInName(field)));
+		}
 	}
 
 	/** Tem nome e sobrenome? As ligações ("da", "dos"...) não contam como sobrenome. */

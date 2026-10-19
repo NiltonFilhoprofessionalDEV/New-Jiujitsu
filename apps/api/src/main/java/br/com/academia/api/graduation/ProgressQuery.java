@@ -11,8 +11,9 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
 /**
- * Sem graduação registrada, a faixa conta desde a matrícula e o grau desde "grau concedido em"
- * (ou a matrícula). Treinos no próprio dia da graduação não contam para a próxima; na matrícula, contam.
+ * Sem graduação registrada no app: faixa branca sem grau conta da matrícula; as demais faixas contam
+ * de {@code belt_awarded_at}; o próximo grau conta de {@code degree_awarded_at}. Treinos no próprio dia
+ * da graduação não contam para a próxima; no dia da matrícula, contam.
  */
 @Repository
 class ProgressQuery {
@@ -28,11 +29,33 @@ class ProgressQuery {
 			    order by g.student_id, g.graduated_on desc, g.created_at desc),
 			base as (
 			    select s.id, s.name, s.nickname, s.belt, s.degrees,
-			           coalesce(lb.graduated_on, s.enrollment_date - 1) as belt_after,
-			           coalesce(lb.graduated_on, s.enrollment_date) as belt_since,
+			           case
+			               when lb.graduated_on is not null then lb.graduated_on
+			               when s.belt_awarded_at is not null and not (s.belt = 'branca' and s.degrees = 0)
+			                   then s.belt_awarded_at
+			               else s.enrollment_date - 1
+			           end as belt_after,
+			           case
+			               when lb.graduated_on is not null then lb.graduated_on
+			               when s.belt_awarded_at is not null and not (s.belt = 'branca' and s.degrees = 0)
+			                   then s.belt_awarded_at
+			               else s.enrollment_date
+			           end as belt_since,
 			           coalesce(lb.prior, 0) as belt_prior,
-			           coalesce(la.graduated_on, s.degree_awarded_at, s.enrollment_date - 1) as last_after,
-			           coalesce(la.graduated_on, s.degree_awarded_at, s.enrollment_date) as last_since,
+			           case
+			               when la.graduated_on is not null then la.graduated_on
+			               when s.degrees > 0 and s.degree_awarded_at is not null then s.degree_awarded_at
+			               when s.belt_awarded_at is not null and not (s.belt = 'branca' and s.degrees = 0)
+			                   then s.belt_awarded_at
+			               else s.enrollment_date - 1
+			           end as last_after,
+			           case
+			               when la.graduated_on is not null then la.graduated_on
+			               when s.degrees > 0 and s.degree_awarded_at is not null then s.degree_awarded_at
+			               when s.belt_awarded_at is not null and not (s.belt = 'branca' and s.degrees = 0)
+			                   then s.belt_awarded_at
+			               else s.enrollment_date
+			           end as last_since,
 			           coalesce(la.prior, 0) as last_prior
 			    from students s
 			    left join last_any la on la.student_id = s.id

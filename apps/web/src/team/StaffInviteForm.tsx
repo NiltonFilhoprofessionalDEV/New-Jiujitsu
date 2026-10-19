@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { problemOf } from '@/lib/api'
 import { apiErrorMessage } from '@/lib/apiErrors'
 import { formText } from '@/lib/formText'
 
@@ -13,6 +14,7 @@ export function StaffInviteForm({ isOwner }: { isOwner: boolean }) {
   const { t } = useTranslation()
   const create = useCreateStaffInvite()
   const [created, setCreated] = useState<StaffInvite | null>(null)
+  const nameError = problemOf(create.error).fields?.name
   const roles = isOwner ? INVITABLE_ROLES : INVITABLE_ROLES.filter((r) => r === 'INSTRUCTOR')
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -47,7 +49,9 @@ export function StaffInviteForm({ isOwner }: { isOwner: boolean }) {
         </div>
         <div className="field">
           <label htmlFor="si-name">{t('team.invite.name')}</label>
-          <input id="si-name" name="name" className="input" maxLength={120} />
+          <input id="si-name" name="name" className="input" maxLength={120} autoCapitalize="words"
+            autoComplete="off" placeholder={t('students.form.namePlaceholder')} aria-invalid={Boolean(nameError)} />
+          {nameError && <span className="field-error">{nameError}</span>}
         </div>
         <div className="field span-2">
           <label htmlFor="si-email">{t('team.invite.email')}</label>

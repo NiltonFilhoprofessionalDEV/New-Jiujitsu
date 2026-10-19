@@ -12,6 +12,7 @@ import br.com.academia.api.academy.AcademyRepository;
 import br.com.academia.api.auth.AuthDtos.IssuedSession;
 import br.com.academia.api.auth.AuthService;
 import br.com.academia.api.common.ApiException;
+import br.com.academia.api.common.PersonName;
 import br.com.academia.api.common.CurrentUser;
 import br.com.academia.api.common.RandomTokens;
 import br.com.academia.api.common.TextNormalizer;
@@ -70,8 +71,10 @@ public class StaffInviteService {
 			TeamService.requireOwner(me);
 		}
 		String email = TextNormalizer.blankToNull(request.email());
+		String inviteName = TextNormalizer.blankToNull(request.name());
+		PersonName.rejectPhone(inviteName, "name");
 		StaffInvite invite = invites.save(new StaffInvite(me.academyId(), RandomTokens.urlSafe(), request.role(),
-				TextNormalizer.blankToNull(request.name()), email == null ? null : email.toLowerCase(Locale.ROOT),
+				inviteName, email == null ? null : email.toLowerCase(Locale.ROOT),
 				me.userId(), clock.instant().plus(INVITE_TTL)));
 		return StaffInviteView.of(invite);
 	}

@@ -41,4 +41,23 @@ class PersonNameTest {
 	void nullIsNotAFullName() {
 		assertThat(PersonName.isFull(null)).isFalse();
 	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {
+			"62991948360", "(62) 99200-3654", "62 99194-8360", "Maria 62991948360", "12345" })
+	void phoneIsNotAPersonName(String raw) {
+		assertThat(PersonName.isPhoneLike(raw)).isTrue();
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "Maria Souza", "Joana Silva (mãe)", "Rita", "Ana-Clara" })
+	void realNamesAreNotPhones(String raw) {
+		assertThat(PersonName.isPhoneLike(raw)).isFalse();
+	}
+
+	@Test
+	void blankIsNotPhoneLike() {
+		assertThat(PersonName.isPhoneLike(null)).isFalse();
+		assertThat(PersonName.isPhoneLike("  ")).isFalse();
+	}
 }

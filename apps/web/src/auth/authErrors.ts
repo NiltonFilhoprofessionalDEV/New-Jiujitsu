@@ -12,6 +12,7 @@ const KNOWN_CODES = [
   'INVITE_NOT_AVAILABLE',
   'REGISTRATION_CLOSED',
   'VALIDATION_ERROR',
+  'PERSON_NAME_REQUIRED',
 ]
 
 export function authErrorMessage(t: TFunction, error: unknown): string {

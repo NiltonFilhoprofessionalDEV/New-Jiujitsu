@@ -101,6 +101,7 @@ function RegisterForm({ token }: { token: string }) {
                 type={f.type}
                 className="input"
                 autoComplete={f.autoComplete}
+                placeholder={f.name === 'name' ? t('students.form.namePlaceholder') : undefined}
                 required
                 aria-invalid={Boolean(fieldErrors[f.name])}
               />

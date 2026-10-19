@@ -62,14 +62,35 @@ public class StudentService {
 	/** {@code household} preenchido cadastra o aluno já como dependente daquela família. */
 	@Transactional
 	public StudentDetail create(UUID academyId, StudentRequest request, Household household) {
-		return create(academyId, request, household, null);
+		return saveNew(academyId, request, household, null, true);
 	}
 
-	/** {@code userId} preenchido liga o aluno à conta de login dele (convite aceito ou cadastro aprovado). */
+	/**
+	 * Liga o aluno à conta de login. O cadastro público pode chegar sem a data da faixa; o gestor confirma
+	 * depois, na aprovação ou na ficha.
+	 */
 	@Transactional
 	public StudentDetail create(UUID academyId, StudentRequest request, Household household, UUID userId) {
+		return saveNew(academyId, request, household, userId, false);
+	}
+
+	/** Faixa e datas confirmadas pelo gestor na aprovação da matrícula. */
+	@Transactional
+	public StudentDetail confirmRank(UUID academyId, UUID studentId, String beltSlug, int degrees,
+			LocalDate beltAwardedAt, LocalDate degreeAwardedAt) {
+		Student student = require(academyId, studentId);
+		student.requireTraining();
+		Belt belt = Belt.fromSlug(beltSlug == null || beltSlug.isBlank() ? DEFAULT_BELT : beltSlug);
+		belt.requireValidDegrees(degrees);
+		GraduationDates.RankDates rank = GraduationDates.resolve(belt, degrees, beltAwardedAt, degreeAwardedAt, true);
+		student.confirmRank(belt, degrees, rank.beltAwardedAt(), rank.degreeAwardedAt());
+		return StudentDetail.of(student);
+	}
+
+	private StudentDetail saveNew(UUID academyId, StudentRequest request, Household household, UUID userId,
+			boolean requireGraduationDates) {
 		Student student = new Student(academyId);
-		student.apply(normalize(academyId, request, null));
+		student.apply(normalize(academyId, request, null, requireGraduationDates));
 		student.setHousehold(household);
 		student.linkUser(userId);
 		students.save(student);
@@ -88,7 +109,7 @@ public class StudentService {
 		Student student = require(academyId, id);
 		String giSize = student.getGiSize();
 		String beltSize = student.getBeltSize();
-		student.apply(normalize(academyId, request, id));
+		student.apply(normalize(academyId, request, id, true));
 		student.keepEquipmentSizes(giSize, beltSize);
 		return StudentDetail.of(student);
 	}
@@ -116,7 +137,7 @@ public class StudentService {
 		return students.count(StudentSpecs.matching(academyId, filter, today()));
 	}
 
-	private StudentData normalize(UUID academyId, StudentRequest r, UUID exceptId) {
+	private StudentData normalize(UUID academyId, StudentRequest r, UUID exceptId, boolean requireGraduationDates) {
 		StudentRules.Person person = StudentRules.person(r.kind(),
 				new StudentRules.PersonInput(r.name(), r.phone(), r.emergencyContact(), r.emergencyPhone()));
 		String email = r.email() == null || r.email().isBlank() ? null : r.email().trim().toLowerCase(Locale.ROOT);
@@ -130,6 +151,8 @@ public class StudentService {
 			degrees = r.degrees() == null ? belt.minDegrees() : r.degrees();
 			belt.requireValidDegrees(degrees);
 		}
+		GraduationDates.RankDates rank = GraduationDates.resolve(belt, degrees, r.beltAwardedAt(), r.degreeAwardedAt(),
+				requireGraduationDates && training);
 		return new StudentData(
 				r.kind(),
 				person.name(),
@@ -143,7 +166,8 @@ public class StudentService {
 				r.gender(),
 				belt,
 				degrees,
-				training ? r.degreeAwardedAt() : null,
+				training ? rank.degreeAwardedAt() : null,
+				training ? rank.beltAwardedAt() : null,
 				r.beltRuler() == null ? BeltRuler.AUTO : r.beltRuler(),
 				r.enrollmentDate() == null ? today() : r.enrollmentDate(),
 				training ? TextNormalizer.blankToNull(r.giSize()) : null,

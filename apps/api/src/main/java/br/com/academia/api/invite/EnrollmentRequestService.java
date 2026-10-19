@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import br.com.academia.api.common.ApiException;
 import br.com.academia.api.invite.EnrollmentRequest.Status;
+import br.com.academia.api.invite.InviteDtos.ApproveEnrollmentRequest;
 import br.com.academia.api.invite.InviteDtos.EnrollmentRequestView;
 import br.com.academia.api.invite.InviteDtos.PendingCount;
 import br.com.academia.api.membership.Membership;
@@ -47,12 +48,14 @@ public class EnrollmentRequestService {
 
 	/** Cria o aluno ligado à conta e libera o login. */
 	@Transactional
-	public StudentDetail approve(UUID academyId, UUID id, UUID decidedBy) {
+	public StudentDetail approve(UUID academyId, UUID id, UUID decidedBy, ApproveEnrollmentRequest body) {
 		EnrollmentRequest request = requirePending(academyId, id);
 		Membership membership = memberships.findById(request.getMembershipId())
 				.orElseThrow(() -> ApiException.conflict("REQUEST_ALREADY_DECIDED", "Esta solicitação já foi resolvida"));
-		StudentDetail student = students.create(academyId, request.toSignupData().toStudentRequest(Kind.TRAINING),
+		StudentDetail created = students.create(academyId, request.toSignupData().toStudentRequest(Kind.TRAINING),
 				null, request.getUserId());
+		StudentDetail student = students.confirmRank(academyId, created.id(), body.belt(), body.degrees(),
+				body.beltAwardedAt(), body.degreeAwardedAt());
 		membership.activate();
 		request.approve(student.id(), decidedBy, clock.instant());
 		return student;

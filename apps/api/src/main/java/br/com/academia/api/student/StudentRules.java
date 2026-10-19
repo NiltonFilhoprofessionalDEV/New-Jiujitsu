@@ -36,7 +36,9 @@ public final class StudentRules {
 		String emergencyPhone = TextNormalizer.blankToNull(in.emergencyPhone());
 
 		List<FieldError> errors = new ArrayList<>();
-		if (!PersonName.isFull(name)) {
+		if (PersonName.isPhoneLike(name)) {
+			errors.add(PersonName.phoneInName("name"));
+		} else if (!PersonName.isFull(name)) {
 			errors.add(new FieldError("name", "FULL_NAME_REQUIRED", "Informe nome e sobrenome"));
 		}
 		if (phone != null && !Phone.isValid(phone)) {
@@ -46,6 +48,8 @@ public final class StudentRules {
 		if (emergencyRequired && contact == null) {
 			errors.add(new FieldError("emergencyContact", "EMERGENCY_CONTACT_REQUIRED",
 					"Informe o nome do contato de emergência"));
+		} else if (contact != null && PersonName.isPhoneLike(contact)) {
+			errors.add(PersonName.phoneInName("emergencyContact"));
 		}
 		if (emergencyRequired && emergencyPhone == null) {
 			errors.add(new FieldError("emergencyPhone", "EMERGENCY_PHONE_REQUIRED", "Informe um telefone de emergência"));

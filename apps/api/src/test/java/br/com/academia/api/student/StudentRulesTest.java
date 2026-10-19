@@ -54,6 +54,30 @@ class StudentRulesTest {
 	}
 
 	@Test
+	void rejectsPhoneTypedAsEmergencyContact() {
+		assertThatThrownBy(() -> StudentRules.person(Kind.TRAINING,
+				new PersonInput("Ana Souza", null, "62991948360", "(62) 99200-3654")))
+				.isInstanceOf(ApiException.class)
+				.satisfies(e -> {
+					ApiException ex = (ApiException) e;
+					assertThat(ex.code()).isEqualTo("PERSON_NAME_REQUIRED");
+					assertThat(ex.fields()).containsOnlyKeys("emergencyContact");
+				});
+	}
+
+	@Test
+	void rejectsPhoneTypedAsStudentName() {
+		assertThatThrownBy(() -> StudentRules.person(Kind.RESPONSIBLE,
+				new PersonInput("62 99194-8360", null, null, null)))
+				.isInstanceOf(ApiException.class)
+				.satisfies(e -> {
+					ApiException ex = (ApiException) e;
+					assertThat(ex.code()).isEqualTo("PERSON_NAME_REQUIRED");
+					assertThat(ex.fields()).containsOnlyKeys("name");
+				});
+	}
+
+	@Test
 	void invalidEmergencyPhoneIsReportedOnItsField() {
 		assertThatThrownBy(() -> StudentRules.person(Kind.RESPONSIBLE, new PersonInput("Ana Souza", null, "Rita", "9999")))
 				.isInstanceOf(ApiException.class)

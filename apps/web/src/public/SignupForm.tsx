@@ -58,7 +58,8 @@ export function SignupForm({ kind, fixedEmail, initialName, submitLabel, pending
       <div className="field span-2">
         <label htmlFor="su-name">{t('signup.name')}</label>
         <input id="su-name" name="name" className="input" required maxLength={120} autoComplete="name"
-          autoCapitalize="words" defaultValue={initialName ?? ''} aria-invalid={Boolean(fieldErrors.name)} />
+          autoCapitalize="words" placeholder={t('students.form.namePlaceholder')} defaultValue={initialName ?? ''}
+          aria-invalid={Boolean(fieldErrors.name)} />
         {fieldError('name') ?? <span className="hint">{t('students.form.nameHint')}</span>}
       </div>
       {training && (
@@ -93,18 +94,21 @@ export function SignupForm({ kind, fixedEmail, initialName, submitLabel, pending
       </div>
       {training && (
         <>
-          <div className="field">
-            <label htmlFor="su-emergency-contact">{t('students.form.emergencyContact', { context: kind })}</label>
-            <input id="su-emergency-contact" name="emergencyContact" className="input" required maxLength={120}
-              autoCapitalize="words" aria-invalid={Boolean(fieldErrors.emergencyContact)} />
-            {fieldError('emergencyContact') ?? <span className="hint">{t('students.form.emergencyContactHint')}</span>}
-          </div>
-          <div className="field">
-            <label htmlFor="su-emergency">{t('students.form.emergencyPhone', { context: kind })}</label>
-            <MaskedInput id="su-emergency" name="emergencyPhone" type="tel" className="input" mask={maskPhone}
-              required maxLength={15} placeholder="(11) 99999-9999" autoComplete="tel"
-              aria-invalid={Boolean(fieldErrors.emergencyPhone)} />
-            {fieldError('emergencyPhone')}
+          <div className="field-pair">
+            <div className="field">
+              <label htmlFor="su-emergency-contact">{t('students.form.emergencyContact', { context: kind })}</label>
+              <input id="su-emergency-contact" name="emergencyContact" className="input" required maxLength={120}
+                autoCapitalize="words" autoComplete="off" placeholder={t('students.form.emergencyContactPlaceholder')}
+                aria-invalid={Boolean(fieldErrors.emergencyContact)} />
+              {fieldError('emergencyContact') ?? <span className="hint">{t('students.form.emergencyContactHint')}</span>}
+            </div>
+            <div className="field">
+              <label htmlFor="su-emergency">{t('students.form.emergencyPhone', { context: kind })}</label>
+              <MaskedInput id="su-emergency" name="emergencyPhone" type="tel" className="input" mask={maskPhone}
+                required maxLength={15} placeholder="(11) 99999-9999" autoComplete="tel"
+                aria-invalid={Boolean(fieldErrors.emergencyPhone)} />
+              {fieldError('emergencyPhone')}
+            </div>
           </div>
         </>
       )}

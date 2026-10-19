@@ -41,6 +41,7 @@ function useFactGroups(student: StudentDetail): Group[] {
       title: t('students.facts.training'),
       facts: training
         ? [
+            { label: t('students.form.beltAwardedAt'), value: student.beltAwardedAt && formatDate(student.beltAwardedAt) },
             { label: t('students.form.degreeAwardedAt'), value: student.degreeAwardedAt && formatDate(student.degreeAwardedAt) },
             { label: t('students.form.beltRuler'),
               value: student.beltRuler !== 'AUTO' && t(`students.ruler.${student.beltRuler}`) },

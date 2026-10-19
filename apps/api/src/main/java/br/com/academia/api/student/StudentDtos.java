@@ -39,6 +39,7 @@ public final class StudentDtos {
 			@Size(max = 30) String belt,
 			@Min(0) @Max(10) Integer degrees,
 			@PastOrPresent LocalDate degreeAwardedAt,
+			@PastOrPresent LocalDate beltAwardedAt,
 			BeltRuler beltRuler,
 			@PastOrPresent LocalDate enrollmentDate,
 			@Size(max = 20) String giSize,
@@ -93,6 +94,7 @@ public final class StudentDtos {
 			String belt,
 			int degrees,
 			LocalDate degreeAwardedAt,
+			LocalDate beltAwardedAt,
 			BeltRuler beltRuler,
 			LocalDate enrollmentDate,
 			String giSize,
@@ -105,7 +107,8 @@ public final class StudentDtos {
 		static StudentDetail of(Student s) {
 			return new StudentDetail(s.getId(), s.getKind(), s.getStatus(), s.getName(), s.getNickname(),
 					s.getEmail(), s.getCpf(), s.getPhone(), s.getEmergencyContact(), s.getEmergencyPhone(),
-					s.getBirthDate(), s.getGender(), beltSlug(s), s.getDegrees(), s.getDegreeAwardedAt(), s.getBeltRuler(), s.getEnrollmentDate(),
+					s.getBirthDate(), s.getGender(), beltSlug(s), s.getDegrees(), s.getDegreeAwardedAt(),
+					s.getBeltAwardedAt(), s.getBeltRuler(), s.getEnrollmentDate(),
 					s.getGiSize(), s.getBeltSize(), HouseholdRef.of(s.getHousehold()), isResponsible(s),
 					s.getUserId() != null, s.getCreatedAt());
 		}

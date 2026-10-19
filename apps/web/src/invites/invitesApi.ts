@@ -4,7 +4,7 @@ import { api } from '@/lib/api'
 import { STUDENTS } from '@/students/studentsApi'
 import type { StudentDetail } from '@/students/types'
 
-import type { CreateInviteInput, EnrollmentLink, EnrollmentRequestItem, Invite, InviteTab } from './types'
+import type { ApproveRank, CreateInviteInput, EnrollmentLink, EnrollmentRequestItem, Invite, InviteTab } from './types'
 
 const LINK = 'enrollment-link'
 const INVITES = 'invites'
@@ -76,8 +76,8 @@ export function usePendingRequestCount(enabled: boolean) {
 export function useDecideRequest() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async ({ id, approve }: { id: string; approve: boolean }) => {
-      if (approve) return (await api.post<StudentDetail>(`/requests/enrollments/${id}/approve`)).data
+    mutationFn: async ({ id, approve, rank }: { id: string; approve: boolean; rank?: ApproveRank }) => {
+      if (approve) return (await api.post<StudentDetail>(`/requests/enrollments/${id}/approve`, rank)).data
       await api.post(`/requests/enrollments/${id}/reject`)
       return null
     },

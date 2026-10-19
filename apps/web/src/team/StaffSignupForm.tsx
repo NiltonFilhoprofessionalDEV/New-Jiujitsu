@@ -39,7 +39,8 @@ export function StaffSignupForm({ info, pending, error, onSubmit }: Props) {
       <div className="field span-2">
         <label htmlFor="ss-name">{t('signup.name')}</label>
         <input id="ss-name" name="name" className="input" required maxLength={120} autoComplete="name"
-          defaultValue={info.name ?? ''} aria-invalid={Boolean(fieldErrors.name)} />
+          autoCapitalize="words" placeholder={t('students.form.namePlaceholder')} defaultValue={info.name ?? ''}
+          aria-invalid={Boolean(fieldErrors.name)} />
         {fieldError('name')}
       </div>
       <div className="field span-2">

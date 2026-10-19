@@ -16,6 +16,7 @@ import br.com.academia.api.auth.AuthDtos.RegisterAcademyRequest;
 import br.com.academia.api.auth.AuthDtos.SessionResponse;
 import br.com.academia.api.auth.AuthDtos.UserSummary;
 import br.com.academia.api.common.ApiException;
+import br.com.academia.api.common.PersonName;
 import br.com.academia.api.config.AppProperties;
 import br.com.academia.api.membership.Membership;
 import br.com.academia.api.membership.MembershipRepository;
@@ -72,6 +73,7 @@ public class AuthService {
 	@Transactional
 	public User createUser(String name, String email, String rawPassword) {
 		String normalized = normalizeEmail(email);
+		PersonName.rejectPhone(name, "name");
 		if (users.existsByEmailIgnoreCase(normalized)) {
 			throw ApiException.conflict("EMAIL_IN_USE", "Este e-mail já tem cadastro. Entre com sua senha.");
 		}

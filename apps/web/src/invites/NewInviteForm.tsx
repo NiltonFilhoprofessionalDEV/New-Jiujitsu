@@ -3,6 +3,7 @@ import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CopyButton } from '@/components/CopyButton'
+import { problemOf } from '@/lib/api'
 import { apiErrorMessage } from '@/lib/apiErrors'
 import { formText } from '@/lib/formText'
 import { MaskedInput } from '@/components/MaskedInput'
@@ -17,6 +18,7 @@ export function NewInviteForm() {
   const { t } = useTranslation()
   const create = useCreateInvite()
   const [created, setCreated] = useState<Invite | null>(null)
+  const nameError = problemOf(create.error).fields?.name
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -41,7 +43,9 @@ export function NewInviteForm() {
       <form className="form-grid" onSubmit={(e) => void onSubmit(e).catch(() => undefined)}>
         <div className="field span-2">
           <label htmlFor="inv-name">{t('invites.form.name')}</label>
-          <input id="inv-name" name="name" className="input" maxLength={120} />
+          <input id="inv-name" name="name" className="input" maxLength={120} autoCapitalize="words"
+            autoComplete="off" placeholder={t('students.form.namePlaceholder')} aria-invalid={Boolean(nameError)} />
+          {nameError && <span className="field-error">{nameError}</span>}
         </div>
         <div className="field">
           <label htmlFor="inv-email">{t('invites.form.email')}</label>

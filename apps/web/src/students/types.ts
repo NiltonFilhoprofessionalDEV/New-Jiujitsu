@@ -32,6 +32,7 @@ export type StudentDetail = StudentListItem & {
   cpf: string | null
   gender: Gender | null
   degreeAwardedAt: string | null
+  beltAwardedAt: string | null
   beltRuler: BeltRuler
   giSize: string | null
   beltSize: string | null
@@ -52,6 +53,7 @@ export type StudentRequest = {
   belt: string | null
   degrees: number | null
   degreeAwardedAt: string | null
+  beltAwardedAt: string | null
   beltRuler: BeltRuler
   enrollmentDate: string | null
   giSize: string | null

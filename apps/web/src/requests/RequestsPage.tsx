@@ -6,11 +6,13 @@ import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { DataItem } from '@/components/DataItem'
 import { PageHeader } from '@/components/PageHeader'
 import { useDecideRequest, useEnrollmentRequests } from '@/invites/invitesApi'
-import type { EnrollmentRequestItem } from '@/invites/types'
+import type { ApproveRank, EnrollmentRequestItem } from '@/invites/types'
 import { apiErrorMessage } from '@/lib/apiErrors'
 import { initials } from '@/lib/text'
 import { BeltBadge } from '@/students/BeltBadge'
 import { formatCpf, formatDate } from '@/students/format'
+
+import { ApproveRequestDialog } from './ApproveRequestDialog'
 
 type Approved = { studentId: string; name: string }
 
@@ -19,12 +21,18 @@ export function RequestsPage() {
   const { data: requests, isLoading, isError } = useEnrollmentRequests()
   const decide = useDecideRequest()
   const [rejecting, setRejecting] = useState<EnrollmentRequestItem | null>(null)
+  const [approving, setApproving] = useState<EnrollmentRequestItem | null>(null)
   const [approved, setApproved] = useState<Approved | null>(null)
 
-  function approve(request: EnrollmentRequestItem) {
+  function approve(rank: ApproveRank) {
+    if (!approving) return
     decide.mutate(
-      { id: request.id, approve: true },
-      { onSuccess: (student) => student && setApproved({ studentId: student.id, name: student.name }) },
+      { id: approving.id, approve: true, rank },
+      { onSuccess: (student) => {
+        if (!student) return
+        setApproving(null)
+        setApproved({ studentId: student.id, name: student.name })
+      } },
     )
   }
 
@@ -44,7 +52,7 @@ export function RequestsPage() {
             <Link className="link-btn" to={`/alunos?id=${approved.studentId}`}>{t('requests.seeStudent')}</Link>
           </div>
         )}
-        {decide.error && !rejecting && (
+        {decide.error && !rejecting && !approving && (
           <div className="alert alert-error" role="alert">{apiErrorMessage(t, decide.error)}</div>
         )}
         {isLoading && <p className="empty">{t('common.loading')}</p>}
@@ -53,10 +61,16 @@ export function RequestsPage() {
         <div className="request-list">
           {requests?.map((request) => (
             <RequestCard key={request.id} request={request} busy={decide.isPending}
-              onApprove={() => approve(request)} onReject={() => setRejecting(request)} />
+              onApprove={() => { decide.reset(); setApproving(request) }} onReject={() => setRejecting(request)} />
           ))}
         </div>
       </div>
+
+      {approving && (
+        <ApproveRequestDialog request={approving} pending={decide.isPending}
+          error={decide.error ? apiErrorMessage(t, decide.error) : null}
+          onClose={() => { setApproving(null); decide.reset() }} onConfirm={approve} />
+      )}
 
       <ConfirmDialog
         open={rejecting !== null}
