@@ -34,6 +34,8 @@ export type TodayClass = Omit<ScheduledClass, 'weekdays'> & {
   opensAt: string
   closesAt: string
   open: boolean
+  /** Sessão avulsa aberta pelo professor fora da grade. */
+  extra: boolean
 }
 
 export type Overview = {

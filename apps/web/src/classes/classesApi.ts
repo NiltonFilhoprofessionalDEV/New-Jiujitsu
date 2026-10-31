@@ -105,3 +105,16 @@ export function useSaveAttendance(classId: string, date: string) {
     },
   })
 }
+
+/** Abre a chamada de uma turma num dia fora da grade (aula extra). */
+export function useOpenExtraSession(date: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (classId: string) =>
+      (await api.post<AttendanceSession>(`/attendance/classes/${classId}/sessions/${date}/extra`)).data,
+    onSuccess: async (session, classId) => {
+      queryClient.setQueryData(sessionKey(classId, date), session)
+      await queryClient.invalidateQueries({ queryKey: [ATTENDANCE, 'day', date] })
+    },
+  })
+}

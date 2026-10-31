@@ -28,6 +28,10 @@ public class ClassSession {
 	@Column(name = "session_date", nullable = false, updatable = false)
 	private LocalDate sessionDate;
 
+	/** Fora da grade semanal: criada pelo professor como aula extra. */
+	@Column(nullable = false, updatable = false)
+	private boolean extra;
+
 	private String notes;
 
 	@Column(name = "created_at", nullable = false, updatable = false)
@@ -62,5 +66,9 @@ public class ClassSession {
 
 	public String getNotes() {
 		return notes;
+	}
+
+	public boolean isExtra() {
+		return extra;
 	}
 }

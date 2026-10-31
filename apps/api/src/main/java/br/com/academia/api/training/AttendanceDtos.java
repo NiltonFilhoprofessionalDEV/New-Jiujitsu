@@ -27,7 +27,8 @@ public final class AttendanceDtos {
 			String location,
 			StaffRef instructor,
 			long enrolled,
-			long present) {
+			long present,
+			boolean extra) {
 	}
 
 	/** {@code enrolled = false} indica aluno avulso: marcado nesta data sem estar inscrito na turma. */
@@ -43,6 +44,7 @@ public final class AttendanceDtos {
 			StaffRef instructor,
 			String notes,
 			boolean canMark,
+			boolean extra,
 			List<RosterEntry> roster) {
 	}
 

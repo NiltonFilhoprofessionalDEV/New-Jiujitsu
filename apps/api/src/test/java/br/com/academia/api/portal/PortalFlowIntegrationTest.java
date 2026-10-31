@@ -112,6 +112,30 @@ class PortalFlowIntegrationTest {
 	}
 
 	@Test
+	void studentChecksInOnExtraClassOpenedByStaff() throws Exception {
+		String student = acceptInvite("TRAINING");
+		String studentId = read(mvc.perform(auth(get(CTX + "/portal/profiles"), student)).andReturn(), "$[0].id");
+		// Quinta (4): fora da grade de hoje (quarta).
+		String thursday = createClass("Reposição", "[4]", "19:00", "20:30");
+		mvc.perform(authJson(post(CTX + "/classes/" + thursday + "/students"), owner,
+				"{\"studentId\":\"" + studentId + "\"}")).andExpect(status().isOk());
+
+		String base = CTX + "/portal/students/" + studentId;
+		mvc.perform(auth(get(base + "/today"), student)).andExpect(jsonPath("$", hasSize(0)));
+		mvc.perform(auth(post(CTX + "/attendance/classes/" + thursday + "/sessions/" + TODAY + "/extra"), owner))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.extra").value(true));
+		mvc.perform(auth(get(base + "/today"), student))
+				.andExpect(jsonPath("$", hasSize(1)))
+				.andExpect(jsonPath("$[0].title").value("Reposição"))
+				.andExpect(jsonPath("$[0].extra").value(true))
+				.andExpect(jsonPath("$[0].open").value(true));
+		mvc.perform(auth(post(base + "/check-ins/" + thursday), student))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[0].checkedIn").value(true));
+	}
+
+	@Test
 	void responsibleSeesDependentsButNobodyElse() throws Exception {
 		String responsible = acceptInvite("RESPONSIBLE");
 		String responsibleId = read(mvc.perform(auth(get(CTX + "/portal/profiles"), responsible)).andReturn(),

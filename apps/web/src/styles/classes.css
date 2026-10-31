@@ -213,6 +213,30 @@ textarea.input {
   margin: 0;
 }
 
+.day-classes-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.day-classes-head .section-title {
+  margin: 0;
+}
+
+.create-extra-btn {
+  flex-shrink: 0;
+}
+
+.extra-class-options {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .day-class {
   display: grid;
   justify-items: start;
@@ -221,6 +245,13 @@ textarea.input {
   padding: 14px 16px;
   text-align: left;
   cursor: pointer;
+}
+
+.day-class .row-title {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
 }
 
 .day-class:hover {
@@ -239,6 +270,10 @@ textarea.input {
 }
 
 .attendance-header h3 {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
   margin: 0 0 2px;
   font-size: 20px;
 }

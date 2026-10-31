@@ -63,6 +63,7 @@ function TodayRow({ item, busy, onToggle }: RowProps) {
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2 font-semibold">
           {item.title}
+          {item.extra && <Badge variant="outline">{t('account.today.extra')}</Badge>}
           {!item.enrolled && <Badge variant="outline">{t('account.today.walkIn')}</Badge>}
         </div>
         {details.length > 0 && <div className="mt-0.5 text-[13px] text-muted-foreground">{details.join(' · ')}</div>}
