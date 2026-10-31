@@ -50,6 +50,8 @@ export type DayClass = {
   instructor: StaffRef | null
   enrolled: number
   present: number
+  /** Fora da grade semanal: aberta pelo professor neste dia. */
+  extra: boolean
 }
 
 export type RosterEntry = { student: ClassStudent; enrolled: boolean; present: boolean }
@@ -63,6 +65,7 @@ export type AttendanceSession = {
   instructor: StaffRef | null
   notes: string | null
   canMark: boolean
+  extra: boolean
   roster: RosterEntry[]
 }
 

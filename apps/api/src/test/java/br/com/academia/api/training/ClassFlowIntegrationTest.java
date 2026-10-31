@@ -162,6 +162,33 @@ class ClassFlowIntegrationTest {
 				.andExpect(jsonPath("$", hasSize(0)));
 	}
 
+	@Test
+	void opensExtraSessionOutsideSchedule() throws Exception {
+		String classId = createClass("[" + today.getDayOfWeek().getValue() + "]", null);
+		String ana = createStudent("TRAINING", "Ana Lima");
+		enroll(classId, ana).andExpect(status().isOk());
+		LocalDate offDay = today.plusDays(1);
+		String sessions = CTX + "/attendance/classes/" + classId + "/sessions/" + offDay;
+		String extra = sessions + "/extra";
+
+		mvc.perform(auth(post(extra), owner))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.extra").value(true))
+				.andExpect(jsonPath("$.roster", hasSize(1)))
+				.andExpect(jsonPath("$.roster[0].present").value(false));
+		mvc.perform(auth(get(CTX + "/attendance/day?date=" + offDay), owner))
+				.andExpect(jsonPath("$", hasSize(1)))
+				.andExpect(jsonPath("$[0].extra").value(true))
+				.andExpect(jsonPath("$[0].classId").value(classId));
+		mvc.perform(authJson(put(sessions), owner, saveBody("Reposição", ana)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.extra").value(true))
+				.andExpect(jsonPath("$.roster[0].present").value(true));
+		mvc.perform(auth(post(CTX + "/attendance/classes/" + classId + "/sessions/" + today + "/extra"), owner))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.code").value("CLASS_ALREADY_ON_DATE"));
+	}
+
 	private String createClass(String weekdays, Integer capacity) throws Exception {
 		return read(mvc.perform(authJson(post(CTX + "/classes"), owner,
 				classBody("Turma", weekdays, "19:00", null, null, capacity)))

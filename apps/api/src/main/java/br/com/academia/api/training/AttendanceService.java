@@ -4,6 +4,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +56,10 @@ public class AttendanceService {
 
 	@Transactional(readOnly = true)
 	public List<DayClass> day(UUID academyId, LocalDate date) {
-		List<TrainingClass> ofDay = classes.findActive(academyId).stream().filter(c -> c.occursOn(date)).toList();
+		Set<UUID> extras = new HashSet<>(sessions.findExtraClassIds(academyId, date));
+		List<TrainingClass> ofDay = classes.findActive(academyId).stream()
+				.filter(c -> c.occursOn(date) || extras.contains(c.getId()))
+				.toList();
 		if (ofDay.isEmpty()) {
 			return List.of();
 		}
@@ -64,25 +68,40 @@ public class AttendanceService {
 		Map<UUID, String> names = staff.namesById(academyId);
 		return ofDay.stream().map(c -> new DayClass(c.getId(), c.getTitle(), c.getStartTime(), c.getEndTime(),
 				c.getLocation(), ClassService.instructorOf(c, names), enrolled.getOrDefault(c.getId(), 0L),
-				present.getOrDefault(c.getId(), 0L))).toList();
+				present.getOrDefault(c.getId(), 0L), extras.contains(c.getId()) && !c.occursOn(date))).toList();
 	}
 
 	@Transactional(readOnly = true)
 	public SessionView session(UUID academyId, UUID classId, LocalDate date) {
-		TrainingClass trainingClass = requireOn(academyId, classId, date);
+		TrainingClass trainingClass = requireAccessible(academyId, classId, date);
+		return view(academyId, trainingClass, date);
+	}
+
+	/** Abre a chamada de uma turma num dia fora da grade (aula extra). */
+	@Transactional
+	public SessionView openExtra(UUID academyId, UUID classId, LocalDate date) {
+		TrainingClass trainingClass = classService.require(academyId, classId);
+		if (trainingClass.occursOn(date)) {
+			throw ApiException.badRequest("CLASS_ALREADY_ON_DATE", "Esta aula já acontece neste dia");
+		}
+		sessions.insertExtraIfAbsent(academyId, classId, date);
 		return view(academyId, trainingClass, date);
 	}
 
 	@Transactional
 	public SessionView save(UUID academyId, UUID markedBy, UUID classId, LocalDate date, SaveSessionRequest request) {
-		TrainingClass trainingClass = requireOn(academyId, classId, date);
+		TrainingClass trainingClass = requireAccessible(academyId, classId, date);
 		Set<UUID> present = new LinkedHashSet<>(request.presentStudentIds());
 		if (!present.isEmpty() && date.isAfter(LocalDate.now(clock))) {
 			throw ApiException.badRequest("ATTENDANCE_IN_FUTURE", "Só é possível marcar presença até hoje");
 		}
 		requireTrainingStudents(academyId, present);
 
-		sessions.insertIfAbsent(academyId, classId, date);
+		if (trainingClass.occursOn(date)) {
+			sessions.insertIfAbsent(academyId, classId, date);
+		} else {
+			sessions.insertExtraIfAbsent(academyId, classId, date);
+		}
 		ClassSession session = sessions.findByClassIdAndSessionDate(classId, date).orElseThrow();
 		session.setNotes(request.notes());
 
@@ -96,12 +115,17 @@ public class AttendanceService {
 		return view(academyId, trainingClass, date);
 	}
 
-	private TrainingClass requireOn(UUID academyId, UUID classId, LocalDate date) {
+	/** Grade do dia ou sessão extra já aberta pelo professor. */
+	private TrainingClass requireAccessible(UUID academyId, UUID classId, LocalDate date) {
 		TrainingClass trainingClass = classService.require(academyId, classId);
-		if (!trainingClass.occursOn(date)) {
-			throw ApiException.badRequest("CLASS_NOT_ON_DATE", "Esta aula não acontece nesta data");
+		if (trainingClass.occursOn(date)) {
+			return trainingClass;
 		}
-		return trainingClass;
+		ClassSession session = sessions.findByClassIdAndSessionDate(classId, date).orElse(null);
+		if (session != null && session.isExtra()) {
+			return trainingClass;
+		}
+		throw ApiException.badRequest("CLASS_NOT_ON_DATE", "Esta aula não acontece nesta data");
 	}
 
 	private void requireTrainingStudents(UUID academyId, Set<UUID> ids) {
@@ -119,6 +143,7 @@ public class AttendanceService {
 	private SessionView view(UUID academyId, TrainingClass c, LocalDate date) {
 		ClassSession session = sessions.findByClassIdAndSessionDate(c.getId(), date).orElse(null);
 		Set<UUID> presentIds = session == null ? Set.of() : Set.copyOf(checkIns.findStudentIds(session.getId()));
+		boolean extra = session != null && session.isExtra();
 
 		List<RosterEntry> roster = new ArrayList<>();
 		Set<UUID> listed = new LinkedHashSet<>();
@@ -137,7 +162,7 @@ public class AttendanceService {
 
 		return new SessionView(c.getId(), c.getTitle(), date, c.getStartTime(), c.getEndTime(),
 				ClassService.instructorOf(c, staff.namesById(academyId)), session == null ? null : session.getNotes(),
-				!date.isAfter(LocalDate.now(clock)), roster);
+				!date.isAfter(LocalDate.now(clock)), extra, roster);
 	}
 
 	private static Map<UUID, Long> toMap(List<ClassCount> counts) {

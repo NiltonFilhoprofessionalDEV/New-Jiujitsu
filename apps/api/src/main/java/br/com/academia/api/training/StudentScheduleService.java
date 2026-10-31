@@ -72,11 +72,14 @@ public class StudentScheduleService {
 	@Transactional(readOnly = true)
 	public List<TodayClass> today(Student student, UUID myMembershipId) {
 		LocalDateTime now = LocalDateTime.now(clock);
+		LocalDate today = now.toLocalDate();
 		Set<UUID> enrolled = Set.copyOf(enrollments.findClassIds(student.getId()));
+		Set<UUID> extras = Set.copyOf(sessions.findExtraClassIds(student.getAcademyId(), today));
 		Map<UUID, String> names = staff.namesById(student.getAcademyId());
 		return classes.findActive(student.getAcademyId()).stream()
-				.filter(c -> c.occursOn(now.toLocalDate()))
-				.map(c -> todayView(c, student, enrolled.contains(c.getId()), myMembershipId, names, now))
+				.filter(c -> c.occursOn(today) || extras.contains(c.getId()))
+				.map(c -> todayView(c, student, enrolled.contains(c.getId()), extras.contains(c.getId()),
+						myMembershipId, names, now))
 				.sorted((a, b) -> Boolean.compare(b.enrolled(), a.enrolled()))
 				.toList();
 	}
@@ -86,7 +89,10 @@ public class StudentScheduleService {
 		requireCanTrain(student);
 		TrainingClass c = requireOpenNow(student, classId);
 		LocalDate today = LocalDate.now(clock);
-		sessions.insertIfAbsent(student.getAcademyId(), c.getId(), today);
+		ClassSession existing = sessions.findByClassIdAndSessionDate(c.getId(), today).orElse(null);
+		if (existing == null) {
+			sessions.insertIfAbsent(student.getAcademyId(), c.getId(), today);
+		}
 		ClassSession session = sessions.findByClassIdAndSessionDate(c.getId(), today).orElseThrow();
 		checkIns.insertIfAbsent(session.getId(), student.getId(), myMembershipId);
 	}
@@ -104,7 +110,7 @@ public class StudentScheduleService {
 				});
 	}
 
-	private TodayClass todayView(TrainingClass c, Student student, boolean enrolled, UUID me,
+	private TodayClass todayView(TrainingClass c, Student student, boolean enrolled, boolean extra, UUID me,
 			Map<UUID, String> names, LocalDateTime now) {
 		LocalDateTime opens = opensAt(c, now.toLocalDate());
 		LocalDateTime closes = closesAt(c, now.toLocalDate());
@@ -114,18 +120,23 @@ public class StudentScheduleService {
 		return new TodayClass(c.getId(), c.getTitle(), c.getStartTime(), c.getEndTime(), c.getLocation(),
 				ClassService.instructorOf(c, names), enrolled, checkIn.isPresent(),
 				checkIn.map(ci -> me.equals(ci.getMarkedBy())).orElse(false), opens.toLocalTime(),
-				closes.toLocalTime(), open);
+				closes.toLocalTime(), open, extra && !c.occursOn(now.toLocalDate()));
 	}
 
 	private TrainingClass requireOpenNow(Student student, UUID classId) {
 		LocalDateTime now = LocalDateTime.now(clock);
+		LocalDate today = now.toLocalDate();
 		TrainingClass c = classes.findActiveInAcademy(classId, student.getAcademyId())
-				.filter(found -> found.occursOn(now.toLocalDate()))
+				.filter(found -> found.occursOn(today) || isExtraToday(found.getId(), today))
 				.orElseThrow(() -> ApiException.notFound("CLASS_NOT_TODAY", "Esta aula não acontece hoje"));
-		if (now.isBefore(opensAt(c, now.toLocalDate())) || now.isAfter(closesAt(c, now.toLocalDate()))) {
+		if (now.isBefore(opensAt(c, today)) || now.isAfter(closesAt(c, today))) {
 			throw ApiException.badRequest("CHECK_IN_CLOSED", "O check-in abre 1 hora antes da aula e fecha no fim dela");
 		}
 		return c;
+	}
+
+	private boolean isExtraToday(UUID classId, LocalDate today) {
+		return sessions.findByClassIdAndSessionDate(classId, today).map(ClassSession::isExtra).orElse(false);
 	}
 
 	private static void requireCanTrain(Student student) {

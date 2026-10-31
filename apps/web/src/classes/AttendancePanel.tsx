@@ -16,7 +16,10 @@ export function AttendancePanel({ classId, date, onSaved }: Props) {
   return (
     <section className="stack" aria-labelledby="attendance-title">
       <header className="attendance-header">
-        <h3 id="attendance-title">{session.title}</h3>
+        <h3 id="attendance-title">
+          {session.title}
+          {session.extra && <span className="pill pill-outline">{t('attendance.extra')}</span>}
+        </h3>
         <p className="row-sub">
           {timeRange(session.startTime, session.endTime)}
           {' · '}

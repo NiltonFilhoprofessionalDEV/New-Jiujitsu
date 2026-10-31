@@ -39,7 +39,8 @@ public final class ScheduleDtos {
 			boolean canUndo,
 			LocalTime opensAt,
 			LocalTime closesAt,
-			boolean open) {
+			boolean open,
+			boolean extra) {
 	}
 
 	public record AttendanceItem(LocalDate date, String title) {

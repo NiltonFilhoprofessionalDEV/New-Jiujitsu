@@ -14,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +41,13 @@ public class AttendanceController {
 	@GetMapping("/classes/{classId}/sessions/{date}")
 	public SessionView session(@PathVariable UUID classId, @PathVariable @DateTimeFormat(iso = ISO.DATE) LocalDate date) {
 		return service.session(CurrentUser.get().academyId(), classId, date);
+	}
+
+	/** Cria uma aula extra (fora da grade) e libera a chamada/check-in daquela data. */
+	@PostMapping("/classes/{classId}/sessions/{date}/extra")
+	public SessionView openExtra(@PathVariable UUID classId,
+			@PathVariable @DateTimeFormat(iso = ISO.DATE) LocalDate date) {
+		return service.openExtra(CurrentUser.get().academyId(), classId, date);
 	}
 
 	@PutMapping("/classes/{classId}/sessions/{date}")
